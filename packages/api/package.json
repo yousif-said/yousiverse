@@ -1,0 +1,24 @@
+{
+  "name": "@yousiverse/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun --env-file=../../.env run vitest run"
+  },
+  "dependencies": {
+    "@trpc/server": "^11.26.0",
+    "@yousiverse/auth": "workspace:*",
+    "@yousiverse/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@yousiverse/config": "workspace:*",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
