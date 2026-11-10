@@ -1,0 +1,13 @@
+node_modules
+.next
+.turbo
+.vercel
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+test-results
+playwright-report
+.DS_Store
+.claude/settings.local.json
+.e2e-server.log

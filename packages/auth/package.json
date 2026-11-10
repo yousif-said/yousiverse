@@ -1,0 +1,23 @@
+{
+  "name": "@yousiverse/auth",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@yousiverse/db": "workspace:*",
+    "better-auth": "^1.7.19",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@yousiverse/config": "workspace:*",
+    "typescript": "^7.0.2"
+  }
+}
