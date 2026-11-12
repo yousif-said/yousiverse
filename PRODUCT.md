@@ -6,13 +6,13 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Foundation
 
-- **App shell:** header, navigation, and a home page with a sample shelf of movies, TV, games, and books that can be filtered by type. Light and dark mode, keyboard navigable.
+- **App shell:** header, navigation, and a home page with a search box and a shelf of the titles most recently added to the catalog. The shelf can be filtered by type and each title links to its page. Light and dark mode, keyboard navigable.
 - **Sign-in:** Google and Apple (each available once its credentials are configured). A protected account page shows name, email, and join date, with sign out.
 - **Development sign-in:** email sign-in link printed to the server terminal. Not available in production.
 
 ### Catalog
 
-- **Search** for movies, TV shows, games, and books by title, with results as you type. If one source is down, the rest still show and the page says what is missing.
+- **Search** for movies, TV shows, games, and books by title, with results as you type. Results are grouped by type and each group appears as soon as its source answers. A filter narrows the search to one type. If one source is down, the rest still show and the page says what is missing.
 - **Movie pages:** poster, description, release date, runtime, and genres.
 - **TV show pages:** poster, description, first air date, status, and genres, with every season listed. Each season has its own page listing its episodes with air date, runtime, and description.
 - **Book pages:** cover, author, description, year first published, length, and subjects.

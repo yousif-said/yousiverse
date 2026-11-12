@@ -4,11 +4,14 @@ import { Input } from "@yousiverse/ui/components/input";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useTransition } from "react";
+import { type MediaType, searchPath } from "@/lib/media";
 
 const DEBOUNCE_MS = 300;
 
 /** Searches as you type by keeping the query in the URL; submits as a plain form without JS. */
-export function SearchBox({ initialQuery }: { initialQuery: string }) {
+type Props = { initialQuery: string; type?: MediaType };
+
+export function SearchBox({ initialQuery, type }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -20,7 +23,7 @@ export function SearchBox({ initialQuery }: { initialQuery: string }) {
     timer.current = setTimeout(() => {
       const trimmed = query.trim();
       startTransition(() => {
-        router.replace(trimmed ? `/search?q=${encodeURIComponent(trimmed)}` : "/search");
+        router.replace(searchPath(trimmed, type));
       });
     }, delay);
   }
@@ -35,6 +38,7 @@ export function SearchBox({ initialQuery }: { initialQuery: string }) {
           search(String(new FormData(event.currentTarget).get("q") ?? ""), 0);
         }}
       >
+        {type && <input type="hidden" name="type" value={type} />}
         <label htmlFor="search-query" className="sr-only">
           Search the catalog
         </label>

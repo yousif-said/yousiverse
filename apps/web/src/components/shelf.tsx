@@ -3,8 +3,9 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import type { RouterOutputs } from "@yousiverse/api";
 import { cn } from "cn";
+import Link from "next/link";
 import { useState } from "react";
-import { MEDIA, MEDIA_TYPES, type MediaType } from "@/lib/media";
+import { MEDIA, MEDIA_TYPES, type MediaType, mediaPath } from "@/lib/media";
 import { useTRPC } from "@/trpc/client";
 
 type ShelfItem = RouterOutputs["media"]["shelf"][number];
@@ -36,8 +37,7 @@ export function Shelf() {
   if (items.length === 0) {
     return (
       <p className="rounded-lg border bg-card p-5">
-        The shelf is empty. Run <code className="font-mono text-sm">bun run db:seed</code> to add
-        sample titles.
+        Nothing is on the shelf yet. Search for a title and open it to add the first one.
       </p>
     );
   }
@@ -62,29 +62,31 @@ export function Shelf() {
               const isSelected = filter === item.type;
               const isDimmed = filter !== "all" && !isSelected;
               return (
-                <li
-                  key={item.id}
-                  style={{
-                    height: `calc(var(--unit) * ${height})`,
-                    width: `calc(var(--unit) * ${width})`,
-                    animationDelay: `${index * 35}ms`,
-                  }}
-                  className={cn(
-                    "flex shrink-0 flex-col items-center justify-between gap-2 rounded-t-[3px] py-2.5 transition-[opacity,translate] duration-300 motion-safe:animate-shelve",
-                    MEDIA[item.type].color,
-                    isSelected && "-translate-y-2",
-                    isDimmed && "opacity-25",
-                  )}
-                >
-                  <span className="min-h-0 overflow-hidden text-ellipsis whitespace-nowrap font-display text-[calc(var(--unit)*14)] leading-none font-bold font-stretch-condensed [writing-mode:vertical-rl]">
-                    {item.title}
-                  </span>
-                  <span className="sr-only">{MEDIA[item.type].singular}</span>
-                  {item.releaseYear && (
-                    <span className="text-[calc(var(--unit)*10)] leading-none opacity-70 [writing-mode:vertical-rl]">
-                      {item.releaseYear}
+                <li key={item.id} className="shrink-0">
+                  <Link
+                    href={mediaPath(item.type, item.providerId)}
+                    style={{
+                      height: `calc(var(--unit) * ${height})`,
+                      width: `calc(var(--unit) * ${width})`,
+                      animationDelay: `${index * 35}ms`,
+                    }}
+                    className={cn(
+                      "flex flex-col items-center justify-between gap-2 rounded-t-[3px] py-2.5 outline-none transition-[opacity,translate] duration-300 hover:-translate-y-2 focus-visible:-translate-y-2 focus-visible:ring-[3px] focus-visible:ring-ring motion-safe:animate-shelve",
+                      MEDIA[item.type].color,
+                      isSelected && "-translate-y-2",
+                      isDimmed && "opacity-25",
+                    )}
+                  >
+                    <span className="min-h-0 overflow-hidden text-ellipsis whitespace-nowrap font-display text-[calc(var(--unit)*14)] leading-none font-bold font-stretch-condensed [writing-mode:vertical-rl]">
+                      {item.title}
                     </span>
-                  )}
+                    <span className="sr-only">{MEDIA[item.type].singular}</span>
+                    {item.releaseYear && (
+                      <span className="text-[calc(var(--unit)*10)] leading-none opacity-70 [writing-mode:vertical-rl]">
+                        {item.releaseYear}
+                      </span>
+                    )}
+                  </Link>
                 </li>
               );
             })}

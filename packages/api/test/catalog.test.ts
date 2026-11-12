@@ -62,6 +62,26 @@ describe("catalog.search", () => {
     expect(results.some((result) => result.type === "movie" || result.type === "tv")).toBe(false);
   });
 
+  it("searches only the requested media types", async () => {
+    const searchGames = vi.spyOn(igdb, "search");
+
+    const { results } = await caller.catalog.search({ query: "severance", types: ["tv"] });
+
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.every((result) => result.type === "tv")).toBe(true);
+    expect(searchGames).not.toHaveBeenCalled();
+  });
+
+  it("reports only requested media types as unavailable", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(tmdb, "search").mockRejectedValue(new ProviderError("tmdb", "unavailable", "down"));
+
+    expect(await caller.catalog.search({ query: "severance", types: ["movie"] })).toEqual({
+      results: [],
+      unavailable: ["movie"],
+    });
+  });
+
   it("rejects a blank query", async () => {
     await expect(caller.catalog.search({ query: "   " })).rejects.toMatchObject({
       code: "BAD_REQUEST",

@@ -3,6 +3,7 @@ import { expect, test } from "./test";
 test("finds a show by searching, then opens it and one of its seasons", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Search", exact: true }).click();
+  await expect(page).toHaveURL("/search");
 
   await page.getByRole("searchbox", { name: "Search the catalog" }).fill("severance");
   await expect(page).toHaveURL("/search?q=severance");
@@ -39,7 +40,10 @@ test("shows the not-found page for a title that does not exist", async ({ page }
 test("says so when nothing matches a search", async ({ page }) => {
   await page.goto("/search?q=zzzzqqqqxxxx");
 
-  await expect(page.getByText("Nothing matches “zzzzqqqqxxxx”")).toBeVisible();
+  await expect(page.getByText("No movies match “zzzzqqqqxxxx”.")).toBeVisible();
+  await expect(page.getByText("No TV shows match “zzzzqqqqxxxx”.")).toBeVisible();
+  await expect(page.getByText("No games match “zzzzqqqqxxxx”.")).toBeVisible();
+  await expect(page.getByText("No books match “zzzzqqqqxxxx”.")).toBeVisible();
 });
 
 test("finds a game by searching and opens its page", async ({ page }) => {
@@ -66,4 +70,26 @@ test("sends a merged book to the page of the book it was merged into", async ({ 
 
   await expect(page).toHaveURL("/books/OL893414W");
   await expect(page.getByRole("heading", { level: 1, name: "Dune" })).toBeVisible();
+});
+
+test("narrows a search to one media type and keeps the filter while typing", async ({ page }) => {
+  await page.goto("/search?q=hades");
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText([
+    "Movies",
+    "TV",
+    "Games",
+    "Books",
+  ]);
+
+  await page
+    .getByRole("navigation", { name: "Filter results by type" })
+    .getByRole("link", { name: "Games" })
+    .click();
+
+  await expect(page).toHaveURL("/search?q=hades&type=game");
+  await expect(page.getByRole("heading", { level: 2 })).toHaveText(["Games"]);
+  await expect(page.getByRole("link", { name: "Hades Game, 2020" })).toBeVisible();
+
+  await page.getByRole("searchbox", { name: "Search the catalog" }).fill("severance");
+  await expect(page).toHaveURL("/search?q=severance&type=game");
 });
