@@ -5,6 +5,11 @@ export function formatDate(isoDate: string): string {
   return longDate.format(new Date(`${isoDate}T00:00:00Z`));
 }
 
+/** Formats a moment in time as the day it happened: "November 11, 2026". */
+export function formatDay(moment: Date): string {
+  return longDate.format(moment);
+}
+
 export function formatRuntime(minutes: number): string {
   const hours = Math.floor(minutes / 60);
   const remainder = minutes % 60;

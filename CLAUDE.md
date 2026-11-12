@@ -118,7 +118,7 @@ packages/
 - **Fetch on demand.** Search goes straight to the provider. An item is saved to Postgres the first time someone opens its page, and that stored copy is what the app reads from then on. Do not bulk-import provider catalogs.
 - **Refresh:** a stored item older than 7 days is fetched again the next time it is opened. If the provider is down, serve the stored copy.
 - **Updates happen in place.** A refresh never deletes seasons or episodes, because ratings and reviews attach to them.
-- **URLs** use the provider's id: `/movies/<id>`, `/tv/<id>`, `/games/<id>`, `/books/<id>`.
+- **URLs** use the provider's id: `/movies/<id>`, `/tv/<id>`, `/games/<id>`, `/books/<id>`. Seasons and episodes go by number under their show: `/tv/<id>/seasons/<n>/episodes/<n>`.
 - **Tests never call a provider.** With `PROVIDER_FIXTURES=true` (set by the Vitest and Playwright configs), requests are answered from recorded responses in `packages/integrations/src/fixtures`. To cover a new request, add it to `packages/integrations/scripts/record.ts` and run the `record` script.
 - **Attribution:** every provider whose data is shown is credited in the site footer, in the wording its terms require.
 

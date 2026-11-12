@@ -31,6 +31,12 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **TV episode ratings:** each episode can be rated from its season page, separately from the rating for the whole show.
 - Title and season pages show the average rating and how many people rated, to everyone.
 
+### Reviews
+
+- **Text reviews** on every title: one per person, which can be edited or deleted. Reviews are public by default and can be marked so only the author sees them.
+- **TV episode pages**, opened from a season, where an episode can be rated and reviewed separately from its show.
+- A title's or episode's page lists other people's public reviews, newest first, each with its author's name and rating.
+
 ## Future features
 
 ### Library and catalog
@@ -45,8 +51,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 ### Ratings and reviews
 
 - **Optional rating questionnaire:** a few short questions per medium on its key axes (e.g. movies: plot, acting, action, visuals). Kept light, never required.
-- **Text reviews** on any media, public or private.
-- **TV episode reviews** (optional), alongside reviews of the whole show.
 
 ### Where to watch, play, or read
 

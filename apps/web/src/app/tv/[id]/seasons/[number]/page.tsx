@@ -64,8 +64,13 @@ export default async function SeasonPage({ params }: Props) {
                 </span>
                 <div className="min-w-0">
                   <h2 className="font-medium">
-                    <span className="sr-only">Episode {episode.episodeNumber}: </span>
-                    {episode.name}
+                    <Link
+                      href={`${mediaPath("tv", id)}/seasons/${season.seasonNumber}/episodes/${episode.episodeNumber}`}
+                      className="rounded-sm underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                    >
+                      <span className="sr-only">Episode {episode.episodeNumber}: </span>
+                      {episode.name}
+                    </Link>
                   </h2>
                   <p className="text-sm text-muted-foreground">
                     {[

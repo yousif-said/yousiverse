@@ -270,6 +270,27 @@ describe("media.tvShow and media.season", () => {
     );
   });
 
+  it("returns one episode with the season and show it belongs to", async () => {
+    const episode = await caller.media.episode({
+      providerId: SEVERANCE,
+      seasonNumber: 1,
+      episodeNumber: 2,
+    });
+
+    expect(episode).toMatchObject({
+      name: "Half Loop",
+      episodeNumber: 2,
+      season: { seasonNumber: 1, name: "Season 1" },
+      show: { title: "Severance" },
+    });
+  });
+
+  it("answers NOT_FOUND for an episode the season does not have", async () => {
+    await expect(
+      caller.media.episode({ providerId: SEVERANCE, seasonNumber: 1, episodeNumber: 99 }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+
   it("answers NOT_FOUND for a season the show does not have", async () => {
     await expect(
       caller.media.season({ providerId: SEVERANCE, seasonNumber: 99 }),

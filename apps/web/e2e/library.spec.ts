@@ -13,7 +13,7 @@ test("asks a signed-out visitor to sign in before adding to a library", async ({
   await page.goto("/movies/603");
 
   await expect(page.getByText("to add this to your library and rate it")).toBeVisible();
-  await page.getByRole("main").getByRole("link", { name: "Sign in" }).click();
+  await page.getByRole("main").getByRole("link", { name: "Sign in" }).first().click();
   await expect(page).toHaveURL("/sign-in?next=%2Fmovies%2F603");
 
   await page.goto("/library");
@@ -60,7 +60,10 @@ test("adds titles to the library, filters it, changes a status, and removes a ti
     "true",
   );
   await andSave(page, page.getByRole("button", { name: "Finished" }).click());
-  await andSave(page, page.getByRole("checkbox", { name: "Only I can see this" }).check());
+  await andSave(
+    page,
+    page.getByRole("checkbox", { name: "Only I can see this in my library" }).check(),
+  );
   await page.goto("/library?status=finished");
   await expect(titles).toHaveCount(1);
   await expect(titles).toContainText("Finished, only you");

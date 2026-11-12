@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MediaHeader } from "@/components/media-header";
+import { ReviewSection } from "@/components/review-section";
 import { pluralize } from "@/lib/format";
 import { mediaPath } from "@/lib/media";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
@@ -26,19 +27,22 @@ export default async function BookPage({ params }: PageProps<"/books/[id]">) {
   const book = await getBook(id);
 
   return (
-    <MediaHeader
-      mediaId={book.id}
-      providerId={id}
-      type="book"
-      title={book.title}
-      tagline={book.authors.length > 0 ? `by ${book.authors.join(", ")}` : null}
-      overview={book.overview}
-      posterUrl={book.posterUrl}
-      facts={[
-        { label: "First published", value: book.releaseYear ? String(book.releaseYear) : null },
-        { label: "Length", value: book.pageCount ? pluralize(book.pageCount, "page") : null },
-        { label: "Subjects", value: book.genres.join(", ") },
-      ]}
-    />
+    <>
+      <MediaHeader
+        mediaId={book.id}
+        providerId={id}
+        type="book"
+        title={book.title}
+        tagline={book.authors.length > 0 ? `by ${book.authors.join(", ")}` : null}
+        overview={book.overview}
+        posterUrl={book.posterUrl}
+        facts={[
+          { label: "First published", value: book.releaseYear ? String(book.releaseYear) : null },
+          { label: "Length", value: book.pageCount ? pluralize(book.pageCount, "page") : null },
+          { label: "Subjects", value: book.genres.join(", ") },
+        ]}
+      />
+      <ReviewSection target={{ mediaId: book.id }} path={mediaPath("book", id)} />
+    </>
   );
 }
