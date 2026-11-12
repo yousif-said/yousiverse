@@ -19,6 +19,7 @@
     "@yousiverse/api": "workspace:*",
     "@yousiverse/auth": "workspace:*",
     "@yousiverse/db": "workspace:*",
+    "@yousiverse/integrations": "workspace:*",
     "@yousiverse/ui": "workspace:*",
     "better-auth": "^1.7.19",
     "cn": "^0.5.2",

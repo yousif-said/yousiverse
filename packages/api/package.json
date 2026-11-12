@@ -13,7 +13,10 @@
   "dependencies": {
     "@trpc/server": "^11.26.0",
     "@yousiverse/auth": "workspace:*",
-    "@yousiverse/db": "workspace:*"
+    "@yousiverse/db": "workspace:*",
+    "@yousiverse/integrations": "workspace:*",
+    "drizzle-orm": "^0.45.4",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

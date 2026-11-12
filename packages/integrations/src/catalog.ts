@@ -1,0 +1,50 @@
+/** Shapes every catalog provider normalizes its data into. */
+
+export type CatalogSearchResult = {
+  type: "movie" | "tv" | "game" | "book";
+  providerId: string;
+  title: string;
+  releaseYear: number | null;
+  posterUrl: string | null;
+};
+
+export type CatalogItem = {
+  providerId: string;
+  title: string;
+  overview: string | null;
+  /** ISO date (YYYY-MM-DD). */
+  releaseDate: string | null;
+  releaseYear: number | null;
+  posterUrl: string | null;
+  backdropUrl: string | null;
+  genres: string[];
+};
+
+export type CatalogMovie = CatalogItem & {
+  tagline: string | null;
+  runtimeMinutes: number | null;
+};
+
+export type CatalogEpisode = {
+  episodeNumber: number;
+  name: string;
+  overview: string | null;
+  airDate: string | null;
+  runtimeMinutes: number | null;
+  stillUrl: string | null;
+};
+
+export type CatalogSeason = {
+  seasonNumber: number;
+  name: string;
+  overview: string | null;
+  airDate: string | null;
+  posterUrl: string | null;
+  episodes: CatalogEpisode[];
+};
+
+export type CatalogTvShow = CatalogItem & {
+  tagline: string | null;
+  status: string | null;
+  seasons: CatalogSeason[];
+};

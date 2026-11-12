@@ -9,6 +9,8 @@ process.env.DATABASE_URL = testDatabaseUrl(process.env.DATABASE_URL);
 
 export default defineConfig({
   test: {
+    // Provider calls are answered from recorded responses, never the network.
+    env: { PROVIDER_FIXTURES: "true", TMDB_API_TOKEN: "test-token" },
     globalSetup: "./test/global-setup.ts",
     fileParallelism: false,
   },

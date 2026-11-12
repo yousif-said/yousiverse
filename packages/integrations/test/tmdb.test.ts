@@ -1,0 +1,61 @@
+import { describe, expect, it } from "vitest";
+import { ProviderError } from "../src/errors";
+import { getMovie, getTvShow, search } from "../src/tmdb";
+
+describe("tmdb.search", () => {
+  it("returns movies and shows, without people", async () => {
+    const results = await search("severance");
+
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.every(({ type }) => type === "movie" || type === "tv")).toBe(true);
+    expect(results).toContainEqual({
+      type: "tv",
+      providerId: "95396",
+      title: "Severance",
+      releaseYear: 2022,
+      posterUrl: expect.stringMatching(/^https:\/\/image\.tmdb\.org\/t\/p\/w342\/.+/),
+    });
+  });
+
+  it("returns nothing when no title matches", async () => {
+    expect(await search("zzzzqqqqxxxx")).toEqual([]);
+  });
+});
+
+describe("tmdb.getMovie", () => {
+  it("normalizes a movie", async () => {
+    expect(await getMovie("603")).toMatchObject({
+      providerId: "603",
+      title: "The Matrix",
+      releaseDate: "1999-03-31",
+      releaseYear: 1999,
+      runtimeMinutes: 136,
+      genres: expect.arrayContaining(["Science Fiction"]),
+      posterUrl: expect.stringContaining("/w500/"),
+    });
+  });
+
+  it("reports an unknown movie as not found", async () => {
+    const error = await getMovie("999999999").catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(ProviderError);
+    expect(error).toMatchObject({ provider: "tmdb", kind: "not_found" });
+  });
+});
+
+describe("tmdb.getTvShow", () => {
+  it("includes every season with its episodes", async () => {
+    const show = await getTvShow("95396");
+
+    expect(show).toMatchObject({ providerId: "95396", title: "Severance", releaseYear: 2022 });
+    expect(show.seasons.map((season) => season.seasonNumber)).toEqual([0, 1, 2, 3]);
+
+    const firstSeason = show.seasons.find((season) => season.seasonNumber === 1);
+    expect(firstSeason?.episodes).toHaveLength(9);
+    expect(firstSeason?.episodes[0]).toMatchObject({
+      episodeNumber: 1,
+      name: "Good News About Hell",
+      airDate: "2022-02-17",
+    });
+  });
+});

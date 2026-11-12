@@ -1,0 +1,26 @@
+{
+  "name": "@yousiverse/integrations",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./catalog": "./src/catalog.ts",
+    "./tmdb": "./src/tmdb/index.ts",
+    "./errors": "./src/errors.ts",
+    "./env": "./src/env.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "record": "bun --env-file=../../.env run scripts/record.ts"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@yousiverse/config": "workspace:*",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

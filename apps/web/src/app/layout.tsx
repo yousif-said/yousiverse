@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${displayFont.variable} ${bodyFont.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-dvh">
+      <body className="flex min-h-dvh flex-col">
         <Providers>
           <a
             href="#main"
@@ -36,9 +36,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             Skip to content
           </a>
           <SiteHeader />
-          <main id="main" className="mx-auto max-w-6xl px-5 pb-24 sm:px-8">
+          <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-5 pb-24 sm:px-8">
             {children}
           </main>
+          <footer className="border-t">
+            <p className="mx-auto max-w-6xl px-5 py-6 text-sm text-muted-foreground sm:px-8">
+              Movie and TV data and images come from{" "}
+              <a
+                href="https://www.themoviedb.org"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                TMDB
+              </a>
+              . This product uses the TMDB API but is not endorsed or certified by TMDB.
+            </p>
+          </footer>
         </Providers>
       </body>
     </html>

@@ -29,7 +29,11 @@ export async function SiteHeader() {
           <span className="sr-only sm:not-sr-only">Yousiverse</span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-1">
-          <NavLink href="/">Home</NavLink>
+          {/* The logo already links home, so small screens drop this to make room. */}
+          <NavLink href="/" className="hidden sm:block">
+            Home
+          </NavLink>
+          <NavLink href="/search">Search</NavLink>
           <NavLink href="/account">Account</NavLink>
         </nav>
         <div className="ml-auto flex items-center gap-2">
