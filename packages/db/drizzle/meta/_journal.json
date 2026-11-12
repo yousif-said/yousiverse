@@ -15,6 +15,13 @@
       "when": 1794447270454,
       "tag": "0001_blushing_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794447778205,
+      "tag": "0002_wild_infant_terrible",
+      "breakpoints": true
     }
   ]
 }

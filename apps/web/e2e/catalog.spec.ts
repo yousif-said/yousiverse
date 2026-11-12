@@ -4,7 +4,7 @@ test("finds a show by searching, then opens it and one of its seasons", async ({
   await page.goto("/");
   await page.getByRole("link", { name: "Search", exact: true }).click();
 
-  await page.getByRole("searchbox", { name: "Search movies and TV shows" }).fill("severance");
+  await page.getByRole("searchbox", { name: "Search the catalog" }).fill("severance");
   await expect(page).toHaveURL("/search?q=severance");
   await page.getByRole("link", { name: /^Severance TV show, 2022/ }).click();
 
@@ -40,4 +40,14 @@ test("says so when nothing matches a search", async ({ page }) => {
   await page.goto("/search?q=zzzzqqqqxxxx");
 
   await expect(page.getByText("Nothing matches “zzzzqqqqxxxx”")).toBeVisible();
+});
+
+test("finds a game by searching and opens its page", async ({ page }) => {
+  await page.goto("/search?q=hades");
+  await page.getByRole("link", { name: "Hades Game, 2020" }).click();
+
+  await expect(page).toHaveURL("/games/113112");
+  await expect(page.getByRole("heading", { level: 1, name: "Hades" })).toBeVisible();
+  await expect(page.getByText("Supergiant Games").first()).toBeVisible();
+  await expect(page.getByText("September 17, 2020")).toBeVisible();
 });

@@ -19,7 +19,12 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: false,
     // Provider calls are answered from recorded responses, so tests need no API keys.
-    env: { PROVIDER_FIXTURES: "true", TMDB_API_TOKEN: "e2e-token" },
+    env: {
+      PROVIDER_FIXTURES: "true",
+      TMDB_API_TOKEN: "e2e-token",
+      IGDB_CLIENT_ID: "e2e-id",
+      IGDB_CLIENT_SECRET: "e2e-secret",
+    },
     timeout: 120_000,
   },
 });

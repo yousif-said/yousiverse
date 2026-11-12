@@ -25,6 +25,12 @@ export type CatalogMovie = CatalogItem & {
   runtimeMinutes: number | null;
 };
 
+export type CatalogGame = CatalogItem & {
+  platforms: string[];
+  developers: string[];
+  publishers: string[];
+};
+
 export type CatalogEpisode = {
   episodeNumber: number;
   name: string;

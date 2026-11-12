@@ -48,7 +48,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 TMDB
               </a>
-              . This product uses the TMDB API but is not endorsed or certified by TMDB.
+              . This product uses the TMDB API but is not endorsed or certified by TMDB. Game data
+              and images come from{" "}
+              <a
+                href="https://www.igdb.com"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                IGDB
+              </a>
+              .
             </p>
           </footer>
         </Providers>

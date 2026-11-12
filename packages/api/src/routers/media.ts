@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { episodes, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
+import { episodes, games, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
 import { and, count, eq } from "drizzle-orm";
 import { z } from "zod";
 import { ensureImported } from "../catalog/import";
@@ -42,6 +42,22 @@ export const mediaRouter = router({
       .where(eq(media.id, mediaId));
     if (!movie) throw new TRPCError({ code: "NOT_FOUND" });
     return movie;
+  }),
+
+  game: publicProcedure.input(z.object({ providerId })).query(async ({ ctx, input }) => {
+    const mediaId = await ensureImported(ctx.db, { type: "game", providerId: input.providerId });
+    const [game] = await ctx.db
+      .select({
+        ...mediaFields,
+        platforms: games.platforms,
+        developers: games.developers,
+        publishers: games.publishers,
+      })
+      .from(media)
+      .innerJoin(games, eq(games.mediaId, media.id))
+      .where(eq(media.id, mediaId));
+    if (!game) throw new TRPCError({ code: "NOT_FOUND" });
+    return game;
   }),
 
   tvShow: publicProcedure.input(z.object({ providerId })).query(async ({ ctx, input }) => {

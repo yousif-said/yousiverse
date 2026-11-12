@@ -731,6 +731,550 @@
       "total_results": 33
     }
   },
+  "GET api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=hades": {
+    "status": 200,
+    "body": {
+      "page": 1,
+      "results": [
+        {
+          "adult": false,
+          "backdrop_path": "/wJYkWiVcrBIAsZjyyLt46wDyngU.jpg",
+          "id": 67199,
+          "name": "Saint Seiya: The Hades Chapter",
+          "original_name": "聖闘士星矢 冥王ハーデス",
+          "overview": "Hades is planning to take over the world, to achieve that goal, he sends out deceased Gold Saints to take Athena's head. Seiya and the other Bronze Saints come to help but their help isn't appreciated by the remaining Gold Saints that are still alive.",
+          "poster_path": "/tJ3DwxuZXttTFLWuAIjI5ugsbtU.jpg",
+          "media_type": "tv",
+          "original_language": "ja",
+          "genre_ids": [
+            10759,
+            16
+          ],
+          "popularity": 20.5182,
+          "first_air_date": "2002-11-09",
+          "softcore": false,
+          "vote_average": 8.01,
+          "vote_count": 102,
+          "origin_country": [
+            "JP"
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/xIAaN3AQqaJiN5RJ0WsmBady8Hq.jpg",
+          "id": 440471,
+          "title": "Escape Plan 2: Hades",
+          "original_title": "Escape Plan 2: Hades",
+          "overview": "Ray Breslin manages an elite team of security specialists trained in the art of breaking people out of the world's most impenetrable prisons. When his most trusted operative, Shu Ren, is kidnapped and disappears inside the most elaborate prison ever built, Ray must track him down with the help of some of his former friends.",
+          "poster_path": "/A6tb8JNrie2qT8JC2tGqshayuck.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            28,
+            53,
+            80,
+            9648,
+            878
+          ],
+          "popularity": 4.5797,
+          "release_date": "2018-06-05",
+          "softcore": false,
+          "video": false,
+          "vote_average": 5.15,
+          "vote_count": 1632
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 263237,
+          "title": "Hades",
+          "original_title": "Hades",
+          "overview": "This German political drama from iconoclastic filmmaker Herbert Achternbusch takes a slightly askew look at neo-Nazis and the Holocaust. His non-story (a typical trait of Achternbusch films) is divided into three parts. The first introduces Hades, an eccentric half-Jewish coffin maker. Also introduced are the women in his life. The second part depicts different scenes from the city's Jewish ghetto. Included are disturbing film clips from Nazi propaganda footage that shows the naked corpses of starved Jews piled up in the streets with the insinuation that the heartless relatives of the dead would unceremoniously toss them out when they expired. In the third part, Hades is buried at sea. In between, neo-Nazis march unopposed in Munich, Hades battles skinheads, and Hades' shop is repeatedly vandalized. A scene where Hades is fascinated with death is also seen.",
+          "poster_path": "/1McuNY3ujTfn8s9AWR2nGxcZRCh.jpg",
+          "media_type": "movie",
+          "original_language": "de",
+          "genre_ids": [
+            18
+          ],
+          "popularity": 0.724,
+          "release_date": "1995-04-01",
+          "softcore": false,
+          "video": false,
+          "vote_average": 10,
+          "vote_count": 1
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 697207,
+          "title": "Hades",
+          "original_title": "Hades",
+          "overview": "A family of four isolate themselves to their Chicago home following an outbreak of a modern strain of the deadly bubonic plague.",
+          "poster_path": "/remHc2j46rnCtsZOk8H9RFi2B42.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            53
+          ],
+          "popularity": 0.5031,
+          "release_date": "2021-04-01",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/AdAkeIJbZWhOtMK4GbXVtefSgoW.jpg",
+          "id": 81014,
+          "name": "Hades Project Zeorymer",
+          "original_name": "冥王計画ゼオライマー",
+          "overview": "A young man named Akitsu Masato is captured by a secret govt. project known as \"Last Guardian\". He is told that his life as a normal student was all a lie, and that his real destiny is to be the pilot of a great robot called \"Zeorymer of the Heavens\". The truth of this is hammered in when Masato sees his parents accept payment for raising him. The Last Guardian is preparing for the resurrection of \"Hau Dragon\", an organization bent on world conquest. 15 years ago, Hau Dragon built 8 great robots. Each of the mecha represents a force of nature. However, before any of the robots could be used, their creater Kihara Masaki destroyed the robots except for the leader: Zeorymer. He took Zeorymer and an embryo to the government. The embryo became the boy Masato. Now, Hau Dragon has rebuilt the other 7 mecha and wants the 8th. It will be up to Masato and Himuro to pilot Zeorymer and fight against the Hau Dragon, but neither Masato or Himuro are all that they seem.",
+          "poster_path": "/gSNbvtDy1ohL66q0cld87qCWT0F.jpg",
+          "media_type": "tv",
+          "original_language": "ja",
+          "genre_ids": [
+            10759,
+            16
+          ],
+          "popularity": 3.0428,
+          "first_air_date": "1988-11-26",
+          "softcore": false,
+          "vote_average": 6,
+          "vote_count": 3,
+          "origin_country": [
+            "JP"
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 361028,
+          "title": "HADES",
+          "original_title": "HADES",
+          "overview": "A woman is caught in an endless dream in which she has to cross the five rivers of Hades.",
+          "poster_path": "/5vbB60ul5tq8OOHtDOObwANmN7.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            18,
+            27,
+            9648,
+            53
+          ],
+          "popularity": 0.3799,
+          "release_date": "2015-03-22",
+          "softcore": false,
+          "video": false,
+          "vote_average": 8.6,
+          "vote_count": 8
+        },
+        {
+          "adult": false,
+          "id": 4811755,
+          "name": "Hades",
+          "original_name": "Hades",
+          "media_type": "person",
+          "popularity": 0.0547,
+          "gender": 0,
+          "known_for_department": "Acting",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": null,
+              "id": 213205,
+              "name": "Hexagon Catch Shoot Style Series",
+              "original_name": "Hexagon Catch Shoot Style Series",
+              "overview": "Hexagon Catch Shoot Style Series",
+              "poster_path": null,
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [],
+              "popularity": 0.1578,
+              "first_air_date": "2022-10-25",
+              "softcore": false,
+              "vote_average": 0,
+              "vote_count": 0,
+              "origin_country": [
+                "US"
+              ]
+            },
+            {
+              "adult": false,
+              "backdrop_path": null,
+              "id": 223408,
+              "name": "UK Wrestling Show Down",
+              "original_name": "UK Wrestling Show Down",
+              "overview": "UK Wrestling Show Down",
+              "poster_path": null,
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [],
+              "popularity": 0.7052,
+              "first_air_date": "2020-08-19",
+              "softcore": false,
+              "vote_average": 0,
+              "vote_count": 0,
+              "origin_country": [
+                "US"
+              ]
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/s1fgt0HFp2Apv0wHh41ObcJT1i2.jpg",
+          "id": 329183,
+          "name": "Ett sorts Hades",
+          "original_name": "Ett sorts Hades",
+          "overview": "About the individuals who live in a mad-house. This kind of people usually seem to be quite normal. However, from one scene to another they may dramatically change, thereby revealing their deep problems with themselves and the society they cannot live in anymore.",
+          "poster_path": "/aqz9HdF2sAU3J2noAU5dKzCUv28.jpg",
+          "media_type": "tv",
+          "original_language": "sv",
+          "genre_ids": [
+            18
+          ],
+          "popularity": 1.0395,
+          "first_air_date": "1996-11-30",
+          "softcore": false,
+          "vote_average": 0,
+          "vote_count": 0,
+          "origin_country": [
+            "SE"
+          ]
+        },
+        {
+          "adult": false,
+          "id": 6340804,
+          "name": "Hades",
+          "original_name": "Hades",
+          "media_type": "person",
+          "popularity": 0.0159,
+          "gender": 0,
+          "known_for_department": "Acting",
+          "profile_path": "/8wSBBRj5r6gtikUPMsf5geNMy4O.jpg",
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/nvRRh4qdQJki2w5xiNP3e8q0LqQ.jpg",
+              "id": 1711278,
+              "title": "T'es sérieux là ?!",
+              "original_title": "T'es sérieux là ?!",
+              "overview": "",
+              "poster_path": "/sPAQEejEOTh12nhCrrF1rcYSlE5.jpg",
+              "media_type": "movie",
+              "original_language": "fr",
+              "genre_ids": [
+                28
+              ],
+              "popularity": 0.1863,
+              "release_date": "2026-05-19",
+              "softcore": false,
+              "video": false,
+              "vote_average": 10,
+              "vote_count": 1
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/j0SdGUFEoRlDk5STERKl1wb7cgj.jpg",
+          "id": 899396,
+          "title": "Hades",
+          "original_title": "حجر الواد",
+          "overview": "The sudden disappearance of a well-known investigative journalist and public figure intrigues everyone. Malek his best friend and the last person to have seen him. He is seized with grief and panic that attracts attention. At the same time, he is responsible for revealing the truth and finding him...",
+          "poster_path": "/m9JJUw2gwVUixdrrVvkgl5eiOV5.jpg",
+          "media_type": "movie",
+          "original_language": "ar",
+          "genre_ids": [],
+          "popularity": 0.2789,
+          "release_date": "2021-10-27",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 767970,
+          "title": "Hades",
+          "original_title": "Hades",
+          "overview": "The video comprises body exploration with red light and slow motion to convey to the viewer the idea of strength, power, fear and the concept of the underworld. Using electronic music, upside-down plans and timed cuts, I wanted to convey a self-image of surreality and non-conformity with reality. The title, “Hades”, makes explicit reference to the God of Death and the Underworld in Greek mythology, and serves as a guide for the planned sensations of agony, pleasure, revelation and space-time detachment. This is how I see myself, this is how I think I should be.",
+          "poster_path": "/wdLBjAQvYLtOU57o7eQiIXaoyUd.jpg",
+          "media_type": "movie",
+          "original_language": "pt",
+          "genre_ids": [],
+          "popularity": 0.0922,
+          "release_date": "2019-03-25",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/2ImpbSL8xeUJdBGQaJxrqJhuipo.jpg",
+          "id": 5902,
+          "name": "Covert One: The Hades Factor",
+          "original_name": "Covert One: The Hades Factor",
+          "overview": "While in a retrieve operation of a virus in Berlin, the Covert One agent Rachel Russell is double-crossed by two dirty agents; she kills them and escapes, trying to find a hiding place and someone to trust to protect the vials. Meanwhile, the former Covert One agent Dr. Jon Smith is also in Berlin with his beloved fiancée Sophie Amsden participating in a congress. When three persons die with bleeding, the doctors disclose a Hades virus outbreak, an extreme rare Ebola variant. Jon and Sophie return to the USA to research a cure, and Jon discovers a huge combination of bio-terrorism and conspiracy.",
+          "poster_path": "/Ll3ORsvGjIWx2T1vItJFdIS4zE.jpg",
+          "media_type": "tv",
+          "original_language": "en",
+          "genre_ids": [
+            10759,
+            18
+          ],
+          "popularity": 2.0626,
+          "first_air_date": "2006-04-09",
+          "softcore": false,
+          "vote_average": 5.4,
+          "vote_count": 12,
+          "origin_country": [
+            "US"
+          ]
+        },
+        {
+          "adult": false,
+          "id": 6207145,
+          "name": "Hades Croker",
+          "original_name": "Hades Croker",
+          "media_type": "person",
+          "popularity": 0.2488,
+          "gender": 0,
+          "known_for_department": "Acting",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/kHNMmyVMGDs7XPHyDapRbLvKdIK.jpg",
+              "id": 1640342,
+              "title": "Am I Funny Yet?",
+              "original_title": "Am I Funny Yet?",
+              "overview": "A comedian confronts his own thoughts of suicide on stage, turning his personal crisis into an uncomfortable comedy.",
+              "poster_path": "/6h3bKe0wiGXFYPjip7cMZT9mAB8.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                18
+              ],
+              "popularity": 0.4398,
+              "release_date": "2026-05-13",
+              "softcore": false,
+              "video": false,
+              "vote_average": 0,
+              "vote_count": 0
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 1750702,
+          "title": "Hades",
+          "original_title": "Hades",
+          "overview": "Vince is a loser. Like every loser, he wants to finally become a winner. If someone had told him that gas station robberies are only a quick way to make money if you're not too nervous, he probably wouldn't have accidentally shot the cashier, Laura.",
+          "poster_path": null,
+          "media_type": "movie",
+          "original_language": "de",
+          "genre_ids": [
+            80
+          ],
+          "popularity": 0.0066,
+          "release_date": "2010-01-01",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 493321,
+          "title": "A Kind of Hades",
+          "original_title": "Ett sorts Hades",
+          "overview": "About the individuals who live in a mad-house. This kind of people usually seem to be quite normal. However, from one scene to another they may dramatically change, thereby revealing their deep problems with themselves and the society they cannot live in anymore.",
+          "poster_path": "/lQ6HzNb8PabNCDc2gsVMRSkEgKx.jpg",
+          "media_type": "movie",
+          "original_language": "sv",
+          "genre_ids": [
+            18
+          ],
+          "popularity": 0.3857,
+          "release_date": "1996-11-30",
+          "softcore": false,
+          "video": false,
+          "vote_average": 5.3,
+          "vote_count": 3
+        },
+        {
+          "adult": false,
+          "id": 6327353,
+          "name": "Hades Chivas",
+          "original_name": "Hades Chivas",
+          "media_type": "person",
+          "popularity": 0.1715,
+          "gender": 0,
+          "known_for_department": "Acting",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/jtjcg9mT2UAGc0fDNjcr5cf39ur.jpg",
+              "id": 1726244,
+              "title": "The Time Machine: A UTS Revue",
+              "original_title": "The Time Machine: A UTS Revue",
+              "overview": "Aspiring directors, Cam and Felicity, pitch a revue that gets rejected immediately. In order to put on the show they've always dreamt about, they hatch a plan. But what happens when that plan goes wrong?",
+              "poster_path": "/d4X55tSoVy9aBK2LGl4boUnygNl.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                35
+              ],
+              "popularity": 0.1004,
+              "release_date": "2026-08-05",
+              "softcore": false,
+              "video": false,
+              "vote_average": 0,
+              "vote_count": 0
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 6086802,
+          "name": "Haydn Hades",
+          "original_name": "Haydn Hades",
+          "media_type": "person",
+          "popularity": 0.1184,
+          "gender": 0,
+          "known_for_department": "Production",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": null,
+              "id": 1655586,
+              "title": "The Dark Room",
+              "original_title": "The Dark Room",
+              "overview": "Augustus Pike woke up. He was remembering a stupid remark he had made at a party in 2005. Augustus frequently encountered crippling bouts of latent embarrassment. Then one day he discovered a way to right the wrongs of his past.",
+              "poster_path": "/hMgMoQRJCkeMw6ERBtZUEHZklst.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                35,
+                18
+              ],
+              "popularity": 0.3601,
+              "release_date": "",
+              "softcore": false,
+              "video": false,
+              "vote_average": 0,
+              "vote_count": 0
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 1751280,
+          "title": "Maria Hades",
+          "original_title": "Maria Hades",
+          "overview": "",
+          "poster_path": null,
+          "media_type": "movie",
+          "original_language": "de",
+          "genre_ids": [],
+          "popularity": 0.1878,
+          "release_date": "1998-11-21",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "id": 3095434,
+          "name": "Roberto Hades",
+          "original_name": "Roberto Hades",
+          "media_type": "person",
+          "popularity": 0.0547,
+          "gender": 0,
+          "known_for_department": "Camera",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/l6yrdaGK7OqyiuMtljsetkjaTJR.jpg",
+              "id": 831134,
+              "title": "Soror",
+              "original_title": "Soror",
+              "overview": "In 1946, in Soror city, three different stories intersect amid macabre events. While detectives Thomas and Carlos work in the unsolved cases of the mysterious body found in a tree and Serena Caires disappearance, those three stories get together suggesting the motivations of those respective crimes.",
+              "poster_path": "/wMf4Z1YURW5F2Fwk3ZEgHQgS8qF.jpg",
+              "media_type": "movie",
+              "original_language": "pt",
+              "genre_ids": [
+                80,
+                14,
+                9648,
+                27,
+                53
+              ],
+              "popularity": 0.1958,
+              "release_date": "2021-10-31",
+              "softcore": false,
+              "video": false,
+              "vote_average": 6,
+              "vote_count": 1
+            },
+            {
+              "adult": false,
+              "backdrop_path": null,
+              "id": 831853,
+              "title": "O Boneco",
+              "original_title": "O Boneco",
+              "overview": "",
+              "poster_path": "/tsIS9jKwRhIFoVmFalVhP1Xuu33.jpg",
+              "media_type": "movie",
+              "original_language": "pt",
+              "genre_ids": [
+                9648,
+                27
+              ],
+              "popularity": 0.0911,
+              "release_date": "2018-07-01",
+              "softcore": false,
+              "video": false,
+              "vote_average": 0,
+              "vote_count": 0
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 1314392,
+          "title": "Entering Hades",
+          "original_title": "Entering Hades",
+          "overview": "“Entering Hades” is about Jack Unterweger, a celebrated Austrian journalist and best-selling author who led a double life investigating murders by day and killing by night – amassing a body count of 11 people across multiple continents.",
+          "poster_path": null,
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [],
+          "popularity": 0.1698,
+          "release_date": "",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        }
+      ],
+      "total_pages": 4,
+      "total_results": 78
+    }
+  },
   "GET api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=zzzzqqqqxxxx": {
     "status": 200,
     "body": {

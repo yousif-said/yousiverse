@@ -12,16 +12,17 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Catalog
 
-- **Search** for movies and TV shows by title, with results as you type.
+- **Search** for movies, TV shows, and games by title, with results as you type. If one source is down, the rest still show and the page says what is missing.
 - **Movie pages:** poster, description, release date, runtime, and genres.
 - **TV show pages:** poster, description, first air date, status, and genres, with every season listed. Each season has its own page listing its episodes with air date, runtime, and description.
-- Titles are added to the catalog the first time someone opens them and refreshed weekly. Data comes from TMDB.
+- **Game pages:** cover, description, release date, developer, publisher, platforms, and genres.
+- Titles are added to the catalog the first time someone opens them and refreshed weekly. Movie and TV data comes from TMDB; game data from IGDB.
 
 ## Future features
 
 ### Library and catalog
 
-- **Games and books in the catalog**, searchable alongside movies and TV.
+- **Books in the catalog**, searchable alongside movies, TV, and games.
 - **Cast and crew** on movie and TV pages.
 
 - **Personal library** across all four media types, with a status for each item (e.g. want, in progress, finished, dropped, on hold). Viewable all together or filtered by media type.
