@@ -1,7 +1,13 @@
 import type { Database } from "@yousiverse/db";
-import { episodes, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
-import type { CatalogItem, CatalogMovie, CatalogTvShow } from "@yousiverse/integrations/catalog";
+import { episodes, games, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
+import type {
+  CatalogGame,
+  CatalogItem,
+  CatalogMovie,
+  CatalogTvShow,
+} from "@yousiverse/integrations/catalog";
 import { ProviderError } from "@yousiverse/integrations/errors";
+import * as igdb from "@yousiverse/integrations/igdb";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { and, eq, sql } from "drizzle-orm";
 
@@ -9,7 +15,10 @@ const REFRESH_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 
 type Transaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 
-export type CatalogRef = { type: "movie" | "tv"; providerId: string };
+export type CatalogRef = { type: "movie" | "tv" | "game"; providerId: string };
+
+/** Each media type comes from exactly one provider. */
+const PROVIDER_FOR = { movie: "tmdb", tv: "tmdb", game: "igdb" } as const;
 
 /** For bulk upserts: sets each column to the value from the row that conflicted. */
 function fromIncomingRow<Column extends string>(columns: Column[]) {
@@ -32,7 +41,7 @@ async function saveMedia(tx: Transaction, type: CatalogRef["type"], item: Catalo
   };
   const [saved] = await tx
     .insert(media)
-    .values({ ...values, type, provider: "tmdb", providerId: item.providerId })
+    .values({ ...values, type, provider: PROVIDER_FOR[type], providerId: item.providerId })
     .onConflictDoUpdate({ target: [media.provider, media.type, media.providerId], set: values })
     .returning({ id: media.id });
   if (!saved) throw new Error(`Saving ${type} ${item.providerId} returned no row.`);
@@ -47,6 +56,22 @@ function saveMovie(db: Database, movie: CatalogMovie) {
       .insert(movies)
       .values({ mediaId, ...details })
       .onConflictDoUpdate({ target: movies.mediaId, set: details });
+    return mediaId;
+  });
+}
+
+function saveGame(db: Database, game: CatalogGame) {
+  return db.transaction(async (tx) => {
+    const mediaId = await saveMedia(tx, "game", game);
+    const details = {
+      platforms: game.platforms,
+      developers: game.developers,
+      publishers: game.publishers,
+    };
+    await tx
+      .insert(games)
+      .values({ mediaId, ...details })
+      .onConflictDoUpdate({ target: games.mediaId, set: details });
     return mediaId;
   });
 }
@@ -99,7 +124,7 @@ export async function ensureImported(db: Database, ref: CatalogRef): Promise<str
     .from(media)
     .where(
       and(
-        eq(media.provider, "tmdb"),
+        eq(media.provider, PROVIDER_FOR[ref.type]),
         eq(media.type, ref.type),
         eq(media.providerId, ref.providerId),
       ),
@@ -109,9 +134,14 @@ export async function ensureImported(db: Database, ref: CatalogRef): Promise<str
   }
 
   try {
-    return ref.type === "movie"
-      ? await saveMovie(db, await tmdb.getMovie(ref.providerId))
-      : await saveTvShow(db, await tmdb.getTvShow(ref.providerId));
+    switch (ref.type) {
+      case "movie":
+        return await saveMovie(db, await tmdb.getMovie(ref.providerId));
+      case "tv":
+        return await saveTvShow(db, await tmdb.getTvShow(ref.providerId));
+      case "game":
+        return await saveGame(db, await igdb.getGame(ref.providerId));
+    }
   } catch (error) {
     // A stored copy that is out of date is better than an error page while a provider is down.
     if (stored?.syncedAt && error instanceof ProviderError && error.kind !== "not_found") {

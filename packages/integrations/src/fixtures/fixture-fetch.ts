@@ -1,8 +1,9 @@
+import igdb from "./igdb.json" with { type: "json" };
 import tmdb from "./tmdb.json" with { type: "json" };
 
 type Fixture = { status: number; body: unknown };
 
-const fixtures: Record<string, Fixture> = { ...tmdb };
+const fixtures: Record<string, Fixture> = { ...tmdb, ...igdb };
 
 const CREDENTIAL_PARAMS = ["api_key"];
 

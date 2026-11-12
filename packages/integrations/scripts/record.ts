@@ -4,6 +4,7 @@
  */
 import { writeFile } from "node:fs/promises";
 import { fixtureKey } from "../src/fixtures/fixture-fetch";
+import { gameQuery, searchQuery } from "../src/igdb/queries";
 
 type Recording = { url: string; init?: RequestInit; headers?: Record<string, string> };
 
@@ -20,14 +21,51 @@ function tmdb(path: string, params: Record<string, string> = {}): Recording {
   };
 }
 
+const igdbClientId = process.env.IGDB_CLIENT_ID ?? "";
+const igdbTokenResponse = await fetch("https://id.twitch.tv/oauth2/token", {
+  method: "POST",
+  body: new URLSearchParams({
+    client_id: igdbClientId,
+    client_secret: process.env.IGDB_CLIENT_SECRET ?? "",
+    grant_type: "client_credentials",
+  }),
+});
+const { access_token: igdbToken } = (await igdbTokenResponse.json()) as { access_token: string };
+
+function igdb(body: string): Recording {
+  return {
+    url: "https://api.igdb.com/v4/games",
+    init: { method: "POST", body },
+    headers: { "Client-ID": igdbClientId, Authorization: `Bearer ${igdbToken}` },
+  };
+}
+
+// Responses that must not be recorded as they are, because the real ones contain credentials.
+const handWritten: Record<string, Record<string, { status: number; body: unknown }>> = {
+  igdb: {
+    "POST id.twitch.tv/oauth2/token": {
+      status: 200,
+      body: { access_token: "fixture-token", expires_in: 5_000_000, token_type: "bearer" },
+    },
+  },
+};
+
 const recordings: Record<string, Recording[]> = {
   tmdb: [
     tmdb("/search/multi", { query: "severance", include_adult: "false" }),
+    tmdb("/search/multi", { query: "hades", include_adult: "false" }),
     tmdb("/search/multi", { query: "zzzzqqqqxxxx", include_adult: "false" }),
     tmdb("/movie/603"),
     tmdb("/movie/999999999"),
     tmdb("/tv/95396"),
     tmdb("/tv/95396", { append_to_response: "season/0,season/1,season/2,season/3" }),
+  ],
+  igdb: [
+    igdb(searchQuery("hades")),
+    igdb(searchQuery("severance")),
+    igdb(searchQuery("zzzzqqqqxxxx")),
+    igdb(gameQuery("113112")),
+    igdb(gameQuery("999999999")),
   ],
 };
 
@@ -39,7 +77,7 @@ const withoutOmittedKeys = (_key: string, value: unknown) =>
     : value;
 
 for (const [provider, requests] of Object.entries(recordings)) {
-  const fixtures: Record<string, { status: number; body: unknown }> = {};
+  const fixtures: Record<string, { status: number; body: unknown }> = { ...handWritten[provider] };
   for (const { url, init, headers } of requests) {
     const response = await fetch(url, { ...init, headers: { ...init?.headers, ...headers } });
     const key = fixtureKey(new URL(url), init);

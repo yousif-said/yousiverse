@@ -1,0 +1,521 @@
+{
+  "POST id.twitch.tv/oauth2/token": {
+    "status": 200,
+    "body": {
+      "access_token": "fixture-token",
+      "expires_in": 5000000,
+      "token_type": "bearer"
+    }
+  },
+  "POST api.igdb.com/v4/games search \"hades\"; fields name,first_release_date,cover.image_id; where game_type = (0,8,9,10,11); limit 20;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 80529,
+        "cover": {
+          "id": 222627,
+          "image_id": "co4rs3"
+        },
+        "first_release_date": 799286400,
+        "name": "Hades"
+      },
+      {
+        "id": 113112,
+        "cover": {
+          "id": 525627,
+          "image_id": "cob9kr"
+        },
+        "first_release_date": 1600300800,
+        "name": "Hades"
+      },
+      {
+        "id": 228525,
+        "cover": {
+          "id": 493341,
+          "image_id": "coaknx"
+        },
+        "first_release_date": 1758758400,
+        "name": "Hades II"
+      },
+      {
+        "id": 134619,
+        "cover": {
+          "id": 555679,
+          "image_id": "cobwrj"
+        },
+        "first_release_date": 1009756800,
+        "name": "Hades 2"
+      },
+      {
+        "id": 30655,
+        "cover": {
+          "id": 484615,
+          "image_id": "coadxj"
+        },
+        "first_release_date": 1480636800,
+        "name": "Hade"
+      },
+      {
+        "id": 346885,
+        "cover": {
+          "id": 462130,
+          "image_id": "co9wky"
+        },
+        "first_release_date": 1750809600,
+        "name": "H.A.D.E.S Zero"
+      },
+      {
+        "id": 345742,
+        "cover": {
+          "id": 560575,
+          "image_id": "coc0jj"
+        },
+        "name": "Hades-Plan"
+      },
+      {
+        "id": 56959,
+        "cover": {
+          "id": 566234,
+          "image_id": "coc4wq"
+        },
+        "first_release_date": 1551225600,
+        "name": "Hades' Star"
+      },
+      {
+        "id": 13867,
+        "cover": {
+          "id": 381544,
+          "image_id": "co86eg"
+        },
+        "first_release_date": 567907200,
+        "name": "Hades Nebula"
+      },
+      {
+        "id": 402009,
+        "cover": {
+          "id": 563616,
+          "image_id": "coc2w0"
+        },
+        "first_release_date": 1779321600,
+        "name": "Hades Uprising"
+      },
+      {
+        "id": 158772,
+        "cover": {
+          "id": 169982,
+          "image_id": "co3n5q"
+        },
+        "first_release_date": 1611619200,
+        "name": "Cinders of Hades"
+      },
+      {
+        "id": 96354,
+        "cover": {
+          "id": 65151,
+          "image_id": "xi0s4ebdigvsu0b7k4ip"
+        },
+        "first_release_date": 1523491200,
+        "name": "The Road to Hades"
+      },
+      {
+        "id": 47536,
+        "name": "The Seal of Hades"
+      },
+      {
+        "id": 84434,
+        "cover": {
+          "id": 72394,
+          "image_id": "co1juy"
+        },
+        "name": "Abo Hadeed"
+      },
+      {
+        "id": 231464,
+        "first_release_date": 1628380800,
+        "name": "The Garden of Hades"
+      },
+      {
+        "id": 23113,
+        "cover": {
+          "id": 161199,
+          "image_id": "co3gdr"
+        },
+        "first_release_date": 1159488000,
+        "name": "Saint Seiya: The Hades"
+      },
+      {
+        "id": 401774,
+        "cover": {
+          "id": 563117,
+          "image_id": "coc2i5"
+        },
+        "first_release_date": 1778284800,
+        "name": "Orpheus: Echo of Hades"
+      },
+      {
+        "id": 83674,
+        "name": "Hand of Hades Chapter 1"
+      },
+      {
+        "id": 146154,
+        "cover": {
+          "id": 315410,
+          "image_id": "co6rde"
+        },
+        "first_release_date": 1616112000,
+        "name": "Hades: Limited Edition"
+      },
+      {
+        "id": 208167,
+        "cover": {
+          "id": 346221,
+          "image_id": "co7f59"
+        },
+        "first_release_date": 1700006400,
+        "name": "Hades' Star: Dark Nebula"
+      }
+    ]
+  },
+  "POST api.igdb.com/v4/games search \"severance\"; fields name,first_release_date,cover.image_id; where game_type = (0,8,9,10,11); limit 20;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 374827,
+        "cover": {
+          "id": 500647,
+          "image_id": "coaqav"
+        },
+        "first_release_date": 1761868800,
+        "name": "Severance"
+      },
+      {
+        "id": 196235,
+        "cover": {
+          "id": 260404,
+          "image_id": "co5kxg"
+        },
+        "first_release_date": 1650067200,
+        "name": "Severance"
+      },
+      {
+        "id": 327843,
+        "cover": {
+          "id": 490720,
+          "image_id": "coain4"
+        },
+        "name": "Severance"
+      },
+      {
+        "id": 401313,
+        "cover": {
+          "id": 562381,
+          "image_id": "coc1xp"
+        },
+        "first_release_date": 1777507200,
+        "name": "Sever"
+      },
+      {
+        "id": 414337,
+        "cover": {
+          "id": 594232,
+          "image_id": "cocqig"
+        },
+        "name": "Astral Sever"
+      },
+      {
+        "id": 426255,
+        "name": "Severance Pain"
+      },
+      {
+        "id": 368581,
+        "cover": {
+          "id": 492542,
+          "image_id": "coak1q"
+        },
+        "name": "Project Sever"
+      },
+      {
+        "id": 49196,
+        "cover": {
+          "id": 327670,
+          "image_id": "co70ty"
+        },
+        "first_release_date": 1009411200,
+        "name": "Ballistic: Ecks vs. Sever"
+      },
+      {
+        "id": 418128,
+        "cover": {
+          "id": 602301,
+          "image_id": "cocwql"
+        },
+        "first_release_date": 1736035200,
+        "name": "Quarter of Severance"
+      },
+      {
+        "id": 319081,
+        "cover": {
+          "id": 416755,
+          "image_id": "co8xkj"
+        },
+        "name": "Severed"
+      },
+      {
+        "id": 6066,
+        "cover": {
+          "id": 115454,
+          "image_id": "co2h32"
+        },
+        "first_release_date": 1461628800,
+        "name": "Severed"
+      },
+      {
+        "id": 5623,
+        "cover": {
+          "id": 602073,
+          "image_id": "cocwk9"
+        },
+        "first_release_date": 982713600,
+        "name": "Severance: Blade of Darkness"
+      },
+      {
+        "id": 93615,
+        "name": "Severity"
+      },
+      {
+        "id": 427609,
+        "cover": {
+          "id": 620198,
+          "image_id": "codajq"
+        },
+        "name": "Die Severed"
+      },
+      {
+        "id": 342754,
+        "cover": {
+          "id": 621924,
+          "image_id": "codbvo"
+        },
+        "name": "Severed Love"
+      },
+      {
+        "id": 396675,
+        "cover": {
+          "id": 553312,
+          "image_id": "cobuxs"
+        },
+        "first_release_date": 1768262400,
+        "name": "Severed Souls"
+      },
+      {
+        "id": 229751,
+        "cover": {
+          "id": 276796,
+          "image_id": "co5xks"
+        },
+        "first_release_date": 1656201600,
+        "name": "Severed Ties"
+      },
+      {
+        "id": 152172,
+        "cover": {
+          "id": 489041,
+          "image_id": "coahch"
+        },
+        "first_release_date": 1631836800,
+        "name": "Severed Steel"
+      },
+      {
+        "id": 240415,
+        "cover": {
+          "id": 290366,
+          "image_id": "co681q"
+        },
+        "name": "Severed Lands"
+      },
+      {
+        "id": 6396,
+        "cover": {
+          "id": 120918,
+          "image_id": "co2lau"
+        },
+        "first_release_date": 1006300800,
+        "name": "Ecks vs. Sever"
+      }
+    ]
+  },
+  "POST api.igdb.com/v4/games search \"zzzzqqqqxxxx\"; fields name,first_release_date,cover.image_id; where game_type = (0,8,9,10,11); limit 20;": {
+    "status": 200,
+    "body": []
+  },
+  "POST api.igdb.com/v4/games fields name,summary,first_release_date,cover.image_id,artworks.image_id,genres.name,platforms.name,involved_companies.developer,involved_companies.publisher,involved_companies.company.name; where id = 113112;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 113112,
+        "artworks": [
+          {
+            "id": 56837,
+            "image_id": "ar17ut"
+          },
+          {
+            "id": 56834,
+            "image_id": "ar17uq"
+          },
+          {
+            "id": 56838,
+            "image_id": "ar17uu"
+          },
+          {
+            "id": 56835,
+            "image_id": "ar17ur"
+          },
+          {
+            "id": 56839,
+            "image_id": "ar17uv"
+          },
+          {
+            "id": 56840,
+            "image_id": "ar17uw"
+          },
+          {
+            "id": 56841,
+            "image_id": "ar17ux"
+          },
+          {
+            "id": 168648,
+            "image_id": "ar3m4o"
+          },
+          {
+            "id": 288005,
+            "image_id": "ar6685"
+          },
+          {
+            "id": 6752,
+            "image_id": "ar57k"
+          },
+          {
+            "id": 47341,
+            "image_id": "ar10j1"
+          },
+          {
+            "id": 56842,
+            "image_id": "ar17uy"
+          },
+          {
+            "id": 56836,
+            "image_id": "ar17us"
+          },
+          {
+            "id": 168652,
+            "image_id": "ar3m4s"
+          },
+          {
+            "id": 168650,
+            "image_id": "ar3m4q"
+          },
+          {
+            "id": 168651,
+            "image_id": "ar3m4r"
+          },
+          {
+            "id": 168649,
+            "image_id": "ar3m4p"
+          }
+        ],
+        "cover": {
+          "id": 525627,
+          "image_id": "cob9kr"
+        },
+        "first_release_date": 1600300800,
+        "genres": [
+          {
+            "id": 12,
+            "name": "Role-playing (RPG)"
+          },
+          {
+            "id": 25,
+            "name": "Hack and slash/Beat 'em up"
+          },
+          {
+            "id": 31,
+            "name": "Adventure"
+          },
+          {
+            "id": 32,
+            "name": "Indie"
+          }
+        ],
+        "involved_companies": [
+          {
+            "id": 258983,
+            "company": {
+              "id": 928,
+              "name": "Supergiant Games"
+            },
+            "developer": true,
+            "publisher": true
+          },
+          {
+            "id": 258984,
+            "company": {
+              "id": 27224,
+              "name": "Netflix"
+            },
+            "developer": false,
+            "publisher": true
+          },
+          {
+            "id": 265600,
+            "company": {
+              "id": 9691,
+              "name": "Secret 6"
+            },
+            "developer": false,
+            "publisher": false
+          }
+        ],
+        "name": "Hades",
+        "platforms": [
+          {
+            "id": 169,
+            "name": "Xbox Series X|S"
+          },
+          {
+            "id": 48,
+            "name": "PlayStation 4"
+          },
+          {
+            "id": 6,
+            "name": "PC (Microsoft Windows)"
+          },
+          {
+            "id": 39,
+            "name": "iOS"
+          },
+          {
+            "id": 167,
+            "name": "PlayStation 5"
+          },
+          {
+            "id": 14,
+            "name": "Mac"
+          },
+          {
+            "id": 49,
+            "name": "Xbox One"
+          },
+          {
+            "id": 130,
+            "name": "Nintendo Switch"
+          }
+        ],
+        "summary": "A rogue-lite hack and slash dungeon crawler in which Zagreus, son of Hades the Greek god of the dead, attempts to escape his home and his oppressive father by fighting the souls of the dead through the various layers of the ever-shifting underworld, while getting to know and forging relationships with its inhabitants."
+      }
+    ]
+  },
+  "POST api.igdb.com/v4/games fields name,summary,first_release_date,cover.image_id,artworks.image_id,genres.name,platforms.name,involved_companies.developer,involved_companies.publisher,involved_companies.company.name; where id = 999999999;": {
+    "status": 200,
+    "body": []
+  }
+}

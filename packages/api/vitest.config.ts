@@ -10,7 +10,12 @@ process.env.DATABASE_URL = testDatabaseUrl(process.env.DATABASE_URL);
 export default defineConfig({
   test: {
     // Provider calls are answered from recorded responses, never the network.
-    env: { PROVIDER_FIXTURES: "true", TMDB_API_TOKEN: "test-token" },
+    env: {
+      PROVIDER_FIXTURES: "true",
+      TMDB_API_TOKEN: "test-token",
+      IGDB_CLIENT_ID: "test-id",
+      IGDB_CLIENT_SECRET: "test-secret",
+    },
     globalSetup: "./test/global-setup.ts",
     fileParallelism: false,
   },

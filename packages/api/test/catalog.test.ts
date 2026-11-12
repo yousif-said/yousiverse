@@ -1,6 +1,7 @@
 import { db } from "@yousiverse/db";
 import { episodes, media, seasons } from "@yousiverse/db/schema";
 import { ProviderError } from "@yousiverse/integrations/errors";
+import * as igdb from "@yousiverse/integrations/igdb";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { eq } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -10,6 +11,7 @@ const caller = appRouter.createCaller({ db, session: null });
 
 const MATRIX = "603";
 const SEVERANCE = "95396";
+const HADES = "113112";
 const EIGHT_DAYS_MS = 8 * 24 * 60 * 60 * 1000;
 
 beforeEach(async () => {
@@ -30,14 +32,24 @@ describe("catalog.search", () => {
     );
   });
 
-  it("lists the media types of a provider that failed instead of failing the search", async () => {
+  it("mixes games in with movies and shows", async () => {
+    const { results } = await caller.catalog.search({ query: "hades" });
+
+    expect(results).toContainEqual(
+      expect.objectContaining({ type: "game", providerId: HADES, title: "Hades" }),
+    );
+    expect(new Set(results.slice(0, 2).map((result) => result.type)).has("game")).toBe(true);
+  });
+
+  it("still returns other results when one provider fails, and says what is missing", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(tmdb, "search").mockRejectedValue(new ProviderError("tmdb", "unavailable", "down"));
 
-    expect(await caller.catalog.search({ query: "severance" })).toEqual({
-      results: [],
-      unavailable: ["movie", "tv"],
-    });
+    const { results, unavailable } = await caller.catalog.search({ query: "hades" });
+
+    expect(unavailable).toEqual(["movie", "tv"]);
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.every((result) => result.type === "game")).toBe(true);
   });
 
   it("rejects a blank query", async () => {
@@ -108,6 +120,50 @@ describe("media.movie", () => {
     await expect(caller.media.movie({ providerId: "../tv/1" })).rejects.toMatchObject({
       code: "BAD_REQUEST",
     });
+  });
+});
+
+describe("media.game", () => {
+  it("imports a game the first time it is opened and stores it", async () => {
+    const game = await caller.media.game({ providerId: HADES });
+
+    expect(game).toMatchObject({
+      title: "Hades",
+      releaseYear: 2020,
+      developers: ["Supergiant Games"],
+    });
+    expect(game.platforms).toContain("Nintendo Switch");
+    expect(await db.select().from(media)).toMatchObject([
+      { type: "game", provider: "igdb", providerId: HADES },
+    ]);
+  });
+
+  it("serves the stored copy without asking the provider again", async () => {
+    await caller.media.game({ providerId: HADES });
+    const getGame = vi.spyOn(igdb, "getGame");
+
+    await caller.media.game({ providerId: HADES });
+
+    expect(getGame).not.toHaveBeenCalled();
+  });
+
+  it("answers NOT_FOUND for a game the provider does not have", async () => {
+    await expect(caller.media.game({ providerId: "999999999" })).rejects.toMatchObject({
+      code: "NOT_FOUND",
+    });
+  });
+
+  it("keeps a movie and a game with the same provider id apart", async () => {
+    await db.insert(media).values({
+      type: "movie",
+      title: "Same id, different provider",
+      provider: "tmdb",
+      providerId: HADES,
+      syncedAt: new Date(),
+    });
+
+    expect(await caller.media.game({ providerId: HADES })).toMatchObject({ title: "Hades" });
+    expect(await db.$count(media)).toBe(2);
   });
 });
 

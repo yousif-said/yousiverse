@@ -6,6 +6,7 @@
   "exports": {
     "./catalog": "./src/catalog.ts",
     "./tmdb": "./src/tmdb/index.ts",
+    "./igdb": "./src/igdb/index.ts",
     "./errors": "./src/errors.ts",
     "./env": "./src/env.ts"
   },

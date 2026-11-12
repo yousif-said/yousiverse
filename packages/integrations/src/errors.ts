@@ -1,4 +1,4 @@
-export type ProviderName = "tmdb";
+export type ProviderName = "tmdb" | "igdb";
 
 export type ProviderErrorKind = "not_found" | "rate_limited" | "unavailable" | "invalid_response";
 

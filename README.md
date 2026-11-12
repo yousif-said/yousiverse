@@ -4,11 +4,11 @@ Your movies, shows, games, and books on one shelf. See [PRODUCT.md](PRODUCT.md) 
 
 ## Local setup
 
-You need [Bun](https://bun.sh) 1.4+, Node 22+, Docker (OrbStack works), and a free [TMDB API key](https://www.themoviedb.org/settings/api) for movie and TV data.
+You need [Bun](https://bun.sh) 1.4+, Node 22+, Docker (OrbStack works), a free [TMDB API key](https://www.themoviedb.org/settings/api) for movie and TV data, and a free [Twitch developer app](https://dev.twitch.tv/console) for game data (IGDB uses Twitch credentials).
 
 ```sh
 bun install
-cp .env.example .env        # then set BETTER_AUTH_SECRET (openssl rand -base64 32) and TMDB_API_TOKEN
+cp .env.example .env        # then set BETTER_AUTH_SECRET (openssl rand -base64 32) and the provider keys
 bun run db:up               # start Postgres in Docker
 bun run db:migrate          # apply migrations
 bun run db:seed             # add sample titles
@@ -26,7 +26,7 @@ bun run test                # Vitest; uses a separate <database>_test database
 bun run e2e                 # Playwright; stop `bun dev` first, it starts its own server on port 3000
 ```
 
-Tests never call TMDB: they replay recorded responses, so they need no API key.
+Tests never call TMDB or IGDB: they replay recorded responses, so they need no API keys.
 
 The first time, install the Playwright browser: `cd apps/web && bunx playwright install chromium`.
 
@@ -38,7 +38,7 @@ Environment variables on Vercel:
 
 - `DATABASE_URL` and `DATABASE_URL_UNPOOLED`: set by Neon's Vercel integration (one database branch per preview).
 - `BETTER_AUTH_SECRET`: all environments.
-- `TMDB_API_TOKEN`: all environments.
+- `TMDB_API_TOKEN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`: all environments.
 - `BETTER_AUTH_URL`: production only, set to the public origin. Previews fall back to their own deploy URL.
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`: optional.
 

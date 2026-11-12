@@ -36,7 +36,7 @@ export function SearchBox({ initialQuery }: { initialQuery: string }) {
         }}
       >
         <label htmlFor="search-query" className="sr-only">
-          Search movies and TV shows
+          Search the catalog
         </label>
         <Search
           aria-hidden="true"
@@ -47,7 +47,7 @@ export function SearchBox({ initialQuery }: { initialQuery: string }) {
           name="q"
           type="search"
           defaultValue={initialQuery}
-          placeholder="Search movies and TV shows"
+          placeholder="Movies, TV shows, and games"
           autoComplete="off"
           autoFocus
           maxLength={100}
