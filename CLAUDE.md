@@ -86,7 +86,7 @@ packages/
 - Business logic lives in `packages/api`, not in React components or route files.
 - Validate all environment variables at startup with Zod. Keep `.env.example` up to date whenever a new variable is added. Never commit secrets.
 - Database changes always go through Drizzle migrations; never edit the database by hand.
-- **Ratings:** 0 to 10 in 0.25 steps. Store as an integer 0 to 40 (quarter points); convert only for display.
+- **Ratings:** 0 to 10 in 0.25 steps. Store as an integer 0 to 40 (quarter points); convert only for display (`formatRating`). A rating or review is about a whole title or one episode; `packages/api/src/targets.ts` defines that choice.
 - **Media model:** one shared `media` concept with a `type` (movie, tv, game, book) plus type-specific detail tables. TV has seasons and episodes as first-class records so episodes can be rated/reviewed.
 - **Franchise links are typed edges** (e.g. adaptation_of, same_franchise, sequel_of) between any two media items. A link is only visible in the app once it is verified. Suggested links from Wikidata or elsewhere stay hidden until reviewed.
 - **Privacy:** reviews, lists, and libraries carry an explicit visibility, public by default (public or private today; friends is added with the social features). Every query that returns user content must respect it. Add tests for visibility rules.

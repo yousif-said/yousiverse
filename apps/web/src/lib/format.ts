@@ -15,3 +15,13 @@ export function formatRuntime(minutes: number): string {
 export function pluralize(count: number, singular: string, plural = `${singular}s`): string {
   return `${count} ${count === 1 ? singular : plural}`;
 }
+
+/** Ratings are stored in quarter points: 33 is shown as "8.25", 32 as "8". */
+export function formatRating(quarterPoints: number): string {
+  return String(quarterPoints / 4);
+}
+
+/** An average of many ratings, to at most two decimal places: "7.83", "8.5". */
+export function formatAverageRating(quarterPoints: number): string {
+  return String(Number((quarterPoints / 4).toFixed(2)));
+}
