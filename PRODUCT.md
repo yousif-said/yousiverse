@@ -25,6 +25,12 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Library page** showing everything in the library, most recently changed first, filterable by media type and by status.
 - Library entries are public by default. Nothing shows another person's library yet; that arrives with profiles.
 
+### Ratings
+
+- **Ratings out of 10 in 0.25 steps** on every title, set with a slider on the title's page and saved automatically. A rating can be changed or cleared.
+- **TV episode ratings:** each episode can be rated from its season page, separately from the rating for the whole show.
+- Title and season pages show the average rating and how many people rated, to everyone.
+
 ## Future features
 
 ### Library and catalog
@@ -38,10 +44,9 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Ratings and reviews
 
-- **Ratings out of 10 in 0.25 increments.**
 - **Optional rating questionnaire:** a few short questions per medium on its key axes (e.g. movies: plot, acting, action, visuals). Kept light, never required.
 - **Text reviews** on any media, public or private.
-- **TV episode reviews and ratings** (optional), alongside a rating for the whole show.
+- **TV episode reviews** (optional), alongside reviews of the whole show.
 
 ### Where to watch, play, or read
 

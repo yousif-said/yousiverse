@@ -10,6 +10,8 @@ type MediaInfo = {
   /** Several items, mid-sentence: "TV shows". */
   plural: string;
   color: string;
+  /** Colors a native form control, such as the rating slider. */
+  accent: string;
   path: string;
 };
 
@@ -19,6 +21,7 @@ export const MEDIA: Record<MediaType, MediaInfo> = {
     singular: "Movie",
     plural: "movies",
     color: "bg-movie text-movie-foreground",
+    accent: "accent-movie",
     path: "/movies",
   },
   tv: {
@@ -26,6 +29,7 @@ export const MEDIA: Record<MediaType, MediaInfo> = {
     singular: "TV show",
     plural: "TV shows",
     color: "bg-tv text-tv-foreground",
+    accent: "accent-tv",
     path: "/tv",
   },
   game: {
@@ -33,6 +37,7 @@ export const MEDIA: Record<MediaType, MediaInfo> = {
     singular: "Game",
     plural: "games",
     color: "bg-game text-game-foreground",
+    accent: "accent-game",
     path: "/games",
   },
   book: {
@@ -40,6 +45,7 @@ export const MEDIA: Record<MediaType, MediaInfo> = {
     singular: "Book",
     plural: "books",
     color: "bg-book text-book-foreground",
+    accent: "accent-book",
     path: "/books",
   },
 };

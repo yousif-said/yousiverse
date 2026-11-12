@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { formatDate, formatRuntime } from "@/lib/format";
+import { EpisodeRating } from "@/components/episode-rating";
+import { formatAverageRating, formatDate, formatRuntime, pluralize } from "@/lib/format";
 import { mediaPath } from "@/lib/media";
+import { getSession } from "@/lib/session";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
 
 type Props = PageProps<"/tv/[id]/seasons/[number]">;
@@ -25,6 +27,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SeasonPage({ params }: Props) {
   const season = await getSeason(params);
   const { id } = await params;
+  const [session, ratings] = await Promise.all([
+    getSession(),
+    getQueryClient().fetchQuery(trpc.ratings.forSeason.queryOptions({ seasonId: season.id })),
+  ]);
+  const ratingOf = new Map(ratings.map((rating) => [rating.episodeId, rating]));
 
   return (
     <article className="max-w-3xl pt-10 sm:pt-16">
@@ -45,35 +52,47 @@ export default async function SeasonPage({ params }: Props) {
         <p className="mt-10 text-muted-foreground">No episodes have been announced yet.</p>
       ) : (
         <ol className="mt-10 divide-y border-y">
-          {season.episodes.map((episode) => (
-            <li key={episode.id} className="grid grid-cols-[2.5rem_1fr] gap-x-4 py-5">
-              <span
-                aria-hidden="true"
-                className="font-display text-2xl leading-none font-bold text-muted-foreground tabular-nums"
-              >
-                {episode.episodeNumber}
-              </span>
-              <div className="min-w-0">
-                <h2 className="font-medium">
-                  <span className="sr-only">Episode {episode.episodeNumber}: </span>
-                  {episode.name}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {[
-                    episode.airDate && formatDate(episode.airDate),
-                    episode.runtimeMinutes && formatRuntime(episode.runtimeMinutes),
-                  ]
-                    .filter(Boolean)
-                    .join(", ")}
-                </p>
-                {episode.overview && (
-                  <p className="mt-2 max-w-[65ch] text-pretty text-sm leading-relaxed">
-                    {episode.overview}
+          {season.episodes.map((episode) => {
+            const rating = ratingOf.get(episode.id);
+            return (
+              <li key={episode.id} className="grid grid-cols-[2.5rem_1fr_auto] gap-x-4 py-5">
+                <span
+                  aria-hidden="true"
+                  className="font-display text-2xl leading-none font-bold text-muted-foreground tabular-nums"
+                >
+                  {episode.episodeNumber}
+                </span>
+                <div className="min-w-0">
+                  <h2 className="font-medium">
+                    <span className="sr-only">Episode {episode.episodeNumber}: </span>
+                    {episode.name}
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    {[
+                      episode.airDate && formatDate(episode.airDate),
+                      episode.runtimeMinutes && formatRuntime(episode.runtimeMinutes),
+                      rating?.average != null &&
+                        `average ${formatAverageRating(rating.average)} from ${pluralize(rating.count, "rating")}`,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")}
                   </p>
+                  {episode.overview && (
+                    <p className="mt-2 max-w-[65ch] text-pretty text-sm leading-relaxed">
+                      {episode.overview}
+                    </p>
+                  )}
+                </div>
+                {session && (
+                  <EpisodeRating
+                    episodeId={episode.id}
+                    episodeNumber={episode.episodeNumber}
+                    mine={rating?.mine ?? null}
+                  />
                 )}
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ol>
       )}
     </article>
