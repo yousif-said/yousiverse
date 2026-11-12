@@ -50,6 +50,13 @@
       "when": 1794452675109,
       "tag": "0006_past_lionheart",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794452979933,
+      "tag": "0007_mushy_master_chief",
+      "breakpoints": true
     }
   ]
 }

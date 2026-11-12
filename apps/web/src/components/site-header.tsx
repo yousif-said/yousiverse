@@ -35,6 +35,12 @@ export async function SiteHeader() {
           </NavLink>
           <NavLink href="/search">Search</NavLink>
           {session && <NavLink href="/library">Library</NavLink>}
+          {/* Small screens reach lists from the library page instead. */}
+          {session && (
+            <NavLink href="/lists" className="hidden sm:block">
+              Lists
+            </NavLink>
+          )}
           <NavLink href="/account">Account</NavLink>
         </nav>
         <div className="ml-auto flex items-center gap-2">

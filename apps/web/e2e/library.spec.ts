@@ -12,7 +12,7 @@ async function andSave(page: Page, action: Promise<void>) {
 test("asks a signed-out visitor to sign in before adding to a library", async ({ page }) => {
   await page.goto("/movies/603");
 
-  await expect(page.getByText("to add this to your library and rate it")).toBeVisible();
+  await expect(page.getByText("to add this to your library or a list, and rate it.")).toBeVisible();
   await page.getByRole("main").getByRole("link", { name: "Sign in" }).first().click();
   await expect(page).toHaveURL("/sign-in?next=%2Fmovies%2F603");
 

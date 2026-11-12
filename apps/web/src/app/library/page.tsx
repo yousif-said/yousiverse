@@ -28,6 +28,16 @@ export default async function LibraryPage({ searchParams }: PageProps<"/library"
   return (
     <section className="pt-10 sm:pt-16">
       <h1 className="font-display text-4xl font-extrabold tracking-tight">Library</h1>
+      <p className="mt-3 text-muted-foreground">
+        Everything you have added, by status. For your own groupings, see{" "}
+        <Link
+          href="/lists"
+          className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        >
+          your lists
+        </Link>
+        .
+      </p>
 
       <nav aria-label="Filter by type" className="mt-6 flex flex-wrap gap-2">
         <FilterPill href={libraryPath(undefined, status)} selected={!type}>

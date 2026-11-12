@@ -2,6 +2,7 @@ import { MEDIA, type MediaType } from "@/lib/media";
 import { getSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { LibraryControl } from "./library-control";
+import { ListControl } from "./list-control";
 import { RatingPanel } from "./rating-panel";
 import { SignInPrompt } from "./sign-in-prompt";
 
@@ -15,16 +16,23 @@ export async function TitleActions({ mediaId, type, path }: Props) {
     return (
       <div className="space-y-2">
         {rating}
-        <SignInPrompt returnTo={path}>to add this to your library and rate it.</SignInPrompt>
+        <SignInPrompt returnTo={path}>
+          to add this to your library or a list, and rate it.
+        </SignInPrompt>
       </div>
     );
   }
 
-  const entry = await getQueryClient().fetchQuery(trpc.library.entry.queryOptions({ mediaId }));
+  const queryClient = getQueryClient();
+  const [entry, lists] = await Promise.all([
+    queryClient.fetchQuery(trpc.library.entry.queryOptions({ mediaId })),
+    queryClient.fetchQuery(trpc.lists.forTitle.queryOptions({ mediaId })),
+  ]);
   return (
     <div className="space-y-8">
       <LibraryControl mediaId={mediaId} type={type} initialEntry={entry} />
       {rating}
+      <ListControl mediaId={mediaId} initialLists={lists} />
     </div>
   );
 }
