@@ -26,7 +26,7 @@ Do not swap out or add to the core stack without asking first.
 | Validation                | Zod (API inputs, forms, env vars, external API responses)                             |
 | Database                  | Postgres: Docker locally, Neon for preview and production                             |
 | ORM                       | Drizzle ORM + drizzle-kit migrations                                                  |
-| Auth                      | Better Auth (Google, Apple, passkeys, email magic link) stored in our own Postgres    |
+| Auth                      | Better Auth (Google, email magic link) stored in our own Postgres                     |
 | Lint / format             | Biome                                                                                 |
 | Tests                     | Vitest (unit/integration), Playwright (end-to-end)                                    |
 | CI                        | GitHub Actions: typecheck, lint, test on every PR                                     |
