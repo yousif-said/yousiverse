@@ -4,19 +4,11 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import type { RouterOutputs } from "@yousiverse/api";
 import { cn } from "cn";
 import { useState } from "react";
+import { MEDIA, MEDIA_TYPES, type MediaType } from "@/lib/media";
 import { useTRPC } from "@/trpc/client";
 
 type ShelfItem = RouterOutputs["media"]["shelf"][number];
-type MediaType = ShelfItem["type"];
 type Filter = MediaType | "all";
-
-const MEDIA: Record<MediaType, { label: string; singular: string; color: string }> = {
-  movie: { label: "Movies", singular: "Movie", color: "bg-movie text-movie-foreground" },
-  tv: { label: "TV", singular: "TV show", color: "bg-tv text-tv-foreground" },
-  game: { label: "Games", singular: "Game", color: "bg-game text-game-foreground" },
-  book: { label: "Books", singular: "Book", color: "bg-book text-book-foreground" },
-};
-const MEDIA_TYPES = Object.keys(MEDIA) as MediaType[];
 
 /**
  * Spine dimensions in shelf units. Each medium keeps the proportions of its real packaging:

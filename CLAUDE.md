@@ -58,7 +58,7 @@ Wrap every external API in its own module under `packages/integrations/<provider
 
 ## CI/CD
 
-- **Pull requests:** GitHub Actions runs typecheck, Biome lint, Vitest, and Playwright on every PR. All must pass before merging (enforced by branch protection on `main`).
+- **Pull requests:** GitHub Actions runs typecheck, Biome lint, Vitest, and Playwright on every PR. All must pass before merging. GitHub does not enforce this on the current plan, so check before merging.
 - **Preview deploys:** Vercel builds every PR to its own preview URL. Each preview uses its own Neon database branch (Neon's Vercel integration), never the production database.
 - **Production:** merging to `main` deploys to production automatically. No manual deploy steps.
 - **Migrations:** Drizzle migrations run automatically as part of every deploy (preview and production) before the new code serves traffic. Migrations must be backward compatible with the previously deployed code (add columns before using them; remove in a later deploy).
@@ -92,8 +92,45 @@ packages/
 - **Privacy:** reviews, lists, and libraries carry an explicit visibility (public, friends, private). Every query that returns user content must respect it. Add tests for visibility rules.
 - **Clubs:** each club has an allowlist of media types; club views and queries must filter to it.
 - UI should feel fast, clean, and modern. Use the frontend-design plugin for new screens. Support light and dark mode and keyboard navigation from the start.
-- Conventional Commits for commit messages. Small, focused PRs.
 - Write or update tests with every feature. Use Playwright for critical user flows (sign-in, adding to library, rating, reviewing).
+
+### Database schema
+
+- Write columns in camelCase and let Drizzle's `casing: "snake_case"` name them; never pass a column name by hand. Tables are plural snake_case.
+- Primary keys are `uuid().primaryKey().defaultRandom()`. A detail table (`movies`, `tv_shows`) uses its parent's id as its primary key.
+- Every foreign key states its `onDelete`.
+- Timestamps use `timestamp({ withTimezone: true })`; calendar dates with no time use `date()`.
+- A fixed set of values is a `pgEnum` built from an exported `as const` array, so the type and the database agree.
+- Rules about uniqueness are database constraints, not only checks in code.
+- Use `text`, not `varchar`. Store quantities as integers in their smallest unit (minutes, quarter points), never floats.
+
+### Errors
+
+- `packages/integrations` throws only `ProviderError`, with a `kind` (`not_found`, `rate_limited`, `unavailable`, `invalid_response`). Its messages must never include credentials or full provider URLs.
+- `packages/api` throws `TRPCError` with an accurate code. `publicProcedure` already converts a `ProviderError` into the matching code, so routers do not catch provider errors just to rethrow them.
+- A page built around one record wraps its query in `orNotFound` (`apps/web/src/trpc/server.ts`). Anything else reaches the nearest `error.tsx`.
+- Never swallow an error. When the app carries on with less (an out-of-date copy, search missing one provider), log the cause and tell the user what is missing.
+- Messages shown to users say what happened and what to do next, in plain words. Never show a provider's raw error text.
+
+### Provider data
+
+- **Fetch on demand.** Search goes straight to the provider. An item is saved to Postgres the first time someone opens its page, and that stored copy is what the app reads from then on. Do not bulk-import provider catalogs.
+- **Refresh:** a stored item older than 7 days is fetched again the next time it is opened. If the provider is down, serve the stored copy.
+- **Updates happen in place.** A refresh never deletes seasons or episodes, because ratings and reviews attach to them.
+- **URLs** use the provider's id: `/movies/<id>`, `/tv/<id>`, `/games/<id>`, `/books/<id>`.
+- **Tests never call a provider.** With `PROVIDER_FIXTURES=true` (set by the Vitest and Playwright configs), requests are answered from recorded responses in `packages/integrations/src/fixtures`. To cover a new request, add it to `packages/integrations/scripts/record.ts` and run the `record` script.
+- **Attribution:** every provider whose data is shown is credited in the site footer, in the wording its terms require.
+
+## Source control
+
+- **`main` is always deployable.** Never commit to it directly; every change goes through a pull request.
+- **Branches:** one short-lived branch per change, cut from an up-to-date `main`, named `<type>/<short-description>` (e.g. `feat/library-status`, `fix/sign-in-redirect`). Delete the branch after merging.
+- **Commits:** Conventional Commits (`feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `ci`), with an optional scope for the package or app (`feat(api): ...`). Imperative summary under ~70 characters; use the body for the why.
+- **Pull requests:** one logical change each, small enough to review in one sitting. The title follows Conventional Commits because it becomes the commit on `main`. The description says what changed, why, and how it was verified.
+- **Merging:** squash and merge once CI is green, so `main` has one commit per PR. Never merge with failing checks.
+- **Keeping up to date:** rebase a branch on `main` rather than merging `main` into it. Force-push only to your own unmerged branch, with `--force-with-lease`; never to `main`.
+- **Database migrations:** one PR should not edit a migration that has already merged. Add a new one.
+- **Never commit** secrets, `.env` files, build output, or local tool settings.
 
 ## Commands
 
@@ -101,21 +138,22 @@ Use `bun` for everything (`bun install`, `bun run <script>`, `bunx`); never npm,
 
 Run everything from the repo root. All scripts read the root `.env` (copy `.env.example`).
 
-| Command                             | What it does                                                                             |
-| ----------------------------------- | ---------------------------------------------------------------------------------------- |
-| `bun install`                       | Install all workspace dependencies                                                       |
-| `bun dev`                           | Start the web app at http://localhost:3000                                               |
-| `bun run build`                     | Production build                                                                         |
-| `bun run lint`                      | Biome lint + format check                                                                |
-| `bun run format`                    | Biome auto-fix and format                                                                |
-| `bun run typecheck`                 | TypeScript in every package                                                              |
-| `bun run test`                      | Vitest. API tests run against a throwaway `<database>_test` database, recreated each run |
-| `bun run e2e`                       | Playwright. Starts its own dev server on port 3000, so stop `bun dev` first              |
-| `bun run db:up` / `bun run db:down` | Start / stop local Postgres (Docker)                                                     |
-| `bun run db:generate`               | Generate a migration from schema changes in `packages/db/src/schema`                     |
-| `bun run db:migrate`                | Apply migrations                                                                         |
-| `bun run db:seed`                   | Insert sample media (skips if any exist)                                                 |
-| `bun run db:studio`                 | Open Drizzle Studio                                                                      |
+| Command                                      | What it does                                                                             |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `bun install`                                | Install all workspace dependencies                                                       |
+| `bun dev`                                    | Start the web app at http://localhost:3000                                               |
+| `bun run build`                              | Production build                                                                         |
+| `bun run lint`                               | Biome lint + format check                                                                |
+| `bun run format`                             | Biome auto-fix and format                                                                |
+| `bun run typecheck`                          | TypeScript in every package                                                              |
+| `bun run test`                               | Vitest. API tests run against a throwaway `<database>_test` database, recreated each run |
+| `bun run e2e`                                | Playwright. Starts its own dev server on port 3000, so stop `bun dev` first              |
+| `bun run db:up` / `bun run db:down`          | Start / stop local Postgres (Docker)                                                     |
+| `bun run db:generate`                        | Generate a migration from schema changes in `packages/db/src/schema`                     |
+| `bun run db:migrate`                         | Apply migrations                                                                         |
+| `bun run db:seed`                            | Insert sample media (skips if any exist)                                                 |
+| `bun run db:studio`                          | Open Drizzle Studio                                                                      |
+| `bun run --cwd packages/integrations record` | Re-record the provider responses used by tests (needs real API keys in `.env`)           |
 
 - Run one package's script with `bun run --cwd packages/api test`.
 - Add shadcn/ui components from `packages/ui`: `bunx shadcn@latest add <component>`.

@@ -20,6 +20,7 @@
         "@yousiverse/api": "workspace:*",
         "@yousiverse/auth": "workspace:*",
         "@yousiverse/db": "workspace:*",
+        "@yousiverse/integrations": "workspace:*",
         "@yousiverse/ui": "workspace:*",
         "better-auth": "^1.7.19",
         "cn": "^0.5.2",
@@ -48,6 +49,9 @@
         "@trpc/server": "^11.26.0",
         "@yousiverse/auth": "workspace:*",
         "@yousiverse/db": "workspace:*",
+        "@yousiverse/integrations": "workspace:*",
+        "drizzle-orm": "^0.45.4",
+        "zod": "^4.6.7",
       },
       "devDependencies": {
         "@types/node": "^26.6.6",
@@ -87,6 +91,19 @@
         "@yousiverse/config": "workspace:*",
         "drizzle-kit": "^0.31.11",
         "typescript": "^7.0.2",
+      },
+    },
+    "packages/integrations": {
+      "name": "@yousiverse/integrations",
+      "version": "0.0.0",
+      "dependencies": {
+        "zod": "^4.6.7",
+      },
+      "devDependencies": {
+        "@types/node": "^26.6.6",
+        "@yousiverse/config": "workspace:*",
+        "typescript": "^7.0.2",
+        "vitest": "^5.1.0",
       },
     },
     "packages/ui": {
@@ -580,6 +597,8 @@
     "@yousiverse/config": ["@yousiverse/config@workspace:packages/config"],
 
     "@yousiverse/db": ["@yousiverse/db@workspace:packages/db"],
+
+    "@yousiverse/integrations": ["@yousiverse/integrations@workspace:packages/integrations"],
 
     "@yousiverse/ui": ["@yousiverse/ui@workspace:packages/ui"],
 

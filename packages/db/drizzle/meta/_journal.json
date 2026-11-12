@@ -8,6 +8,13 @@
       "when": 1794287355607,
       "tag": "0000_spotty_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794447270454,
+      "tag": "0001_blushing_cassandra_nova",
+      "breakpoints": true
     }
   ]
 }

@@ -18,6 +18,8 @@ export default defineConfig({
     command: `bun run dev 2>&1 | tee "${serverLogPath}"`,
     url: baseURL,
     reuseExistingServer: false,
+    // Provider calls are answered from recorded responses, so tests need no API keys.
+    env: { PROVIDER_FIXTURES: "true", TMDB_API_TOKEN: "e2e-token" },
     timeout: 120_000,
   },
 });

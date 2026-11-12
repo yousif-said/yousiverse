@@ -1,0 +1,1539 @@
+{
+  "GET api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=severance": {
+    "status": 200,
+    "body": {
+      "page": 1,
+      "results": [
+        {
+          "adult": false,
+          "backdrop_path": "/ixgFmf1X59PUZam2qbAfskx2gQr.jpg",
+          "id": 95396,
+          "name": "Severance",
+          "original_name": "Severance",
+          "overview": "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives. When a mysterious colleague appears outside of work, it begins a journey to discover the truth about their jobs.",
+          "poster_path": "/pPHpeI2X1qEd1CS1SeyrdhZ4qnT.jpg",
+          "media_type": "tv",
+          "original_language": "en",
+          "genre_ids": [
+            18,
+            9648,
+            10765
+          ],
+          "popularity": 38.9369,
+          "first_air_date": "2022-02-17",
+          "softcore": false,
+          "vote_average": 8.39,
+          "vote_count": 3118,
+          "origin_country": [
+            "US"
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/1lhFxRRadLuOirqN2THN7gZhJrs.jpg",
+          "id": 5072,
+          "title": "Severance",
+          "original_title": "Severance",
+          "overview": "Seven employees of an international weapons manufacturer are treated to a team-building weekend at the company’s newly built luxury spa lodge. Things quickly go awry as the colleagues find their corporate weekend sabotaged by a deadly enemy.",
+          "poster_path": "/yg1XRTyH5knwh3Tnij2sUV0ZZ5w.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            27,
+            35,
+            53
+          ],
+          "popularity": 2.1224,
+          "release_date": "2006-05-19",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.276,
+          "vote_count": 707
+        },
+        {
+          "adult": false,
+          "id": 18891,
+          "name": "Joan Severance",
+          "original_name": "Joan Severance",
+          "media_type": "person",
+          "popularity": 1.2725,
+          "gender": 1,
+          "known_for_department": "Acting",
+          "profile_path": "/2bgZLV4KYig6p7aXIMkDCwGx4yZ.jpg",
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/xaovXIBilg8FAJSkJD44uN03jMT.jpg",
+              "id": 11185,
+              "title": "See No Evil, Hear No Evil",
+              "original_title": "See No Evil, Hear No Evil",
+              "overview": "A murder takes place in the shop of David Lyons, a deaf man who fails to hear the gunshot being fired. Outside, blind man Wally Karue hears the shot, but cannot see the perpetrator. Both are arrested, but escape to form an unlikely partnership. Being chased by both the law AND the original killers, can the pair work together to outwit them all?",
+              "poster_path": "/e9JrnUotqhKTUQEgg2UzDQ7nME2.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                35,
+                80
+              ],
+              "popularity": 3.9337,
+              "release_date": "1989-05-12",
+              "softcore": false,
+              "video": false,
+              "vote_average": 6.772,
+              "vote_count": 1138
+            },
+            {
+              "adult": false,
+              "backdrop_path": "/coTUjqmUcrNLhxVISDdAAphemLt.jpg",
+              "id": 1727,
+              "title": "Bird on a Wire",
+              "original_title": "Bird on a Wire",
+              "overview": "An FBI informant has kept his new identity secret for 15 years. Now an old flame has recognised him, and the bad guys are back for revenge.",
+              "poster_path": "/m98qoFAJg09nZmWyI6gricLagX.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                35,
+                10749,
+                12
+              ],
+              "popularity": 3.9662,
+              "release_date": "1990-05-18",
+              "softcore": false,
+              "video": false,
+              "vote_average": 6.232,
+              "vote_count": 1092
+            },
+            {
+              "adult": false,
+              "backdrop_path": "/xinJKZQiqkdJhoYc2SXuEnhehXz.jpg",
+              "id": 941,
+              "title": "Lethal Weapon",
+              "original_title": "Lethal Weapon",
+              "overview": "A veteran cop and an unstable detective become partners who must put their differences aside in order to bring down a heroin-smuggling ring run by ex-Special Forces.",
+              "poster_path": "/6gt44oqb4nE8vflPElffeGwsHVl.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                28,
+                53,
+                80
+              ],
+              "popularity": 7.3686,
+              "release_date": "1987-03-06",
+              "softcore": false,
+              "video": false,
+              "vote_average": 7.309,
+              "vote_count": 5314
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 1205412,
+          "title": "Severance",
+          "original_title": "Severance",
+          "overview": "In fear of being outed as a gay male at work, Matt switches personalities based on the environment he finds himself inhabiting. He has spent his life keeping these two worlds separate, but what happens when they collide?",
+          "poster_path": "/AnI5jipbxwJg942QWy1KIeecMll.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            18
+          ],
+          "popularity": 0.4489,
+          "release_date": "2022-11-18",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.7,
+          "vote_count": 3
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 549624,
+          "title": "Severance",
+          "original_title": "Severance",
+          "overview": "Ray Ponti is a down and out father, a man trapped by his past and frightened of his future. Cly is a streetwise runaway, waiting tables by day and stripping by night.  Both are fighting for existence in the slime-bowl of New York's gutters, where drugs and prostitution are the only currency. Ray is in over the top with the Mafia and Cly is emotionally destroyed by the absence of her father.  Severence is a gripping story set against the seedy backdrop of New York City, where broken dreams and empty promises litter the streets.",
+          "poster_path": null,
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            18,
+            53
+          ],
+          "popularity": 0.319,
+          "release_date": "1988-01-01",
+          "softcore": false,
+          "video": false,
+          "vote_average": 4.2,
+          "vote_count": 4
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 1251859,
+          "title": "Severance",
+          "original_title": "Severance",
+          "overview": "A woman is severed from reality after a tragedy.  The film follows her dissociative experience of grief.",
+          "poster_path": null,
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            18
+          ],
+          "popularity": 0.2514,
+          "release_date": "",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/zeY6fDuT219vTCFGm8xkISzEkb0.jpg",
+          "id": 1358999,
+          "title": "Severance Mountain",
+          "original_title": "Severance Mountain",
+          "overview": "After a tragic loss two friends reunite for a camping trip to the Adirondacks, but when police discover a dead body on the mountain, they fear an unknown killer may be hunting unsuspecting tourists.",
+          "poster_path": "/kNrmhlM6epTvceDI2OeB0cC3TY6.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            27
+          ],
+          "popularity": 0.6157,
+          "release_date": "2024-09-13",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 348669,
+          "title": "Severance",
+          "original_title": "Severance",
+          "overview": "A short film made by the B TEAM",
+          "poster_path": "/98VJrD6RcMlNCrZo3XSvLbnx5UG.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [],
+          "popularity": 0.1302,
+          "release_date": "2015-07-15",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/7IVzXbXJ27jBiXfrQaLLlXEUYmT.jpg",
+          "id": 517398,
+          "title": "Severance",
+          "original_title": "Severance",
+          "overview": "Two friends watch their relationship disintegrate during their final week of work at a closing warehouse.",
+          "poster_path": "/xpOYfAgvHlYQU9WHtPjLriQwEBM.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            18
+          ],
+          "popularity": 0.1275,
+          "release_date": "2020-05-28",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/msowjxMHQkTrwgxSVKVm3abtbeB.jpg",
+          "id": 1726504,
+          "title": "Severance",
+          "original_title": "Severance",
+          "overview": "Cory has a new job cleaning pool of rather odd woman.",
+          "poster_path": "/wwybz5BlWdt6MWj7kIlO0Um6OSQ.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [],
+          "popularity": 0.0359,
+          "release_date": "2018-08-11",
+          "softcore": false,
+          "video": false,
+          "vote_average": 5,
+          "vote_count": 1
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/9QoCyfTNiA0GeTPrVPFiXBRk3Ka.jpg",
+          "id": 1655209,
+          "title": "Severe Severance",
+          "original_title": "Severance Sévère",
+          "overview": "A poetic short film about Disconnection and Resonance, based on Hartmut Rosa his theories",
+          "poster_path": "/m3uYaE9zY3xjZ1Fv4TfqEjLWyy5.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            16
+          ],
+          "popularity": 0.1418,
+          "release_date": "2026-03-17",
+          "softcore": false,
+          "video": true,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "id": 3265340,
+          "name": "Claudia Severance",
+          "original_name": "Claudia Severance",
+          "media_type": "person",
+          "popularity": 0.218,
+          "gender": 1,
+          "known_for_department": "Acting",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/xhK9YCxNwnE0OB1SWvCY39heHQI.jpg",
+              "id": 2734,
+              "name": "Law & Order: Special Victims Unit",
+              "original_name": "Law & Order: Special Victims Unit",
+              "overview": "In the criminal justice system, sexually-based offenses are considered especially heinous. In New York City, the dedicated detectives who investigate these vicious felonies are members of an elite squad known as the Special Victims Unit. These are their stories.",
+              "poster_path": "/pHNhUwSXuDQ9jPZOCb8SgJaQZsc.jpg",
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [
+                80,
+                18,
+                9648
+              ],
+              "popularity": 1401.7475,
+              "first_air_date": "1999-09-20",
+              "softcore": false,
+              "vote_average": 7.962,
+              "vote_count": 4409,
+              "origin_country": [
+                "US"
+              ]
+            },
+            {
+              "adult": false,
+              "backdrop_path": "/4BrWdbv2Cqe0zLqvNzkoednZQAb.jpg",
+              "id": 94372,
+              "name": "FBI: Most Wanted",
+              "original_name": "FBI: Most Wanted",
+              "overview": "The Fugitive Task Force relentlessly tracks and captures the notorious criminals on the Bureau's Most Wanted list. Seasoned agents oversee the highly skilled team that functions as a mobile undercover unit that is always out in the field, pursuing those who are most desperate to elude justice.",
+              "poster_path": "/uwTNBqFrEur3EtK8ofWbtGXMQOP.jpg",
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [
+                80,
+                18
+              ],
+              "popularity": 43.2845,
+              "first_air_date": "2020-01-07",
+              "softcore": false,
+              "vote_average": 7.603,
+              "vote_count": 452,
+              "origin_country": [
+                "US"
+              ]
+            },
+            {
+              "adult": false,
+              "backdrop_path": "/qLYumObEHeRHFMC6N3SfCrnBFjp.jpg",
+              "id": 4601,
+              "name": "Law & Order: Criminal Intent",
+              "original_name": "Law & Order: Criminal Intent",
+              "overview": "The third installment of the “Law & Order” franchise takes viewers deep into the minds of its criminals while following the intense psychological approaches the Major Case Squad uses to solve its crimes.",
+              "poster_path": "/zwqeNcgITL8ixEVVhe1dCnMQksq.jpg",
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [
+                18
+              ],
+              "popularity": 72.6824,
+              "first_air_date": "2001-09-30",
+              "softcore": false,
+              "vote_average": 7.591,
+              "vote_count": 392,
+              "origin_country": [
+                "US"
+              ]
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 1194823,
+          "name": "Abigail Severance",
+          "original_name": "Abigail Severance",
+          "media_type": "person",
+          "popularity": 0.1838,
+          "gender": 0,
+          "known_for_department": "Writing",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": null,
+              "id": 77150,
+              "title": "Pump",
+              "original_title": "Pump",
+              "overview": "A darkly comic tale of the heart and how it might be more than the sum of its parts. Pump was Severance’s debut film and screened at over 60 festivals worldwide, winning five best short awards.",
+              "poster_path": null,
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                99,
+                16
+              ],
+              "popularity": 0.6121,
+              "release_date": "1999-06-21",
+              "softcore": false,
+              "video": false,
+              "vote_average": 7,
+              "vote_count": 1
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 2514418,
+          "name": "Stan Severance",
+          "original_name": "Stan Severance",
+          "media_type": "person",
+          "popularity": 0.1575,
+          "gender": 0,
+          "known_for_department": "Directing",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/73WYTVI0YcF4oBg24rRD3p9ZxOZ.jpg",
+              "id": 665104,
+              "title": "The God Cafe",
+              "original_title": "The God Cafe",
+              "overview": "A worship pastor and successful Christian music artist faces a crisis when his marriage and career begin to collapse. Can an encounter with two mysterious strangers awaken him to peace that transcends understanding?",
+              "poster_path": "/o36fAVEKzlZfoReRnYZGtVr3Bjc.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                18
+              ],
+              "popularity": 0.6532,
+              "release_date": "2019-11-01",
+              "softcore": false,
+              "video": false,
+              "vote_average": 10,
+              "vote_count": 1
+            },
+            {
+              "adult": false,
+              "backdrop_path": null,
+              "id": 836160,
+              "title": "Noah",
+              "original_title": "Noah",
+              "overview": "In a world overcome by wickedness, one faithful man builds an ark to save his family and the earth's animals from an approaching calamity.",
+              "poster_path": null,
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [],
+              "popularity": 0.1484,
+              "release_date": "",
+              "softcore": false,
+              "video": false,
+              "vote_average": 0,
+              "vote_count": 0
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 1982319,
+          "name": "Claire Severance",
+          "original_name": "Claire Severance",
+          "media_type": "person",
+          "popularity": 0.1235,
+          "gender": 1,
+          "known_for_department": "Production",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/AhxG7gHPFD5xbXRnjsVxM00K6yd.jpg",
+              "id": 19959,
+              "title": "Surrogates",
+              "original_title": "Surrogates",
+              "overview": "Set in a futuristic world where humans live in isolation and interact through surrogate robots, a cop is forced to leave his home for the first time in years in order to investigate the murders of others' surrogates.",
+              "poster_path": "/v3Z0Hbl0oe57njrrIPh0fJPFoo.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                878,
+                28,
+                53
+              ],
+              "popularity": 4.5205,
+              "release_date": "2009-09-24",
+              "softcore": false,
+              "video": false,
+              "vote_average": 6.167,
+              "vote_count": 3599
+            },
+            {
+              "adult": false,
+              "backdrop_path": "/dTOQaHP4PjDXU2JwDF6UYqGqRT0.jpg",
+              "id": 792293,
+              "title": "Dumb Money",
+              "original_title": "Dumb Money",
+              "overview": "Vlogger Keith Gill sinks his life savings into GameStop stock and posts about it. When social media starts blowing up, so do his life and the lives of everyone following him. As a stock tip becomes a movement, everyone gets rich—until the billionaires fight back, and both sides find their worlds turned upside down.",
+              "poster_path": "/e9u7luSxFKOZgPTB9XHFnPArGdP.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                36,
+                35,
+                18
+              ],
+              "popularity": 3.2647,
+              "release_date": "2023-09-15",
+              "softcore": false,
+              "video": false,
+              "vote_average": 6.692,
+              "vote_count": 891
+            },
+            {
+              "adult": false,
+              "backdrop_path": "/2kaBbThrOp8ZXf8iSuGmiuI2Zwd.jpg",
+              "id": 94901,
+              "title": "About Cherry",
+              "original_title": "About Cherry",
+              "overview": "18-year-old Angelina shuffles between school, a dead-end job, her exploitative boyfriend, and home, where her life consists of cleaning up after her alcoholic mother and protecting her younger sister from their menacing stepfather. After arranging an escape to San Francisco with her best friend Andrew, she soon finds herself dating a coke-addicted attorney and becoming immersed in the local porn industry, mentored by lesbian director Margaret, who has more than just a professional interest in Angelina's talents.",
+              "poster_path": "/gl6Q7GwDnwHDNd1emmQBoyUKiwB.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                18
+              ],
+              "popularity": 2.5177,
+              "release_date": "2012-02-14",
+              "softcore": false,
+              "video": false,
+              "vote_average": 4.582,
+              "vote_count": 331
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 6242594,
+          "name": "Lenora Severance",
+          "original_name": "Lenora Severance",
+          "media_type": "person",
+          "popularity": 0.1072,
+          "gender": 1,
+          "known_for_department": "Acting",
+          "profile_path": "/zXpHWrpFYPpYbIjInFeKNRovISp.jpg",
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/vV5LKWmuysEe5wsuZJGbdiL5XJ2.jpg",
+              "id": 194583,
+              "name": "The Walking Dead: Dead City",
+              "original_name": "The Walking Dead: Dead City",
+              "overview": "Maggie and Negan travel to post-apocalyptic Manhattan - long ago cut off from the mainland. The crumbling city is filled with the dead and denizens who have made it a world full of anarchy, danger, beauty, and terror.",
+              "poster_path": "/wq3vuQzQgbS83zX3malAFWMsSwX.jpg",
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [
+                10759,
+                18,
+                10765
+              ],
+              "popularity": 20.39,
+              "first_air_date": "2023-06-18",
+              "softcore": false,
+              "vote_average": 7.896,
+              "vote_count": 819,
+              "origin_country": [
+                "US"
+              ]
+            },
+            {
+              "adult": false,
+              "backdrop_path": "/yx0sfeYOoXol2fjT22SXo9YyviI.jpg",
+              "id": 270476,
+              "name": "Widow's Bay",
+              "original_name": "Widow's Bay",
+              "overview": "The mayor of a New England town resolves to turn it into the next tourist hot spot, despite local warnings that it's cursed.",
+              "poster_path": "/5lcxWLVAEICkFpuAiV1aMy7ZZj3.jpg",
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [
+                18,
+                35,
+                9648
+              ],
+              "popularity": 25.8425,
+              "first_air_date": "2026-04-28",
+              "softcore": false,
+              "vote_average": 8.009,
+              "vote_count": 604,
+              "origin_country": [
+                "US"
+              ]
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 1374164,
+          "name": "Colby Severance",
+          "original_name": "Colby Severance",
+          "media_type": "person",
+          "popularity": 0.0773,
+          "gender": 0,
+          "known_for_department": "Acting",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/49RywCZBv8KQIyn5zDQCBdHGfyi.jpg",
+              "id": 61499,
+              "name": "Marry Me",
+              "original_name": "Marry Me",
+              "overview": "Six years ago, Annie and Jake bonded over their mutual love of nachos and they've been inseparable ever since. Now, after returning from a romantic two-week island vacation, Jake’s all set to pop the question. Before he can ask, though, Annie lets loose on Jake for his inability to commit. She was expecting him to “put a ring on it” in paradise and now Jake’s perfect proposal is ruined. Not wanting to spend the next 60 years talking about that mess of a proposal, Jake and Annie decide to hold off on the engagement until they can do it right. Yet if history tells us anything, it’s when we really want things to go right that they all tend to go wrong. The only thing we know for sure is these two are destined to be together whether they can get it together or not.",
+              "poster_path": "/iUT8oHqb8N7jqaZCU8NpRlylZFd.jpg",
+              "media_type": "tv",
+              "original_language": "en",
+              "genre_ids": [
+                35
+              ],
+              "popularity": 4.9769,
+              "first_air_date": "2014-10-14",
+              "softcore": false,
+              "vote_average": 5.9,
+              "vote_count": 21,
+              "origin_country": [
+                "US"
+              ]
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 2630163,
+          "name": "Bonnie Severance",
+          "original_name": "Bonnie Severance",
+          "media_type": "person",
+          "popularity": 0.0725,
+          "gender": 0,
+          "known_for_department": "Production",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/73WYTVI0YcF4oBg24rRD3p9ZxOZ.jpg",
+              "id": 665104,
+              "title": "The God Cafe",
+              "original_title": "The God Cafe",
+              "overview": "A worship pastor and successful Christian music artist faces a crisis when his marriage and career begin to collapse. Can an encounter with two mysterious strangers awaken him to peace that transcends understanding?",
+              "poster_path": "/o36fAVEKzlZfoReRnYZGtVr3Bjc.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                18
+              ],
+              "popularity": 0.6532,
+              "release_date": "2019-11-01",
+              "softcore": false,
+              "video": false,
+              "vote_average": 10,
+              "vote_count": 1
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 4185669,
+          "name": "Jimmy Severance",
+          "original_name": "Jimmy Severance",
+          "media_type": "person",
+          "popularity": 0.0692,
+          "gender": 0,
+          "known_for_department": "Acting",
+          "profile_path": null,
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": null,
+              "id": 1157559,
+              "title": "The Remarkable Riderless Runaway Tricycle",
+              "original_title": "The Remarkable Riderless Runaway Tricycle",
+              "overview": "A boy riding his tricycle down the sidewalk is distracted by a kite he finds in the trash. While he runs off to play with the kite, his tricycle is picked up with the rest of the garbage. The panicked tricycle escapes at the dump and races to find the boy, with garbage men and police in hot pursuit.",
+              "poster_path": "/xons4Vl6Ime0AwIDrKPlN4SlGay.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                14,
+                35,
+                10751
+              ],
+              "popularity": 0.5364,
+              "release_date": "1982-05-01",
+              "softcore": false,
+              "video": false,
+              "vote_average": 0,
+              "vote_count": 0
+            }
+          ]
+        },
+        {
+          "adult": false,
+          "id": 5968694,
+          "name": "Madison Severance",
+          "original_name": "Madison Severance",
+          "media_type": "person",
+          "popularity": 0.0547,
+          "gender": 1,
+          "known_for_department": "Acting",
+          "profile_path": "/spYqLcG7aOWZDWKvWtcNNhT2AIb.jpg",
+          "known_for": [
+            {
+              "adult": false,
+              "backdrop_path": "/o8KivAB9bwNxZtaiGA3xYrWcsfr.jpg",
+              "id": 1624611,
+              "title": "How Come",
+              "original_title": "How Come",
+              "overview": "Two young girls find a fishbowl.",
+              "poster_path": "/bUQaCieedZtfDi0ANaUgj0ZG1k0.jpg",
+              "media_type": "movie",
+              "original_language": "en",
+              "genre_ids": [
+                27
+              ],
+              "popularity": 0.2598,
+              "release_date": "2026-01-27",
+              "softcore": false,
+              "video": false,
+              "vote_average": 10,
+              "vote_count": 1
+            }
+          ]
+        }
+      ],
+      "total_pages": 2,
+      "total_results": 33
+    }
+  },
+  "GET api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=zzzzqqqqxxxx": {
+    "status": 200,
+    "body": {
+      "page": 1,
+      "results": [],
+      "total_pages": 1,
+      "total_results": 0
+    }
+  },
+  "GET api.themoviedb.org/3/movie/603?language=en-US": {
+    "status": 200,
+    "body": {
+      "adult": false,
+      "backdrop_path": "/tlm8UkiQsitc8rSuIAscQDCnP8d.jpg",
+      "belongs_to_collection": {
+        "id": 2344,
+        "name": "The Matrix Collection",
+        "poster_path": "/bV9qTVHTVf0gkW0j7p7M0ILD4pG.jpg",
+        "backdrop_path": "/bRm2DEgUiYciDw3myHuYFInD7la.jpg"
+      },
+      "budget": 63000000,
+      "genres": [
+        {
+          "id": 28,
+          "name": "Action"
+        },
+        {
+          "id": 878,
+          "name": "Science Fiction"
+        }
+      ],
+      "homepage": "http://www.warnerbros.com/matrix",
+      "id": 603,
+      "imdb_id": "tt0133093",
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_title": "The Matrix",
+      "overview": "Set in the 22nd century, The Matrix tells the story of a computer hacker who joins a group of underground insurgents fighting the vast and powerful computers who now rule the earth.",
+      "popularity": 38.3318,
+      "poster_path": "/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg",
+      "production_companies": [
+        {
+          "id": 79,
+          "logo_path": "/at4uYdwAAgNRKhZuuFX8ShKSybw.png",
+          "name": "Village Roadshow Pictures",
+          "origin_country": "US"
+        },
+        {
+          "id": 372,
+          "logo_path": null,
+          "name": "Groucho II Film Partnership",
+          "origin_country": ""
+        },
+        {
+          "id": 1885,
+          "logo_path": "/xlvoOZr4s1PygosrwZyolIFe5xs.png",
+          "name": "Silver Pictures",
+          "origin_country": "US"
+        },
+        {
+          "id": 174,
+          "logo_path": "/zhD3hhtKB5qyv7ZeL4uLpNxgMVU.png",
+          "name": "Warner Bros. Pictures",
+          "origin_country": "US"
+        }
+      ],
+      "production_countries": [
+        {
+          "iso_3166_1": "US",
+          "name": "United States of America"
+        }
+      ],
+      "release_date": "1999-03-31",
+      "revenue": 463517383,
+      "runtime": 136,
+      "softcore": false,
+      "spoken_languages": [
+        {
+          "english_name": "English",
+          "iso_639_1": "en",
+          "name": "English"
+        }
+      ],
+      "status": "Released",
+      "tagline": "Believe the unbelievable.",
+      "title": "The Matrix",
+      "video": false,
+      "vote_average": 8.263,
+      "vote_count": 29228
+    }
+  },
+  "GET api.themoviedb.org/3/movie/999999999?language=en-US": {
+    "status": 404,
+    "body": {
+      "success": false,
+      "status_code": 34,
+      "status_message": "The resource you requested could not be found."
+    }
+  },
+  "GET api.themoviedb.org/3/tv/95396?language=en-US": {
+    "status": 200,
+    "body": {
+      "adult": false,
+      "backdrop_path": "/ixgFmf1X59PUZam2qbAfskx2gQr.jpg",
+      "created_by": [
+        {
+          "id": 3442409,
+          "credit_id": "6217f14d0e597b00412768f1",
+          "name": "Dan Erickson",
+          "original_name": "Dan Erickson",
+          "gender": 2,
+          "profile_path": "/qzQ30V43kbVoMjJXRw6ydkicXEP.jpg"
+        }
+      ],
+      "episode_run_time": [],
+      "first_air_date": "2022-02-17",
+      "genres": [
+        {
+          "id": 18,
+          "name": "Drama"
+        },
+        {
+          "id": 9648,
+          "name": "Mystery"
+        },
+        {
+          "id": 10765,
+          "name": "Sci-Fi & Fantasy"
+        }
+      ],
+      "homepage": "https://tv.apple.com/show/umc.cmc.1srk2goyh2q2zdxcx605w8vtx",
+      "id": 95396,
+      "in_production": true,
+      "languages": [
+        "en"
+      ],
+      "last_air_date": "2025-03-20",
+      "last_episode_to_air": {
+        "id": 5469142,
+        "name": "Cold Harbor",
+        "overview": "Mark forms a shaky alliance in an all-or-nothing play, while the team makes a dangerous last stand.",
+        "vote_average": 8.633,
+        "vote_count": 128,
+        "air_date": "2025-03-20",
+        "episode_number": 10,
+        "episode_type": "finale",
+        "production_code": "210",
+        "runtime": 80,
+        "season_number": 2,
+        "show_id": 95396,
+        "still_path": "/gXUvGwpZxrpqMRouxM7yI28lgNa.jpg"
+      },
+      "name": "Severance",
+      "next_episode_to_air": null,
+      "networks": [
+        {
+          "id": 2552,
+          "logo_path": "/bngHRFi794mnMq34gfVcm9nDxN1.png",
+          "name": "Apple TV",
+          "origin_country": ""
+        }
+      ],
+      "number_of_episodes": 19,
+      "number_of_seasons": 3,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "Severance",
+      "overview": "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives. When a mysterious colleague appears outside of work, it begins a journey to discover the truth about their jobs.",
+      "popularity": 38.9369,
+      "poster_path": "/pPHpeI2X1qEd1CS1SeyrdhZ4qnT.jpg",
+      "production_companies": [
+        {
+          "id": 100640,
+          "logo_path": "/5BR67T28TVm2UMH8GCRDftafsaJ.png",
+          "name": "Endeavor Content",
+          "origin_country": "US"
+        },
+        {
+          "id": 2932,
+          "logo_path": "/4uLKLjGivVg2YnAIhAn8k7ZuVFj.png",
+          "name": "Red Hour",
+          "origin_country": "US"
+        },
+        {
+          "id": 181874,
+          "logo_path": "/crrgXvLhDO9c57HYrbO4H58Vxmb.png",
+          "name": "Fifth Season",
+          "origin_country": "US"
+        },
+        {
+          "id": 254490,
+          "logo_path": null,
+          "name": "Animals & People",
+          "origin_country": "US"
+        },
+        {
+          "id": 166623,
+          "logo_path": "/rvmwTPf8K4tMFCSqzS4rKs9K0Eo.png",
+          "name": "Westward",
+          "origin_country": "US"
+        }
+      ],
+      "production_countries": [
+        {
+          "iso_3166_1": "US",
+          "name": "United States of America"
+        }
+      ],
+      "seasons": [
+        {
+          "air_date": "2021-12-15",
+          "episode_count": 1,
+          "id": 443382,
+          "name": "Specials",
+          "overview": "",
+          "poster_path": "/f3E2o8DbW9QSzu31yY3Q1av5JO7.jpg",
+          "season_number": 0,
+          "vote_average": 0
+        },
+        {
+          "air_date": "2022-02-17",
+          "episode_count": 9,
+          "id": 135726,
+          "name": "Season 1",
+          "overview": "At Lumon Industries, employees undergo \"severance,\" a procedure dividing their work and personal memories. Mark, a grieving team leader, begins to uncover the dark secrets of the company, forcing him and his coworkers to confront questions of identity, free will, and corporate control.",
+          "poster_path": "/lFf6LLrQjYldcZItzOkGmMMigP7.jpg",
+          "season_number": 1,
+          "vote_average": 8.4
+        },
+        {
+          "air_date": "2025-01-16",
+          "episode_count": 10,
+          "id": 401674,
+          "name": "Season 2",
+          "overview": "Mark and his friends learn the dire consequences of trifling with the severance barrier, leading them further down a path of woe.",
+          "poster_path": "/Rb7sga832Cyqvafd7CqOzbwdK4.jpg",
+          "season_number": 2,
+          "vote_average": 8
+        },
+        {
+          "air_date": null,
+          "episode_count": 0,
+          "id": 447475,
+          "name": "Season 3",
+          "overview": "",
+          "poster_path": null,
+          "season_number": 3,
+          "vote_average": 0
+        }
+      ],
+      "softcore": false,
+      "spoken_languages": [
+        {
+          "english_name": "English",
+          "iso_639_1": "en",
+          "name": "English"
+        }
+      ],
+      "status": "Returning Series",
+      "tagline": "There's more to work than life.",
+      "type": "Scripted",
+      "vote_average": 8.389,
+      "vote_count": 3119
+    }
+  },
+  "GET api.themoviedb.org/3/tv/95396?append_to_response=season%2F0%2Cseason%2F1%2Cseason%2F2%2Cseason%2F3&language=en-US": {
+    "status": 200,
+    "body": {
+      "adult": false,
+      "backdrop_path": "/ixgFmf1X59PUZam2qbAfskx2gQr.jpg",
+      "created_by": [
+        {
+          "id": 3442409,
+          "credit_id": "6217f14d0e597b00412768f1",
+          "name": "Dan Erickson",
+          "original_name": "Dan Erickson",
+          "gender": 2,
+          "profile_path": "/qzQ30V43kbVoMjJXRw6ydkicXEP.jpg"
+        }
+      ],
+      "episode_run_time": [],
+      "first_air_date": "2022-02-17",
+      "genres": [
+        {
+          "id": 18,
+          "name": "Drama"
+        },
+        {
+          "id": 9648,
+          "name": "Mystery"
+        },
+        {
+          "id": 10765,
+          "name": "Sci-Fi & Fantasy"
+        }
+      ],
+      "homepage": "https://tv.apple.com/show/umc.cmc.1srk2goyh2q2zdxcx605w8vtx",
+      "id": 95396,
+      "in_production": true,
+      "languages": [
+        "en"
+      ],
+      "last_air_date": "2025-03-20",
+      "last_episode_to_air": {
+        "id": 5469142,
+        "name": "Cold Harbor",
+        "overview": "Mark forms a shaky alliance in an all-or-nothing play, while the team makes a dangerous last stand.",
+        "vote_average": 8.633,
+        "vote_count": 128,
+        "air_date": "2025-03-20",
+        "episode_number": 10,
+        "episode_type": "finale",
+        "production_code": "210",
+        "runtime": 80,
+        "season_number": 2,
+        "show_id": 95396,
+        "still_path": "/gXUvGwpZxrpqMRouxM7yI28lgNa.jpg"
+      },
+      "name": "Severance",
+      "next_episode_to_air": null,
+      "networks": [
+        {
+          "id": 2552,
+          "logo_path": "/bngHRFi794mnMq34gfVcm9nDxN1.png",
+          "name": "Apple TV",
+          "origin_country": ""
+        }
+      ],
+      "number_of_episodes": 19,
+      "number_of_seasons": 3,
+      "origin_country": [
+        "US"
+      ],
+      "original_language": "en",
+      "original_name": "Severance",
+      "overview": "Mark leads a team of office workers whose memories have been surgically divided between their work and personal lives. When a mysterious colleague appears outside of work, it begins a journey to discover the truth about their jobs.",
+      "popularity": 38.9369,
+      "poster_path": "/pPHpeI2X1qEd1CS1SeyrdhZ4qnT.jpg",
+      "production_companies": [
+        {
+          "id": 100640,
+          "logo_path": "/5BR67T28TVm2UMH8GCRDftafsaJ.png",
+          "name": "Endeavor Content",
+          "origin_country": "US"
+        },
+        {
+          "id": 2932,
+          "logo_path": "/4uLKLjGivVg2YnAIhAn8k7ZuVFj.png",
+          "name": "Red Hour",
+          "origin_country": "US"
+        },
+        {
+          "id": 181874,
+          "logo_path": "/crrgXvLhDO9c57HYrbO4H58Vxmb.png",
+          "name": "Fifth Season",
+          "origin_country": "US"
+        },
+        {
+          "id": 254490,
+          "logo_path": null,
+          "name": "Animals & People",
+          "origin_country": "US"
+        },
+        {
+          "id": 166623,
+          "logo_path": "/rvmwTPf8K4tMFCSqzS4rKs9K0Eo.png",
+          "name": "Westward",
+          "origin_country": "US"
+        }
+      ],
+      "production_countries": [
+        {
+          "iso_3166_1": "US",
+          "name": "United States of America"
+        }
+      ],
+      "seasons": [
+        {
+          "air_date": "2021-12-15",
+          "episode_count": 1,
+          "id": 443382,
+          "name": "Specials",
+          "overview": "",
+          "poster_path": "/f3E2o8DbW9QSzu31yY3Q1av5JO7.jpg",
+          "season_number": 0,
+          "vote_average": 0
+        },
+        {
+          "air_date": "2022-02-17",
+          "episode_count": 9,
+          "id": 135726,
+          "name": "Season 1",
+          "overview": "At Lumon Industries, employees undergo \"severance,\" a procedure dividing their work and personal memories. Mark, a grieving team leader, begins to uncover the dark secrets of the company, forcing him and his coworkers to confront questions of identity, free will, and corporate control.",
+          "poster_path": "/lFf6LLrQjYldcZItzOkGmMMigP7.jpg",
+          "season_number": 1,
+          "vote_average": 8.4
+        },
+        {
+          "air_date": "2025-01-16",
+          "episode_count": 10,
+          "id": 401674,
+          "name": "Season 2",
+          "overview": "Mark and his friends learn the dire consequences of trifling with the severance barrier, leading them further down a path of woe.",
+          "poster_path": "/Rb7sga832Cyqvafd7CqOzbwdK4.jpg",
+          "season_number": 2,
+          "vote_average": 8
+        },
+        {
+          "air_date": null,
+          "episode_count": 0,
+          "id": 447475,
+          "name": "Season 3",
+          "overview": "",
+          "poster_path": null,
+          "season_number": 3,
+          "vote_average": 0
+        }
+      ],
+      "softcore": false,
+      "spoken_languages": [
+        {
+          "english_name": "English",
+          "iso_639_1": "en",
+          "name": "English"
+        }
+      ],
+      "status": "Returning Series",
+      "tagline": "There's more to work than life.",
+      "type": "Scripted",
+      "vote_average": 8.389,
+      "vote_count": 3119,
+      "season/0": {
+        "_id": "67b7569c7434200c2822194a",
+        "air_date": "2021-12-15",
+        "episodes": [
+          {
+            "air_date": "2021-12-15",
+            "episode_number": 1,
+            "episode_type": "standard",
+            "id": 5995805,
+            "name": "Welcome to Lumon",
+            "overview": "An introduction to the world.",
+            "production_code": "",
+            "runtime": 7,
+            "season_number": 0,
+            "show_id": 95396,
+            "still_path": "/bmNMgw7nmJSytXGLycnMiRISgYF.jpg",
+            "vote_average": 8.3,
+            "vote_count": 3
+          }
+        ],
+        "name": "Specials",
+        "networks": [],
+        "overview": "",
+        "poster_path": "/f3E2o8DbW9QSzu31yY3Q1av5JO7.jpg",
+        "season_number": 0,
+        "vote_average": 0
+      },
+      "season/1": {
+        "_id": "5dcc353ee263bb001170d896",
+        "air_date": "2022-02-17",
+        "episodes": [
+          {
+            "air_date": "2022-02-17",
+            "episode_number": 1,
+            "episode_type": "standard",
+            "id": 1982925,
+            "name": "Good News About Hell",
+            "overview": "Mark is promoted to lead a team who've had their memories surgically divided between their work and personal lives.",
+            "production_code": "101",
+            "runtime": 59,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/sP3GZe9j7BY3CAyZGFuZxxnGpN1.jpg",
+            "vote_average": 8.167,
+            "vote_count": 177
+          },
+          {
+            "air_date": "2022-02-17",
+            "episode_number": 2,
+            "episode_type": "standard",
+            "id": 3396429,
+            "name": "Half Loop",
+            "overview": "The team train new hire Helly on macrodata refinement. Mark takes a day off to meet with a mysterious former colleague.",
+            "production_code": "102",
+            "runtime": 57,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/wIQP0P2tyE7VRIN3xR8Efq7UgKt.jpg",
+            "vote_average": 8.229,
+            "vote_count": 157
+          },
+          {
+            "air_date": "2022-02-24",
+            "episode_number": 3,
+            "episode_type": "standard",
+            "id": 3396430,
+            "name": "In Perpetuity",
+            "overview": "Mark takes the team on a field trip, but Helly continues to rebel. A deteriorating Petey struggles to tell Mark about Lumon’s misdeeds.",
+            "production_code": "103",
+            "runtime": 60,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/yezUFOqLt0U3haSYc5gIBzfsPvo.jpg",
+            "vote_average": 8.023,
+            "vote_count": 149
+          },
+          {
+            "air_date": "2022-03-03",
+            "episode_number": 4,
+            "episode_type": "standard",
+            "id": 3396431,
+            "name": "The You You Are",
+            "overview": "Irving finds an intriguing book at work. Helly aggressively pursues a meeting with her Outie. Mark attends a funeral with Ms. Selvig.",
+            "production_code": "104",
+            "runtime": 50,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/dzQJeDznS0I4spAqTImiLH9p252.jpg",
+            "vote_average": 8.283,
+            "vote_count": 145
+          },
+          {
+            "air_date": "2022-03-10",
+            "episode_number": 5,
+            "episode_type": "standard",
+            "id": 3396432,
+            "name": "The Grim Barbarity of Optics and Design",
+            "overview": "Irving and Dylan confront Burt about his lies. Mark and Helly discover a strange new department.",
+            "production_code": "105",
+            "runtime": 47,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/oy4BZotFbNX5YoPkWuWF3kcdMVw.jpg",
+            "vote_average": 8.011,
+            "vote_count": 138
+          },
+          {
+            "air_date": "2022-03-17",
+            "episode_number": 6,
+            "episode_type": "standard",
+            "id": 3396433,
+            "name": "Hide and Seek",
+            "overview": "The team angers Cobel by forming an alliance.",
+            "production_code": "106",
+            "runtime": 44,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/3fQp0pUtgDkqqyEbXY8KKCZPMU7.jpg",
+            "vote_average": 8.1,
+            "vote_count": 134
+          },
+          {
+            "air_date": "2022-03-24",
+            "episode_number": 7,
+            "episode_type": "standard",
+            "id": 3396434,
+            "name": "Defiant Jazz",
+            "overview": "Mark and the team encounter new security measures from Cobel.",
+            "production_code": "107",
+            "runtime": 53,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/gHoKlbC2esqq3SXm0ZCcl3bzpFZ.jpg",
+            "vote_average": 8.8,
+            "vote_count": 141
+          },
+          {
+            "air_date": "2022-03-31",
+            "episode_number": 8,
+            "episode_type": "standard",
+            "id": 3396435,
+            "name": "What's for Dinner?",
+            "overview": "The team prepares a plan. Mark attends Devon and Ricken’s party.",
+            "production_code": "108",
+            "runtime": 50,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/8Gv9ELume0jo7gz7R2h4tPmVLsD.jpg",
+            "vote_average": 8.8,
+            "vote_count": 140
+          },
+          {
+            "air_date": "2022-04-07",
+            "episode_number": 9,
+            "episode_type": "finale",
+            "id": 3396436,
+            "name": "The We We Are",
+            "overview": "The team discovers troubling revelations.",
+            "production_code": "109",
+            "runtime": 44,
+            "season_number": 1,
+            "show_id": 95396,
+            "still_path": "/dzx8D2B0ELncXuCNwtPCags43Q.jpg",
+            "vote_average": 9.289,
+            "vote_count": 171
+          }
+        ],
+        "name": "Season 1",
+        "networks": [
+          {
+            "id": 2552,
+            "logo_path": "/bngHRFi794mnMq34gfVcm9nDxN1.png",
+            "name": "Apple TV",
+            "origin_country": ""
+          }
+        ],
+        "overview": "At Lumon Industries, employees undergo \"severance,\" a procedure dividing their work and personal memories. Mark, a grieving team leader, begins to uncover the dark secrets of the company, forcing him and his coworkers to confront questions of identity, free will, and corporate control.",
+        "poster_path": "/lFf6LLrQjYldcZItzOkGmMMigP7.jpg",
+        "season_number": 1,
+        "vote_average": 8.4
+      },
+      "season/2": {
+        "_id": "668e785777fb6dba5759dcba",
+        "air_date": "2025-01-16",
+        "episodes": [
+          {
+            "air_date": "2025-01-16",
+            "episode_number": 1,
+            "episode_type": "standard",
+            "id": 5469028,
+            "name": "Hello, Ms. Cobel",
+            "overview": "Mark returns to work under different circumstances. Secrets from the Outie world come to light.",
+            "production_code": "201",
+            "runtime": 54,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/a97vNY8Knu45FLQib0uQZ2VReLy.jpg",
+            "vote_average": 7.985,
+            "vote_count": 137
+          },
+          {
+            "air_date": "2025-01-23",
+            "episode_number": 2,
+            "episode_type": "standard",
+            "id": 5469115,
+            "name": "Goodbye, Mrs. Selvig",
+            "overview": "Mark contemplates the meaning of a message.",
+            "production_code": "202",
+            "runtime": 49,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/wjlSkqMoLngSO6fv2Ajt2CIeCSi.jpg",
+            "vote_average": 7.9,
+            "vote_count": 124
+          },
+          {
+            "air_date": "2025-01-30",
+            "episode_number": 3,
+            "episode_type": "standard",
+            "id": 5469117,
+            "name": "Who Is Alive?",
+            "overview": "Mark, Helly, Irving, and Dylan search for answers.",
+            "production_code": "203",
+            "runtime": 57,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/j4AUAq1XJOBmfXsLphZzsCz6pZs.jpg",
+            "vote_average": 8.1,
+            "vote_count": 128
+          },
+          {
+            "air_date": "2025-02-06",
+            "episode_number": 4,
+            "episode_type": "standard",
+            "id": 5469118,
+            "name": "Woe's Hollow",
+            "overview": "The team participates in a group activity.",
+            "production_code": "204",
+            "runtime": 54,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/mioOOhTaShLd1MPKsmfirbe9AwI.jpg",
+            "vote_average": 8.1,
+            "vote_count": 131
+          },
+          {
+            "air_date": "2025-02-13",
+            "episode_number": 5,
+            "episode_type": "standard",
+            "id": 5469120,
+            "name": "Trojan's Horse",
+            "overview": "Tensions emerge after the team suffers a loss.",
+            "production_code": "205",
+            "runtime": 50,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/7Gw2DWAbhsBREKFbM2S0h5sD0tL.jpg",
+            "vote_average": 8.038,
+            "vote_count": 117
+          },
+          {
+            "air_date": "2025-02-20",
+            "episode_number": 6,
+            "episode_type": "standard",
+            "id": 5469123,
+            "name": "Attila",
+            "overview": "Bonds are tested. Mark continues on his path of discovery.",
+            "production_code": "206",
+            "runtime": 52,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/l9CC3onLMDBDKxs6Ie0yIWI8VmC.jpg",
+            "vote_average": 7.974,
+            "vote_count": 117
+          },
+          {
+            "air_date": "2025-02-27",
+            "episode_number": 7,
+            "episode_type": "standard",
+            "id": 5469128,
+            "name": "Chikhai Bardo",
+            "overview": "An old romance intersects with a deadly present threat.",
+            "production_code": "207",
+            "runtime": 53,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/dmzBzYcEtjOYJO46p7kyRmYrHZu.jpg",
+            "vote_average": 8.579,
+            "vote_count": 126
+          },
+          {
+            "air_date": "2025-03-06",
+            "episode_number": 8,
+            "episode_type": "standard",
+            "id": 5469133,
+            "name": "Sweet Vitriol",
+            "overview": "Discoveries are made.",
+            "production_code": "208",
+            "runtime": 41,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/piWjCKARsSkmr9kMKHZ5ynengj3.jpg",
+            "vote_average": 7,
+            "vote_count": 111
+          },
+          {
+            "air_date": "2025-03-13",
+            "episode_number": 9,
+            "episode_type": "standard",
+            "id": 5469139,
+            "name": "The After Hours",
+            "overview": "Mark and Devon team with an ally. Helly investigates further.",
+            "production_code": "209",
+            "runtime": 48,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/2RJaWjY4dD5s7jpdo2aGeSLmtI3.jpg",
+            "vote_average": 7.968,
+            "vote_count": 109
+          },
+          {
+            "air_date": "2025-03-20",
+            "episode_number": 10,
+            "episode_type": "finale",
+            "id": 5469142,
+            "name": "Cold Harbor",
+            "overview": "Mark forms a shaky alliance in an all-or-nothing play, while the team makes a dangerous last stand.",
+            "production_code": "210",
+            "runtime": 80,
+            "season_number": 2,
+            "show_id": 95396,
+            "still_path": "/gXUvGwpZxrpqMRouxM7yI28lgNa.jpg",
+            "vote_average": 8.633,
+            "vote_count": 128
+          }
+        ],
+        "name": "Season 2",
+        "networks": [
+          {
+            "id": 2552,
+            "logo_path": "/bngHRFi794mnMq34gfVcm9nDxN1.png",
+            "name": "Apple TV",
+            "origin_country": ""
+          }
+        ],
+        "overview": "Mark and his friends learn the dire consequences of trifling with the severance barrier, leading them further down a path of woe.",
+        "poster_path": "/Rb7sga832Cyqvafd7CqOzbwdK4.jpg",
+        "season_number": 2,
+        "vote_average": 8
+      },
+      "season/3": {
+        "_id": "67ddfb75338e77783ff57946",
+        "air_date": null,
+        "episodes": [],
+        "name": "Season 3",
+        "networks": [
+          {
+            "id": 2552,
+            "logo_path": "/bngHRFi794mnMq34gfVcm9nDxN1.png",
+            "name": "Apple TV",
+            "origin_country": ""
+          }
+        ],
+        "overview": "",
+        "poster_path": null,
+        "season_number": 3,
+        "vote_average": 0
+      }
+    }
+  }
+}
