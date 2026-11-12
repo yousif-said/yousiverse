@@ -37,6 +37,12 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **TV episode pages**, opened from a season, where an episode can be rated and reviewed separately from its show.
 - A title's or episode's page lists other people's public reviews, newest first, each with its author's name and rating.
 
+### Lists
+
+- **Custom lists** holding any mix of movies, shows, games, and books, each with a name and an optional description. Titles are added and removed from their own pages, or removed from the list's page, and appear in the order they were added.
+- **Lists page** showing a person's lists and how many titles each holds, with a form to create a new one.
+- Lists are public by default: anyone with the link can open one. A list can be made private, renamed, or deleted by its owner.
+
 ## Future features
 
 ### Library and catalog
@@ -44,7 +50,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Authors in book search results**, to tell apart books that share a title.
 - **Google Books** as a second source for books, if Open Library's data proves thin.
 - **Cast and crew** on movie and TV pages.
-- **Custom lists and shelves**, public or private.
+- **Reordering the titles on a list** by hand.
 - **Release calendar** of upcoming releases, filterable by media type and by items in the user's library.
 - **Time budget filter:** find things that fit the time you have. Uses movie/episode runtime, book page count or audiobook length, and game time-to-beat where reliable data exists.
 
