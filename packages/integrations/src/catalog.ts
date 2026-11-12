@@ -31,6 +31,11 @@ export type CatalogGame = CatalogItem & {
   publishers: string[];
 };
 
+export type CatalogBook = CatalogItem & {
+  authors: string[];
+  pageCount: number | null;
+};
+
 export type CatalogEpisode = {
   episodeNumber: number;
   name: string;

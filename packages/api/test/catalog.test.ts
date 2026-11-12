@@ -12,6 +12,7 @@ const caller = appRouter.createCaller({ db, session: null });
 const MATRIX = "603";
 const SEVERANCE = "95396";
 const HADES = "113112";
+const PIRANESI = "OL20893680W";
 const EIGHT_DAYS_MS = 8 * 24 * 60 * 60 * 1000;
 
 beforeEach(async () => {
@@ -41,6 +42,14 @@ describe("catalog.search", () => {
     expect(new Set(results.slice(0, 2).map((result) => result.type)).has("game")).toBe(true);
   });
 
+  it("includes books", async () => {
+    const { results } = await caller.catalog.search({ query: "piranesi" });
+
+    expect(results).toContainEqual(
+      expect.objectContaining({ type: "book", providerId: PIRANESI, title: "Piranesi" }),
+    );
+  });
+
   it("still returns other results when one provider fails, and says what is missing", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
     vi.spyOn(tmdb, "search").mockRejectedValue(new ProviderError("tmdb", "unavailable", "down"));
@@ -49,7 +58,8 @@ describe("catalog.search", () => {
 
     expect(unavailable).toEqual(["movie", "tv"]);
     expect(results.length).toBeGreaterThan(0);
-    expect(results.every((result) => result.type === "game")).toBe(true);
+    expect(results.some((result) => result.type === "game")).toBe(true);
+    expect(results.some((result) => result.type === "movie" || result.type === "tv")).toBe(false);
   });
 
   it("rejects a blank query", async () => {
@@ -164,6 +174,40 @@ describe("media.game", () => {
 
     expect(await caller.media.game({ providerId: HADES })).toMatchObject({ title: "Hades" });
     expect(await db.$count(media)).toBe(2);
+  });
+});
+
+describe("media.book", () => {
+  it("imports a book the first time it is opened and stores it", async () => {
+    const book = await caller.media.book({ providerId: PIRANESI });
+
+    expect(book).toMatchObject({
+      title: "Piranesi",
+      authors: ["Susanna Clarke"],
+      releaseYear: 2020,
+    });
+    expect(await db.select().from(media)).toMatchObject([
+      { type: "book", provider: "open_library", providerId: PIRANESI },
+    ]);
+  });
+
+  it("stores a merged work under the id it was merged into", async () => {
+    const book = await caller.media.book({ providerId: "OL893415W" });
+
+    expect(book).toMatchObject({ providerId: "OL893414W", title: "Dune" });
+    expect(await db.$count(media)).toBe(1);
+  });
+
+  it("answers NOT_FOUND for a work the provider does not have", async () => {
+    await expect(caller.media.book({ providerId: "OL99999999999W" })).rejects.toMatchObject({
+      code: "NOT_FOUND",
+    });
+  });
+
+  it("rejects an id that is not a work id", async () => {
+    await expect(caller.media.book({ providerId: "603" })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
   });
 });
 

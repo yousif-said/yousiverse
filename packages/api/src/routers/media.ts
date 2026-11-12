@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
-import { episodes, games, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
+import { books, episodes, games, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
 import { and, count, eq } from "drizzle-orm";
 import { z } from "zod";
 import { ensureImported } from "../catalog/import";
 import { publicProcedure, router } from "../trpc";
 
 const providerId = z.string().regex(/^\d{1,12}$/);
+const openLibraryWorkId = z.string().regex(/^OL\d{1,12}W$/);
 
 const mediaFields = {
   id: media.id,
@@ -59,6 +60,23 @@ export const mediaRouter = router({
     if (!game) throw new TRPCError({ code: "NOT_FOUND" });
     return game;
   }),
+
+  /**
+   * Open Library merges duplicate works, so the book returned can have a different
+   * `providerId` from the one asked for. Callers should send visitors to the returned id.
+   */
+  book: publicProcedure
+    .input(z.object({ providerId: openLibraryWorkId }))
+    .query(async ({ ctx, input }) => {
+      const mediaId = await ensureImported(ctx.db, { type: "book", providerId: input.providerId });
+      const [book] = await ctx.db
+        .select({ ...mediaFields, authors: books.authors, pageCount: books.pageCount })
+        .from(media)
+        .innerJoin(books, eq(books.mediaId, media.id))
+        .where(eq(media.id, mediaId));
+      if (!book) throw new TRPCError({ code: "NOT_FOUND" });
+      return book;
+    }),
 
   tvShow: publicProcedure.input(z.object({ providerId })).query(async ({ ctx, input }) => {
     const mediaId = await ensureImported(ctx.db, { type: "tv", providerId: input.providerId });

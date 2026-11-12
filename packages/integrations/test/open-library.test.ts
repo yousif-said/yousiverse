@@ -1,0 +1,107 @@
+import { describe, expect, it } from "vitest";
+import { ProviderError } from "../src/errors";
+import { getBook, search } from "../src/open-library";
+import { plainDescription, readableSubjects } from "../src/open-library/text";
+
+describe("openLibrary.search", () => {
+  it("returns books", async () => {
+    expect(await search("piranesi")).toContainEqual({
+      type: "book",
+      providerId: "OL20893680W",
+      title: "Piranesi",
+      releaseYear: 2020,
+      posterUrl: expect.stringMatching(/^https:\/\/covers\.openlibrary\.org\/b\/id\/\d+-M\.jpg$/),
+    });
+  });
+
+  it("returns nothing when no title matches", async () => {
+    expect(await search("zzzzqqqqxxxx")).toEqual([]);
+  });
+});
+
+describe("openLibrary.getBook", () => {
+  it("combines the work record with the search index", async () => {
+    const book = await getBook("OL20893680W");
+
+    expect(book).toMatchObject({
+      providerId: "OL20893680W",
+      title: "Piranesi",
+      authors: ["Susanna Clarke"],
+      releaseYear: 2020,
+      releaseDate: null,
+      posterUrl: expect.stringContaining("-L.jpg"),
+    });
+    expect(book.pageCount).toBeGreaterThan(100);
+    expect(book.overview).toContain("Piranesi's house is no ordinary building");
+    expect(book.overview).not.toContain("**");
+    expect(book.genres).toContain("Labyrinths");
+    expect(book.genres.some((genre) => genre.includes(":"))).toBe(false);
+  });
+
+  it("follows a work that was merged into another", async () => {
+    expect(await getBook("OL893415W")).toMatchObject({ providerId: "OL893414W", title: "Dune" });
+  });
+
+  it("reports an unknown work as not found", async () => {
+    const error = await getBook("OL99999999999W").catch((caught: unknown) => caught);
+
+    expect(error).toBeInstanceOf(ProviderError);
+    expect(error).toMatchObject({ provider: "open_library", kind: "not_found" });
+  });
+
+  it("reports an id that is not a work id as not found without calling the provider", async () => {
+    await expect(getBook("../authors/OL1A")).rejects.toMatchObject({ kind: "not_found" });
+  });
+});
+
+describe("plainDescription", () => {
+  it("removes emphasis markers and keeps paragraphs", () => {
+    expect(plainDescription("**Bold** and *italic*.\r\n\r\nSecond paragraph.")).toBe(
+      "Bold and italic.\n\nSecond paragraph.",
+    );
+  });
+
+  it("drops source notes and edition lists", () => {
+    expect(
+      plainDescription(
+        "A desert planet. ([source][1])\n\n----------\nAlso contained in:\n\n - [Omnibus](https://example.com)\n\n[1]: https://example.com",
+      ),
+    ).toBe("A desert planet.");
+  });
+
+  it("keeps link text and drops the address", () => {
+    expect(plainDescription("See [the sequel](https://example.com) next.")).toBe(
+      "See the sequel next.",
+    );
+  });
+
+  it("returns null for a missing or empty description", () => {
+    expect(plainDescription(undefined)).toBeNull();
+    expect(plainDescription("  ")).toBeNull();
+  });
+});
+
+describe("readableSubjects", () => {
+  it("drops compound headings and repeats", () => {
+    expect(readableSubjects(["Fiction", "Fiction, general", "fiction", "Deserts"])).toEqual([
+      "Fiction",
+      "Deserts",
+    ]);
+  });
+
+  it("drops machine tags and keeps at most six topics", () => {
+    expect(
+      readableSubjects([
+        "form:novel",
+        "Fiction",
+        "nyt:fiction=2020-10-04",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+      ]),
+    ).toEqual(["Fiction", "a", "b", "c", "d", "e"]);
+  });
+});

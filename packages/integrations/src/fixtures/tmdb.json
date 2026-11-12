@@ -1275,6 +1275,76 @@
       "total_results": 78
     }
   },
+  "GET api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=piranesi": {
+    "status": 200,
+    "body": {
+      "page": 1,
+      "results": [
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 1307044,
+          "title": "Piranesi",
+          "original_title": "Piranesi",
+          "overview": "Piranesi's house is no ordinary building: its rooms are infinite, its corridors endless, its walls are lined with thousands upon thousands of statues, each one different from all the others. Within the labyrinth of halls, an ocean is imprisoned; waves thunder up staircases, rooms are flooded in an instant. But Piranesi is not afraid; he understands the tides as he understands the pattern of the labyrinth itself. He lives to explore the house.",
+          "poster_path": "/w3Gu4aMAAZhKW1b2ZAHDkH7Uzu4.jpg",
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            14,
+            16,
+            9648
+          ],
+          "popularity": 0.4225,
+          "release_date": "",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": null,
+          "id": 502646,
+          "title": "Carceri d'invenzione. Piranesi",
+          "original_title": "Carceri d'invenzione. Piranesi",
+          "overview": "A film inspired by Piranesi's etchings.",
+          "poster_path": "/lQP1q4HIwWkDjMRXi6f9XswAlSK.jpg",
+          "media_type": "movie",
+          "original_language": "it",
+          "genre_ids": [],
+          "popularity": 0.3527,
+          "release_date": "2009-02-02",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/Ak0o7SFHsDoHsvGjcMo47eRCR7E.jpg",
+          "id": 1626628,
+          "title": "Piranesi – Visionary of Shadow and Stone",
+          "original_title": "Piranesi – Visionary of Shadow and Stone",
+          "overview": "The name Piranesi evokes a world of mystery and imagination. The Italian architect, engraver, and archaeologist gifted us with dreamlike visions – labyrinthine spaces where stairways lead to nowhere and shadows stretch into the unknown. At the same time, he celebrated the monumental beauty of ancient Rome in his iconic vedute – vivid panoramas of the “Eternal City” that spread far and wide across Europe.  But who was Giovanni Battista Piranesi, the man behind these extraordinary creations? Very little is known about his life and inner world. This documentary seeks to trace his footsteps, to delve into the enigma he left behind and to bring us closer to understanding the mind of a genius who built entire worlds on paper.",
+          "poster_path": null,
+          "media_type": "movie",
+          "original_language": "en",
+          "genre_ids": [
+            99
+          ],
+          "popularity": 0.291,
+          "release_date": "2025-12-31",
+          "softcore": false,
+          "video": false,
+          "vote_average": 0,
+          "vote_count": 0
+        }
+      ],
+      "total_pages": 1,
+      "total_results": 3
+    }
+  },
   "GET api.themoviedb.org/3/search/multi?include_adult=false&language=en-US&query=zzzzqqqqxxxx": {
     "status": 200,
     "body": {

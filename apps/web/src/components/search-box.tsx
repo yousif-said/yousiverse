@@ -47,7 +47,7 @@ export function SearchBox({ initialQuery }: { initialQuery: string }) {
           name="q"
           type="search"
           defaultValue={initialQuery}
-          placeholder="Movies, TV shows, and games"
+          placeholder="Movies, TV shows, games, and books"
           autoComplete="off"
           autoFocus
           maxLength={100}

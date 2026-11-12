@@ -5,6 +5,7 @@
 import { writeFile } from "node:fs/promises";
 import { fixtureKey } from "../src/fixtures/fixture-fetch";
 import { gameQuery, searchQuery } from "../src/igdb/queries";
+import { SEARCH_FIELDS, WORK_FIELDS } from "../src/open-library/fields";
 
 type Recording = { url: string; init?: RequestInit; headers?: Record<string, string> };
 
@@ -40,6 +41,19 @@ function igdb(body: string): Recording {
   };
 }
 
+function openLibrary(path: string, params: Record<string, string> = {}): Recording {
+  const url = new URL(`https://openlibrary.org${path}`);
+  url.search = new URLSearchParams(params).toString();
+  return { url: url.href };
+}
+
+const openLibrarySearch = (query: string) =>
+  openLibrary("/search.json", { q: query, fields: SEARCH_FIELDS, limit: "20" });
+const openLibraryWork = (workId: string) => [
+  openLibrary(`/works/${workId}.json`),
+  openLibrary("/search.json", { q: `key:/works/${workId}`, fields: WORK_FIELDS, limit: "1" }),
+];
+
 // Responses that must not be recorded as they are, because the real ones contain credentials.
 const handWritten: Record<string, Record<string, { status: number; body: unknown }>> = {
   igdb: {
@@ -54,6 +68,7 @@ const recordings: Record<string, Recording[]> = {
   tmdb: [
     tmdb("/search/multi", { query: "severance", include_adult: "false" }),
     tmdb("/search/multi", { query: "hades", include_adult: "false" }),
+    tmdb("/search/multi", { query: "piranesi", include_adult: "false" }),
     tmdb("/search/multi", { query: "zzzzqqqqxxxx", include_adult: "false" }),
     tmdb("/movie/603"),
     tmdb("/movie/999999999"),
@@ -63,9 +78,21 @@ const recordings: Record<string, Recording[]> = {
   igdb: [
     igdb(searchQuery("hades")),
     igdb(searchQuery("severance")),
+    igdb(searchQuery("piranesi")),
     igdb(searchQuery("zzzzqqqqxxxx")),
     igdb(gameQuery("113112")),
     igdb(gameQuery("999999999")),
+  ],
+  "open-library": [
+    openLibrarySearch("piranesi"),
+    openLibrarySearch("hades"),
+    openLibrarySearch("severance"),
+    openLibrarySearch("zzzzqqqqxxxx"),
+    ...openLibraryWork("OL20893680W"),
+    // A work that was merged into another: it answers with a redirect record.
+    ...openLibraryWork("OL893415W"),
+    ...openLibraryWork("OL893414W"),
+    ...openLibraryWork("OL99999999999W"),
   ],
 };
 
