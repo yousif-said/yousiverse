@@ -1,16 +1,12 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Button } from "@yousiverse/ui/components/button";
-import Link from "next/link";
+import { Input } from "@yousiverse/ui/components/input";
 import { Shelf } from "@/components/shelf";
-import { getSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export default async function HomePage() {
   const queryClient = getQueryClient();
-  const [session] = await Promise.all([
-    getSession(),
-    queryClient.prefetchQuery(trpc.media.shelf.queryOptions()),
-  ]);
+  await queryClient.prefetchQuery(trpc.media.shelf.queryOptions());
 
   return (
     <>
@@ -22,23 +18,35 @@ export default async function HomePage() {
           Yousiverse keeps your movies, shows, games, and books together, so you can rate them,
           review them, and find what&apos;s next.
         </p>
-        {!session && (
-          <Button asChild size="lg" className="mt-8">
-            <Link href="/sign-in">Sign in</Link>
-          </Button>
-        )}
+        <search>
+          <form action="/search" className="mt-8 flex max-w-xl gap-2">
+            <label htmlFor="home-search" className="sr-only">
+              Search the catalog
+            </label>
+            <Input
+              id="home-search"
+              name="q"
+              type="search"
+              required
+              maxLength={100}
+              autoComplete="off"
+              placeholder="Search by title"
+              className="h-12 rounded-lg bg-card px-4 text-base shadow-none md:text-base"
+            />
+            <Button type="submit" size="lg" className="h-12">
+              Search
+            </Button>
+          </form>
+        </search>
       </section>
 
       <section aria-labelledby="shelf-heading">
-        <h2 id="shelf-heading" className="sr-only">
-          Sample shelf
+        <h2 id="shelf-heading" className="mb-2 font-display text-2xl font-bold tracking-tight">
+          Recently added
         </h2>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <Shelf />
         </HydrationBoundary>
-        <p className="mt-6 text-sm text-muted-foreground">
-          These are sample titles. Your own library comes next.
-        </p>
       </section>
     </>
   );

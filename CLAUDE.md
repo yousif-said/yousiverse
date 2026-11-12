@@ -151,7 +151,7 @@ Run everything from the repo root. All scripts read the root `.env` (copy `.env.
 | `bun run db:up` / `bun run db:down`          | Start / stop local Postgres (Docker)                                                     |
 | `bun run db:generate`                        | Generate a migration from schema changes in `packages/db/src/schema`                     |
 | `bun run db:migrate`                         | Apply migrations                                                                         |
-| `bun run db:seed`                            | Insert sample media (skips if any exist)                                                 |
+| `bun run db:seed`                            | Add starter titles; safe to run again. Details load from the provider when a page opens  |
 | `bun run db:studio`                          | Open Drizzle Studio                                                                      |
 | `bun run --cwd packages/integrations record` | Re-record the provider responses used by tests (needs real API keys in `.env`)           |
 

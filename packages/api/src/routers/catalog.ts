@@ -1,4 +1,4 @@
-import type { MediaType } from "@yousiverse/db/schema";
+import { type MediaType, mediaTypes } from "@yousiverse/db/schema";
 import type { CatalogSearchResult } from "@yousiverse/integrations/catalog";
 import * as igdb from "@yousiverse/integrations/igdb";
 import * as openLibrary from "@yousiverse/integrations/open-library";
@@ -27,24 +27,35 @@ function interleave<Item>(lists: Item[][]): Item[] {
 
 export const catalogRouter = router({
   /**
-   * Searches every provider at once. A provider that fails does not fail the search: its
-   * media types are listed in `unavailable` so the page can say what is missing.
+   * Searches the providers for the requested media types (all of them by default) at once.
+   * A provider that fails does not fail the search: its media types are listed in
+   * `unavailable` so the page can say what is missing.
    */
   search: publicProcedure
-    .input(z.object({ query: z.string().trim().min(1).max(100) }))
+    .input(
+      z.object({
+        query: z.string().trim().min(1).max(100),
+        types: z.array(z.enum(mediaTypes)).min(1).optional(),
+      }),
+    )
     .query(async ({ input }) => {
+      const wanted = new Set<MediaType>(input.types ?? mediaTypes);
+      const providers = searchProviders.filter((provider) =>
+        provider.types.some((type) => wanted.has(type)),
+      );
       const outcomes = await Promise.allSettled(
-        searchProviders.map((provider) => provider.search(input.query)),
+        providers.map((provider) => provider.search(input.query)),
       );
 
       const resultLists: CatalogSearchResult[][] = [];
       const unavailable: MediaType[] = [];
       outcomes.forEach((outcome, index) => {
         if (outcome.status === "fulfilled") {
-          resultLists.push(outcome.value);
+          resultLists.push(outcome.value.filter((result) => wanted.has(result.type)));
         } else {
           console.error("Catalog search failed for a provider.", outcome.reason);
-          unavailable.push(...(searchProviders[index]?.types ?? []));
+          const failedTypes = providers[index]?.types ?? [];
+          unavailable.push(...failedTypes.filter((type) => wanted.has(type)));
         }
       });
       return { results: interleave(resultLists), unavailable };

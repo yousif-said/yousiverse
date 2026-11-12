@@ -11,7 +11,7 @@ bun install
 cp .env.example .env        # then set BETTER_AUTH_SECRET (openssl rand -base64 32) and the provider keys
 bun run db:up               # start Postgres in Docker
 bun run db:migrate          # apply migrations
-bun run db:seed             # add sample titles
+bun run db:seed             # add starter titles to the home page shelf
 bun dev                     # http://localhost:3000
 ```
 

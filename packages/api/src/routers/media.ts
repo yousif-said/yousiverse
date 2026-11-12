@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { books, episodes, games, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
-import { and, count, eq } from "drizzle-orm";
+import { and, count, desc, eq, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { ensureImported } from "../catalog/import";
 import { publicProcedure, router } from "../trpc";
@@ -21,18 +21,25 @@ const mediaFields = {
 };
 
 export const mediaRouter = router({
-  shelf: publicProcedure.query(({ ctx }) =>
-    ctx.db
+  /** The titles most recently added to the catalog. */
+  shelf: publicProcedure.query(async ({ ctx }) => {
+    const items = await ctx.db
       .select({
         id: media.id,
         type: media.type,
         title: media.title,
         releaseYear: media.releaseYear,
+        providerId: media.providerId,
       })
       .from(media)
-      .orderBy(media.title)
-      .limit(24),
-  ),
+      .where(isNotNull(media.providerId))
+      .orderBy(desc(media.createdAt), media.title)
+      .limit(24);
+    // The filter above guarantees an id; this narrows the type for callers.
+    return items.flatMap((item) =>
+      item.providerId ? { ...item, providerId: item.providerId } : [],
+    );
+  }),
 
   movie: publicProcedure.input(z.object({ providerId })).query(async ({ ctx, input }) => {
     const mediaId = await ensureImported(ctx.db, { type: "movie", providerId: input.providerId });
