@@ -22,10 +22,13 @@ export async function generateMetadata({ params }: PageProps<"/books/[id]">): Pr
 }
 
 export default async function BookPage({ params }: PageProps<"/books/[id]">) {
-  const book = await getBook((await params).id);
+  const { id } = await params;
+  const book = await getBook(id);
 
   return (
     <MediaHeader
+      mediaId={book.id}
+      providerId={id}
       type="book"
       title={book.title}
       tagline={book.authors.length > 0 ? `by ${book.authors.join(", ")}` : null}

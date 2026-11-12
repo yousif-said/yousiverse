@@ -13,10 +13,13 @@ export async function generateMetadata({ params }: PageProps<"/games/[id]">): Pr
 }
 
 export default async function GamePage({ params }: PageProps<"/games/[id]">) {
-  const game = await getGame((await params).id);
+  const { id } = await params;
+  const game = await getGame(id);
 
   return (
     <MediaHeader
+      mediaId={game.id}
+      providerId={id}
       type="game"
       title={game.title}
       tagline={null}

@@ -21,6 +21,8 @@ export default async function TvShowPage({ params }: PageProps<"/tv/[id]">) {
   return (
     <>
       <MediaHeader
+        mediaId={show.id}
+        providerId={id}
         type="tv"
         title={show.title}
         tagline={show.tagline}

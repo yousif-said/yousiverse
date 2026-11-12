@@ -2,16 +2,10 @@ import { cn } from "cn";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Cover } from "@/components/cover";
+import { FilterPill } from "@/components/filter-pill";
 import { SearchBox } from "@/components/search-box";
-import {
-  isMediaType,
-  MEDIA,
-  MEDIA_TYPES,
-  type MediaType,
-  mediaPath,
-  searchPath,
-} from "@/lib/media";
+import { TitleCard, titleGridClasses } from "@/components/title-card";
+import { isMediaType, MEDIA, MEDIA_TYPES, type MediaType, searchPath } from "@/lib/media";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Search" };
@@ -19,7 +13,6 @@ export const metadata: Metadata = { title: "Search" };
 /** How many results each media type shows when all four are on the page together. */
 const PREVIEW_COUNT = 6;
 
-const gridClasses = "grid grid-cols-2 gap-x-5 gap-y-8 sm:grid-cols-3 lg:grid-cols-6";
 const linkFocus = "outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50";
 
 type SectionProps = { query: string; type: MediaType; preview: boolean };
@@ -47,27 +40,10 @@ async function Results({ query, type, preview }: SectionProps) {
   const shown = preview ? results.slice(0, PREVIEW_COUNT) : results;
   return (
     <>
-      <ul className={gridClasses}>
+      <ul className={titleGridClasses}>
         {shown.map((result) => (
           <li key={result.providerId}>
-            <Link
-              href={mediaPath(result.type, result.providerId)}
-              className={cn("group block rounded-sm", linkFocus)}
-            >
-              <Cover
-                type={result.type}
-                title={result.title}
-                posterUrl={result.posterUrl}
-                className="transition-transform duration-200 group-hover:-translate-y-1 motion-reduce:transition-none"
-              />
-              <span className="mt-3 block leading-snug font-medium group-hover:underline">
-                {result.title}
-              </span>
-              <span className="block text-sm text-muted-foreground">
-                {MEDIA[result.type].singular}
-                {result.releaseYear && `, ${result.releaseYear}`}
-              </span>
-            </Link>
+            <TitleCard {...result} />
           </li>
         ))}
       </ul>
@@ -88,7 +64,7 @@ async function Results({ query, type, preview }: SectionProps) {
 
 function ResultsPlaceholder({ type }: { type: MediaType }) {
   return (
-    <div className={gridClasses} role="status" aria-label={`Searching ${MEDIA[type].plural}`}>
+    <div className={titleGridClasses} role="status" aria-label={`Searching ${MEDIA[type].plural}`}>
       {Array.from({ length: PREVIEW_COUNT }, (_, index) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: identical static placeholders
         <div key={index} className="aspect-[5/7] animate-pulse rounded-[3px] bg-muted" />
@@ -106,18 +82,14 @@ function TypeFilter({ query, selected }: { query: string; selected: MediaType | 
   return (
     <nav aria-label="Filter results by type" className="mt-5 flex flex-wrap gap-2">
       {options.map(({ type, label, color }) => (
-        <Link
+        <FilterPill
           key={label}
           href={searchPath(query, type)}
-          aria-current={type === selected ? "true" : undefined}
-          className={cn(
-            "inline-flex items-center gap-2 rounded-full border bg-card px-3.5 py-1.5 text-sm font-medium transition-colors hover:bg-accent aria-[current]:border-foreground aria-[current]:bg-foreground aria-[current]:text-background",
-            linkFocus,
-          )}
+          selected={type === selected}
+          color={color}
         >
-          {color && <span className={cn("size-2.5 rounded-[2px]", color)} />}
           {label}
-        </Link>
+        </FilterPill>
       ))}
     </nav>
   );

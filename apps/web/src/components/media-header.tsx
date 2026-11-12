@@ -1,7 +1,10 @@
-import type { MediaType } from "@/lib/media";
+import { type MediaType, mediaPath } from "@/lib/media";
 import { Cover } from "./cover";
+import { TitleActions } from "./title-actions";
 
 type Props = {
+  mediaId: string;
+  providerId: string;
   type: MediaType;
   title: string;
   tagline: string | null;
@@ -11,7 +14,16 @@ type Props = {
 };
 
 /** The top of every title's page: cover, title, overview, and a short list of facts. */
-export function MediaHeader({ type, title, tagline, overview, posterUrl, facts }: Props) {
+export function MediaHeader({
+  mediaId,
+  providerId,
+  type,
+  title,
+  tagline,
+  overview,
+  posterUrl,
+  facts,
+}: Props) {
   const knownFacts = facts.filter((fact) => fact.value);
 
   return (
@@ -41,6 +53,9 @@ export function MediaHeader({ type, title, tagline, overview, posterUrl, facts }
             ))}
           </dl>
         )}
+        <div className="mt-8 max-w-xl border-t pt-6">
+          <TitleActions mediaId={mediaId} type={type} path={mediaPath(type, providerId)} />
+        </div>
       </div>
     </header>
   );
