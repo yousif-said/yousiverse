@@ -19,6 +19,12 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Game pages:** cover, description, release date, developer, publisher, platforms, and genres.
 - Titles are added to the catalog the first time someone opens them and refreshed weekly. Movie and TV data comes from TMDB, game data from IGDB, and book data from Open Library.
 
+### Library
+
+- **Personal library** across all four media types. Each title page has a status control: want, in progress, finished, or dropped, worded for the type (want to read, playing). A title can be marked so only its owner can see it, and removed again.
+- **Library page** showing everything in the library, most recently changed first, filterable by media type and by status.
+- Library entries are public by default. Nothing shows another person's library yet; that arrives with profiles.
+
 ## Future features
 
 ### Library and catalog
@@ -26,8 +32,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Authors in book search results**, to tell apart books that share a title.
 - **Google Books** as a second source for books, if Open Library's data proves thin.
 - **Cast and crew** on movie and TV pages.
-
-- **Personal library** across all four media types, with a status for each item (e.g. want, in progress, finished, dropped, on hold). Viewable all together or filtered by media type.
 - **Custom lists and shelves**, public or private.
 - **Release calendar** of upcoming releases, filterable by media type and by items in the user's library.
 - **Time budget filter:** find things that fit the time you have. Uses movie/episode runtime, book page count or audiobook length, and game time-to-beat where reliable data exists.

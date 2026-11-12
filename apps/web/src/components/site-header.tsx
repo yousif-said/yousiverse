@@ -34,6 +34,7 @@ export async function SiteHeader() {
             Home
           </NavLink>
           <NavLink href="/search">Search</NavLink>
+          {session && <NavLink href="/library">Library</NavLink>}
           <NavLink href="/account">Account</NavLink>
         </nav>
         <div className="ml-auto flex items-center gap-2">

@@ -1,12 +1,5 @@
-import { readFile } from "node:fs/promises";
-import { serverLogPath } from "./server-log";
+import { findSignInLink } from "./session";
 import { expect, test } from "./test";
-
-async function findSignInLink(email: string): Promise<string | undefined> {
-  const log = await readFile(serverLogPath, "utf8");
-  const [, afterMarker] = log.split(`Sign-in link for ${email}:`);
-  return afterMarker?.trim().split(/\s/)[0];
-}
 
 test("signs in with an emailed link, reaches the protected account page, and signs out", async ({
   page,

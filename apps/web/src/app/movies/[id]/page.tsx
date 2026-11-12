@@ -13,10 +13,13 @@ export async function generateMetadata({ params }: PageProps<"/movies/[id]">): P
 }
 
 export default async function MoviePage({ params }: PageProps<"/movies/[id]">) {
-  const movie = await getMovie((await params).id);
+  const { id } = await params;
+  const movie = await getMovie(id);
 
   return (
     <MediaHeader
+      mediaId={movie.id}
+      providerId={id}
       type="movie"
       title={movie.title}
       tagline={movie.tagline}
