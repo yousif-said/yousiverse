@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 test("home page shows the shelf and switches theme", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "light" });

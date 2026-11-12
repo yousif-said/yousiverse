@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 test("finds a show by searching, then opens it and one of its seasons", async ({ page }) => {
   await page.goto("/");
