@@ -28,7 +28,7 @@ export function MediaHeader({ type, title, tagline, overview, posterUrl, facts }
           {title}
         </h1>
         {tagline && <p className="mt-4 text-lg text-muted-foreground">{tagline}</p>}
-        <p className="mt-6 max-w-[65ch] text-pretty leading-relaxed">
+        <p className="mt-6 max-w-[65ch] text-pretty leading-relaxed whitespace-pre-line">
           {overview ?? "No description yet."}
         </p>
         {knownFacts.length > 0 && (

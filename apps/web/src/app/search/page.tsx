@@ -83,7 +83,9 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
             <Results query={query} />
           </Suspense>
         ) : (
-          <p className="text-muted-foreground">Type a title to find a movie, TV show, or game.</p>
+          <p className="text-muted-foreground">
+            Type a title to find a movie, TV show, game, or book.
+          </p>
         )}
       </div>
     </section>

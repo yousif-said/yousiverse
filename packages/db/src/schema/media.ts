@@ -5,7 +5,7 @@ export type MediaType = (typeof mediaTypes)[number];
 
 export const mediaType = pgEnum("media_type", mediaTypes);
 
-export const providers = ["tmdb", "igdb"] as const;
+export const providers = ["tmdb", "igdb", "open_library"] as const;
 export type Provider = (typeof providers)[number];
 
 export const provider = pgEnum("provider", providers);
@@ -48,6 +48,14 @@ export const games = pgTable("games", {
   platforms: text().array().notNull().default([]),
   developers: text().array().notNull().default([]),
   publishers: text().array().notNull().default([]),
+});
+
+export const books = pgTable("books", {
+  mediaId: uuid()
+    .primaryKey()
+    .references(() => media.id, { onDelete: "cascade" }),
+  authors: text().array().notNull().default([]),
+  pageCount: integer(),
 });
 
 export const tvShows = pgTable("tv_shows", {

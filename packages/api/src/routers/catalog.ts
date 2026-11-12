@@ -1,6 +1,7 @@
 import type { MediaType } from "@yousiverse/db/schema";
 import type { CatalogSearchResult } from "@yousiverse/integrations/catalog";
 import * as igdb from "@yousiverse/integrations/igdb";
+import * as openLibrary from "@yousiverse/integrations/open-library";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
@@ -13,6 +14,7 @@ type SearchProvider = {
 const searchProviders: SearchProvider[] = [
   { types: ["movie", "tv"], search: (query) => tmdb.search(query) },
   { types: ["game"], search: (query) => igdb.search(query) },
+  { types: ["book"], search: (query) => openLibrary.search(query) },
 ];
 
 /** Takes one result from each list in turn, so no provider's matches are buried under another's. */

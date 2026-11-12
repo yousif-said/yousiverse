@@ -344,6 +344,10 @@
       }
     ]
   },
+  "POST api.igdb.com/v4/games search \"piranesi\"; fields name,first_release_date,cover.image_id; where game_type = (0,8,9,10,11); limit 20;": {
+    "status": 200,
+    "body": []
+  },
   "POST api.igdb.com/v4/games search \"zzzzqqqqxxxx\"; fields name,first_release_date,cover.image_id; where game_type = (0,8,9,10,11); limit 20;": {
     "status": 200,
     "body": []

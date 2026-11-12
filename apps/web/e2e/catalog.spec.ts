@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./test";
 
 test("finds a show by searching, then opens it and one of its seasons", async ({ page }) => {
   await page.goto("/");
@@ -50,4 +50,20 @@ test("finds a game by searching and opens its page", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Hades" })).toBeVisible();
   await expect(page.getByText("Supergiant Games").first()).toBeVisible();
   await expect(page.getByText("September 17, 2020")).toBeVisible();
+});
+
+test("finds a book by searching and opens its page", async ({ page }) => {
+  await page.goto("/search?q=piranesi");
+  await page.getByRole("link", { name: "Piranesi Book, 2020" }).click();
+
+  await expect(page).toHaveURL("/books/OL20893680W");
+  await expect(page.getByRole("heading", { level: 1, name: "Piranesi" })).toBeVisible();
+  await expect(page.getByText("Susanna Clarke")).toBeVisible();
+});
+
+test("sends a merged book to the page of the book it was merged into", async ({ page }) => {
+  await page.goto("/books/OL893415W");
+
+  await expect(page).toHaveURL("/books/OL893414W");
+  await expect(page.getByRole("heading", { level: 1, name: "Dune" })).toBeVisible();
 });

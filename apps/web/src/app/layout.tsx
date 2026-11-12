@@ -56,6 +56,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 IGDB
               </a>
+              . Book data and covers come from{" "}
+              <a
+                href="https://openlibrary.org"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                Open Library
+              </a>
               .
             </p>
           </footer>

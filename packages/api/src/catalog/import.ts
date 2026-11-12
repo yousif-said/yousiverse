@@ -1,6 +1,17 @@
 import type { Database } from "@yousiverse/db";
-import { episodes, games, media, movies, seasons, tvShows } from "@yousiverse/db/schema";
+import {
+  books,
+  episodes,
+  games,
+  type MediaType,
+  media,
+  movies,
+  type Provider,
+  seasons,
+  tvShows,
+} from "@yousiverse/db/schema";
 import type {
+  CatalogBook,
   CatalogGame,
   CatalogItem,
   CatalogMovie,
@@ -8,6 +19,7 @@ import type {
 } from "@yousiverse/integrations/catalog";
 import { ProviderError } from "@yousiverse/integrations/errors";
 import * as igdb from "@yousiverse/integrations/igdb";
+import * as openLibrary from "@yousiverse/integrations/open-library";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { and, eq, sql } from "drizzle-orm";
 
@@ -15,10 +27,15 @@ const REFRESH_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 
 type Transaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 
-export type CatalogRef = { type: "movie" | "tv" | "game"; providerId: string };
+export type CatalogRef = { type: MediaType; providerId: string };
 
 /** Each media type comes from exactly one provider. */
-const PROVIDER_FOR = { movie: "tmdb", tv: "tmdb", game: "igdb" } as const;
+const PROVIDER_FOR = {
+  movie: "tmdb",
+  tv: "tmdb",
+  game: "igdb",
+  book: "open_library",
+} as const satisfies Record<MediaType, Provider>;
 
 /** For bulk upserts: sets each column to the value from the row that conflicted. */
 function fromIncomingRow<Column extends string>(columns: Column[]) {
@@ -72,6 +89,18 @@ function saveGame(db: Database, game: CatalogGame) {
       .insert(games)
       .values({ mediaId, ...details })
       .onConflictDoUpdate({ target: games.mediaId, set: details });
+    return mediaId;
+  });
+}
+
+function saveBook(db: Database, book: CatalogBook) {
+  return db.transaction(async (tx) => {
+    const mediaId = await saveMedia(tx, "book", book);
+    const details = { authors: book.authors, pageCount: book.pageCount };
+    await tx
+      .insert(books)
+      .values({ mediaId, ...details })
+      .onConflictDoUpdate({ target: books.mediaId, set: details });
     return mediaId;
   });
 }
@@ -141,6 +170,8 @@ export async function ensureImported(db: Database, ref: CatalogRef): Promise<str
         return await saveTvShow(db, await tmdb.getTvShow(ref.providerId));
       case "game":
         return await saveGame(db, await igdb.getGame(ref.providerId));
+      case "book":
+        return await saveBook(db, await openLibrary.getBook(ref.providerId));
     }
   } catch (error) {
     // A stored copy that is out of date is better than an error page while a provider is down.

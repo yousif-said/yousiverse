@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
-import { expect, test } from "@playwright/test";
 import { serverLogPath } from "./server-log";
+import { expect, test } from "./test";
 
 async function findSignInLink(email: string): Promise<string | undefined> {
   const log = await readFile(serverLogPath, "utf8");
