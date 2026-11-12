@@ -13,10 +13,13 @@ export function SignInForm({ methods, redirectTo }: Props) {
   const [emailStatus, setEmailStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  async function signInWith(provider: "google" | "apple") {
+  async function signInWithGoogle() {
     setErrorMessage(undefined);
-    const { error } = await authClient.signIn.social({ provider, callbackURL: redirectTo });
-    if (error) setErrorMessage(error.message ?? `Could not reach ${provider}. Try again.`);
+    const { error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: redirectTo,
+    });
+    if (error) setErrorMessage(error.message ?? "Could not reach Google. Try again.");
   }
 
   async function sendSignInLink(event: React.FormEvent<HTMLFormElement>) {
@@ -33,39 +36,20 @@ export function SignInForm({ methods, redirectTo }: Props) {
     setEmailStatus("sent");
   }
 
-  if (!methods.google && !methods.apple && !methods.devEmail) {
+  if (!methods.google && !methods.devEmail) {
     return (
       <p className="mt-8 rounded-lg border bg-card p-4 text-sm">
-        Sign-in isn&apos;t set up yet. Add Google or Apple credentials to the environment.
+        Sign-in isn&apos;t set up yet. Add Google credentials to the environment.
       </p>
     );
   }
 
   return (
     <div className="mt-8 space-y-6">
-      {(methods.google || methods.apple) && (
-        <div className="space-y-3">
-          {methods.google && (
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={() => signInWith("google")}
-            >
-              Continue with Google
-            </Button>
-          )}
-          {methods.apple && (
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={() => signInWith("apple")}
-            >
-              Continue with Apple
-            </Button>
-          )}
-        </div>
+      {methods.google && (
+        <Button variant="outline" size="lg" className="w-full" onClick={signInWithGoogle}>
+          Continue with Google
+        </Button>
       )}
 
       {methods.devEmail && (

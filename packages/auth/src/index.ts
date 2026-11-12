@@ -9,14 +9,8 @@ const google =
     ? { clientId: env.GOOGLE_CLIENT_ID, clientSecret: env.GOOGLE_CLIENT_SECRET }
     : undefined;
 
-const apple =
-  env.APPLE_CLIENT_ID && env.APPLE_CLIENT_SECRET
-    ? { clientId: env.APPLE_CLIENT_ID, clientSecret: env.APPLE_CLIENT_SECRET }
-    : undefined;
-
 export const signInMethods = {
   google: Boolean(google),
-  apple: Boolean(apple),
   // Email sign-in has no mail provider yet, so it only exists outside production,
   // where the link is printed to the server terminal.
   devEmail: env.NODE_ENV !== "production",
@@ -33,8 +27,7 @@ export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, { provider: "pg", usePlural: true }),
-  socialProviders: { ...(google && { google }), ...(apple && { apple }) },
-  trustedOrigins: apple ? ["https://appleid.apple.com"] : [],
+  socialProviders: { ...(google && { google }) },
   plugins: signInMethods.devEmail ? [devMagicLink] : [],
 });
 

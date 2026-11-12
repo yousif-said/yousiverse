@@ -15,7 +15,7 @@ bun run db:seed             # add starter titles to the home page shelf
 bun dev                     # http://localhost:3000
 ```
 
-To sign in locally, enter any email on the sign-in page. The sign-in link prints in the terminal running `bun dev`; open it in the browser. Google and Apple sign-in appear once their credentials are set in `.env`.
+To sign in locally, enter any email on the sign-in page. The sign-in link prints in the terminal running `bun dev`; open it in the browser. Google sign-in appears once its credentials are set in `.env`.
 
 ## Checks
 
@@ -40,6 +40,6 @@ Environment variables on Vercel:
 - `BETTER_AUTH_SECRET`: all environments.
 - `TMDB_API_TOKEN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`: all environments.
 - `BETTER_AUTH_URL`: production only, set to the public origin. Previews fall back to their own deploy URL.
-- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`: optional.
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: optional.
 
-Email sign-in is development-only until an email provider is added, so a deploy needs Google or Apple configured for anyone to sign in.
+Email sign-in is development-only until an email provider is added, so a deploy needs Google configured for anyone to sign in.

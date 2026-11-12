@@ -10,14 +10,9 @@ const parsed = z
     VERCEL_URL: z.string().min(1).optional(),
     GOOGLE_CLIENT_ID: z.string().min(1).optional(),
     GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
-    APPLE_CLIENT_ID: z.string().min(1).optional(),
-    APPLE_CLIENT_SECRET: z.string().min(1).optional(),
   })
   .refine((env) => bothOrNeither(env.GOOGLE_CLIENT_ID, env.GOOGLE_CLIENT_SECRET), {
     message: "Set both GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET, or neither.",
-  })
-  .refine((env) => bothOrNeither(env.APPLE_CLIENT_ID, env.APPLE_CLIENT_SECRET), {
-    message: "Set both APPLE_CLIENT_ID and APPLE_CLIENT_SECRET, or neither.",
   })
   .refine((env) => env.BETTER_AUTH_URL || env.VERCEL_URL, {
     message: "Set BETTER_AUTH_URL to the app's public origin.",
