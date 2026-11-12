@@ -62,7 +62,7 @@ export function LibraryControl({ mediaId, type, initialEntry }: Props) {
               }
               className="size-4 accent-primary"
             />
-            Only I can see this
+            Only I can see this in my library
           </label>
           <button
             type="button"

@@ -43,6 +43,13 @@
       "when": 1794452409873,
       "tag": "0005_ambitious_starhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794452675109,
+      "tag": "0006_past_lionheart",
+      "breakpoints": true
     }
   ]
 }

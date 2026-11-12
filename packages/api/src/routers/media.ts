@@ -7,6 +7,8 @@ import { publicProcedure, router } from "../trpc";
 
 const providerId = z.string().regex(/^\d{1,12}$/);
 const openLibraryWorkId = z.string().regex(/^OL\d{1,12}W$/);
+/** A season's or episode's number within its show or season. Specials are season 0. */
+const positionNumber = z.number().int().min(0).max(10_000);
 
 const mediaFields = {
   id: media.id,
@@ -112,7 +114,7 @@ export const mediaRouter = router({
   }),
 
   season: publicProcedure
-    .input(z.object({ providerId, seasonNumber: z.number().int().min(0).max(10_000) }))
+    .input(z.object({ providerId, seasonNumber: positionNumber }))
     .query(async ({ ctx, input }) => {
       const mediaId = await ensureImported(ctx.db, { type: "tv", providerId: input.providerId });
       const [season] = await ctx.db
@@ -144,5 +146,34 @@ export const mediaRouter = router({
         .where(eq(episodes.seasonId, season.id))
         .orderBy(episodes.episodeNumber);
       return { ...season, episodes: seasonEpisodes };
+    }),
+
+  episode: publicProcedure
+    .input(z.object({ providerId, seasonNumber: positionNumber, episodeNumber: positionNumber }))
+    .query(async ({ ctx, input }) => {
+      const mediaId = await ensureImported(ctx.db, { type: "tv", providerId: input.providerId });
+      const [episode] = await ctx.db
+        .select({
+          id: episodes.id,
+          episodeNumber: episodes.episodeNumber,
+          name: episodes.name,
+          overview: episodes.overview,
+          airDate: episodes.airDate,
+          runtimeMinutes: episodes.runtimeMinutes,
+          season: { seasonNumber: seasons.seasonNumber, name: seasons.name },
+          show: { title: media.title },
+        })
+        .from(episodes)
+        .innerJoin(seasons, eq(seasons.id, episodes.seasonId))
+        .innerJoin(media, eq(media.id, seasons.mediaId))
+        .where(
+          and(
+            eq(seasons.mediaId, mediaId),
+            eq(seasons.seasonNumber, input.seasonNumber),
+            eq(episodes.episodeNumber, input.episodeNumber),
+          ),
+        );
+      if (!episode) throw new TRPCError({ code: "NOT_FOUND" });
+      return episode;
     }),
 });
