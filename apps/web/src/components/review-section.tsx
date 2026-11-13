@@ -39,7 +39,7 @@ export async function ReviewSection({ target, path }: Props) {
           {reviews.others.map((review) => (
             <li key={review.id} className="grid grid-cols-[1fr_auto] gap-x-6 gap-y-3 py-6">
               <div>
-                <p className="font-medium">{review.author || "A Yousiverse member"}</p>
+                <p className="font-medium">{review.author ?? "A Yousiverse member"}</p>
                 <p className="text-sm text-muted-foreground">
                   {formatDay(new Date(review.createdAt))}
                 </p>

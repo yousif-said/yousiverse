@@ -25,7 +25,7 @@ export default async function ListPage({ params }: Props) {
         {list.name}
       </h1>
       <p className="mt-4 text-muted-foreground">
-        {list.isOwner ? "Your list" : `A list by ${list.owner || "a Yousiverse member"}`}
+        {list.isOwner ? "Your list" : `A list by ${list.owner ?? "a Yousiverse member"}`}
         {list.visibility === "private" && ", visible only to you"}
       </p>
       {list.description && (

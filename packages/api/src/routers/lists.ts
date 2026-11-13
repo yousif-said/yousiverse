@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { Database } from "@yousiverse/db";
-import { listItems, lists, media, users, visibilities } from "@yousiverse/db/schema";
+import { listItems, lists, media, profiles, visibilities } from "@yousiverse/db/schema";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
@@ -65,10 +65,11 @@ export const listsRouter = router({
         name: lists.name,
         description: lists.description,
         visibility: lists.visibility,
-        owner: users.name,
+        // Null when the owner has not chosen a username.
+        owner: profiles.username,
       })
       .from(lists)
-      .innerJoin(users, eq(users.id, lists.userId))
+      .leftJoin(profiles, eq(profiles.userId, lists.userId))
       .where(eq(lists.id, input.id));
     const isOwner = list?.userId === ctx.session?.user.id;
     if (!list || (list.visibility === "private" && !isOwner)) {
