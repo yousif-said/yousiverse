@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { FilterPill } from "@/components/filter-pill";
+import { FollowButton } from "@/components/follow-button";
+import { SignInPrompt } from "@/components/sign-in-prompt";
 import { TitleCard, titleGridClasses } from "@/components/title-card";
 import { formatDay, formatRating, pluralize } from "@/lib/format";
 import { isLibraryStatus, LIBRARY_STATUSES, STATUS_LABELS, statusLabel } from "@/lib/library";
 import { isMediaType, MEDIA, MEDIA_TYPES, mediaPath } from "@/lib/media";
 import { profilePath } from "@/lib/profile";
+import { getSession } from "@/lib/session";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
 
 type Props = PageProps<"/u/[username]">;
@@ -37,11 +40,13 @@ export default async function ProfilePage({ params, searchParams }: Props) {
   const status = isLibraryStatus(filters.status) ? filters.status : undefined;
 
   const queryClient = getQueryClient();
-  const [entries, lists, reviews] = await Promise.all([
+  const [session, entries, lists, reviews] = await Promise.all([
+    getSession(),
     queryClient.fetchQuery(trpc.profiles.library.queryOptions({ username, type, status })),
     queryClient.fetchQuery(trpc.profiles.lists.queryOptions({ username })),
     queryClient.fetchQuery(trpc.profiles.reviews.queryOptions({ username })),
   ]);
+  const signedIn = Boolean(session);
 
   return (
     <div className="pt-10 sm:pt-16">
@@ -52,6 +57,34 @@ export default async function ProfilePage({ params, searchParams }: Props) {
         <p className="mt-4 text-muted-foreground">
           {username}, joined {joinedFormat.format(new Date(profile.joinedAt))}
         </p>
+        <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+          <Link href={`${profilePath(username)}/followers`} className={linkClasses}>
+            {pluralize(profile.followerCount, "follower")}
+          </Link>
+          <Link href={`${profilePath(username)}/following`} className={linkClasses}>
+            {profile.followingCount} following
+          </Link>
+        </p>
+        {!profile.isOwner && (
+          <div className="mt-6">
+            {signedIn ? (
+              <>
+                <FollowButton username={username} initiallyFollowing={profile.isFollowing} />
+                {profile.followsYou && (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    {profile.isFollowing
+                      ? "You follow each other, so you are friends."
+                      : "Follows you."}
+                  </p>
+                )}
+              </>
+            ) : (
+              <SignInPrompt returnTo={profilePath(username)}>
+                to follow {profile.name}.
+              </SignInPrompt>
+            )}
+          </div>
+        )}
         {profile.isOwner && (
           <p className="mt-4 max-w-[65ch] text-sm text-muted-foreground">
             This is your profile as other people see it, so anything you marked private is left out.{" "}

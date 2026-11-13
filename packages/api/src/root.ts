@@ -1,5 +1,6 @@
 import { availabilityRouter } from "./routers/availability";
 import { catalogRouter } from "./routers/catalog";
+import { followsRouter } from "./routers/follows";
 import { libraryRouter } from "./routers/library";
 import { listsRouter } from "./routers/lists";
 import { mediaRouter } from "./routers/media";
@@ -12,6 +13,7 @@ import { router } from "./trpc";
 export const appRouter = router({
   availability: availabilityRouter,
   catalog: catalogRouter,
+  follows: followsRouter,
   library: libraryRouter,
   lists: listsRouter,
   media: mediaRouter,
