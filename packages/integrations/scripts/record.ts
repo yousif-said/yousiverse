@@ -133,11 +133,25 @@ const recordings: Record<string, Recording[]> = {
     watchmode("/title/tv-95396/sources/", { regions: "US" }),
     watchmode("/title/tv-1396/sources/", { regions: "US" }),
     watchmode("/title/movie-999999999/sources/", { regions: "US" }),
+    watchmode("/sources/", { regions: "US" }),
   ],
 };
 
 // Bulky fields no client reads; dropping them keeps the fixture files reviewable.
-const OMITTED_KEYS = new Set(["crew", "guest_stars", "assets"]);
+const OMITTED_KEYS = new Set([
+  "crew",
+  "guest_stars",
+  "assets",
+  // From Watchmode's list of services.
+  "regions",
+  "logo_100px",
+  "ios_appstore_url",
+  "android_playstore_url",
+  "android_scheme",
+  "ios_scheme",
+  "host_source",
+  "host_source_id",
+]);
 // IsThereAnyDeal tags its store links with the id of the app that asked for them.
 const withoutAppId = (text: string) => text.replace(/([?&]app=)\w+/, "$1fixture");
 const forFixture = (_key: string, value: unknown) => {

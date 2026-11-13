@@ -469,5 +469,1245 @@
       "statusCode": 404,
       "statusMessage": "Title not found"
     }
+  },
+  "GET api.watchmode.com/v1/sources/?regions=US": {
+    "status": 200,
+    "body": [
+      {
+        "id": 203,
+        "name": "Netflix",
+        "type": "sub"
+      },
+      {
+        "id": 157,
+        "name": "Hulu",
+        "type": "sub"
+      },
+      {
+        "id": 387,
+        "name": "HBO Max",
+        "type": "sub"
+      },
+      {
+        "id": 26,
+        "name": "Prime Video",
+        "type": "sub"
+      },
+      {
+        "id": 372,
+        "name": "Disney+",
+        "type": "sub"
+      },
+      {
+        "id": 371,
+        "name": "AppleTV+",
+        "type": "sub"
+      },
+      {
+        "id": 444,
+        "name": "Paramount+",
+        "type": "sub"
+      },
+      {
+        "id": 455,
+        "name": "Paramount+ with Showtime",
+        "type": "sub"
+      },
+      {
+        "id": 388,
+        "name": "Peacock",
+        "type": "free"
+      },
+      {
+        "id": 389,
+        "name": "Peacock Premium",
+        "type": "sub"
+      },
+      {
+        "id": 365,
+        "name": "Amazon Freevee",
+        "type": "free"
+      },
+      {
+        "id": 440,
+        "name": "Netflix Free",
+        "type": "free"
+      },
+      {
+        "id": 232,
+        "name": "STARZ",
+        "type": "sub"
+      },
+      {
+        "id": 108,
+        "name": "MGM+",
+        "type": "sub"
+      },
+      {
+        "id": 296,
+        "name": "Tubi TV",
+        "type": "free"
+      },
+      {
+        "id": 10,
+        "name": "ABC",
+        "type": "tve"
+      },
+      {
+        "id": 13,
+        "name": "AMC",
+        "type": "tve"
+      },
+      {
+        "id": 467,
+        "name": "Arrow Video Channel",
+        "type": "sub"
+      },
+      {
+        "id": 462,
+        "name": "Fawesome",
+        "type": "free"
+      },
+      {
+        "id": 122,
+        "name": "FX",
+        "type": "tve"
+      },
+      {
+        "id": 367,
+        "name": "Kanopy",
+        "type": "sub"
+      },
+      {
+        "id": 192,
+        "name": "NBC",
+        "type": "tve"
+      },
+      {
+        "id": 299,
+        "name": "USA",
+        "type": "tve"
+      },
+      {
+        "id": 369,
+        "name": "Youtube Premium",
+        "type": "free"
+      },
+      {
+        "id": 368,
+        "name": "Youtube Premium",
+        "type": "sub"
+      },
+      {
+        "id": 80,
+        "name": "Crunchyroll Premium",
+        "type": "sub"
+      },
+      {
+        "id": 439,
+        "name": "Plex",
+        "type": "free"
+      },
+      {
+        "id": 451,
+        "name": "Topic",
+        "type": "sub"
+      },
+      {
+        "id": 366,
+        "name": "The Criterion Channel",
+        "type": "sub"
+      },
+      {
+        "id": 125,
+        "name": "Fandor",
+        "type": "sub"
+      },
+      {
+        "id": 252,
+        "name": "Shudder",
+        "type": "sub"
+      },
+      {
+        "id": 318,
+        "name": "WWE Network",
+        "type": "sub"
+      },
+      {
+        "id": 349,
+        "name": "AppleTV",
+        "type": "purchase"
+      },
+      {
+        "id": 215,
+        "name": "PBS",
+        "type": "free"
+      },
+      {
+        "id": 140,
+        "name": "Google Play",
+        "type": "purchase"
+      },
+      {
+        "id": 24,
+        "name": "Amazon",
+        "type": "purchase"
+      },
+      {
+        "id": 307,
+        "name": "Fandango at Home",
+        "type": "purchase"
+      },
+      {
+        "id": 344,
+        "name": "YouTube",
+        "type": "purchase"
+      },
+      {
+        "id": 452,
+        "name": "The Roku Channel",
+        "type": "free"
+      },
+      {
+        "id": 270,
+        "name": "Syfy",
+        "type": "tve"
+      },
+      {
+        "id": 271,
+        "name": "Syfy",
+        "type": "free"
+      },
+      {
+        "id": 18,
+        "name": "Acorn TV (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 647,
+        "name": "Acorn TV Apple TV Channel",
+        "type": "sub"
+      },
+      {
+        "id": 625,
+        "name": "AMC Plus Apple TV Channel",
+        "type": "sub"
+      },
+      {
+        "id": 613,
+        "name": "AMC+ Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 736,
+        "name": "AMC+ Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 612,
+        "name": "AppleTV+ Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 737,
+        "name": "BET+ Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 735,
+        "name": "BritBox Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 68,
+        "name": "Cinemax (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 683,
+        "name": "Crunchyroll Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 81,
+        "name": "Curiosity Stream (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 734,
+        "name": "Discovery+ Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 126,
+        "name": "Fandor (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 777,
+        "name": "France Channel Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 358,
+        "name": "Hallmark Movies Now (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 725,
+        "name": "HIDIVE Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 148,
+        "name": "HISTORY Vault (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 648,
+        "name": "HISTORY Vault Apple TV Channel",
+        "type": "sub"
+      },
+      {
+        "id": 803,
+        "name": "Howdy Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 634,
+        "name": "Hulu on Disney+",
+        "type": "sub"
+      },
+      {
+        "id": 664,
+        "name": "Kocowa Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 490,
+        "name": "HBO Max (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 733,
+        "name": "Max Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 728,
+        "name": "MGM+ Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 732,
+        "name": "Paramount+ Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 729,
+        "name": "PBS Living Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 776,
+        "name": "REELZ+ Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 247,
+        "name": "Shout! Factory TV (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 253,
+        "name": "Shudder (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 234,
+        "name": "STARZ (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 731,
+        "name": "STARZ Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 269,
+        "name": "SundanceNow Doc Club (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 644,
+        "name": "ViX Premium Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 775,
+        "name": "Wonder Project Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 443,
+        "name": "Spectrum On Demand",
+        "type": "sub"
+      },
+      {
+        "id": 442,
+        "name": "DirecTV On Demand",
+        "type": "sub"
+      },
+      {
+        "id": 7,
+        "name": "A&E",
+        "type": "free"
+      },
+      {
+        "id": 8,
+        "name": "A&E",
+        "type": "tve"
+      },
+      {
+        "id": 17,
+        "name": "Acorn TV",
+        "type": "sub"
+      },
+      {
+        "id": 19,
+        "name": "Adult Swim",
+        "type": "free"
+      },
+      {
+        "id": 20,
+        "name": "Adult Swim",
+        "type": "tve"
+      },
+      {
+        "id": 12,
+        "name": "AHC GO",
+        "type": "tve"
+      },
+      {
+        "id": 378,
+        "name": "AMC+",
+        "type": "sub"
+      },
+      {
+        "id": 758,
+        "name": "AmericaEast.TV",
+        "type": "free"
+      },
+      {
+        "id": 30,
+        "name": "Animal Planet GO",
+        "type": "tve"
+      },
+      {
+        "id": 522,
+        "name": "Apple TV",
+        "type": "sub"
+      },
+      {
+        "id": 757,
+        "name": "B1G+",
+        "type": "sub"
+      },
+      {
+        "id": 32,
+        "name": "BBC America",
+        "type": "tve"
+      },
+      {
+        "id": 34,
+        "name": "BET",
+        "type": "tve"
+      },
+      {
+        "id": 382,
+        "name": "BET+",
+        "type": "sub"
+      },
+      {
+        "id": 46,
+        "name": "Bravo",
+        "type": "tve"
+      },
+      {
+        "id": 376,
+        "name": "Britbox",
+        "type": "sub"
+      },
+      {
+        "id": 377,
+        "name": "Britbox (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 774,
+        "name": "BYUtv",
+        "type": "free"
+      },
+      {
+        "id": 62,
+        "name": "Cartoon Network",
+        "type": "tve"
+      },
+      {
+        "id": 63,
+        "name": "Cartoon Network",
+        "type": "free"
+      },
+      {
+        "id": 50,
+        "name": "CBS",
+        "type": "free"
+      },
+      {
+        "id": 53,
+        "name": "CBS News",
+        "type": "free"
+      },
+      {
+        "id": 782,
+        "name": "College Conference of Illinois and Wisconsin",
+        "type": "free"
+      },
+      {
+        "id": 766,
+        "name": "Centennial Conference Digital Network",
+        "type": "free"
+      },
+      {
+        "id": 761,
+        "name": "CIAA Sports Network",
+        "type": "free"
+      },
+      {
+        "id": 384,
+        "name": "Cinemax (Via Hulu)",
+        "type": "sub"
+      },
+      {
+        "id": 481,
+        "name": "Cineverse",
+        "type": "free"
+      },
+      {
+        "id": 667,
+        "name": "Cineverse Subscription",
+        "type": "sub"
+      },
+      {
+        "id": 779,
+        "name": "Conference of New England Sports Network",
+        "type": "free"
+      },
+      {
+        "id": 79,
+        "name": "Crunchyroll",
+        "type": "free"
+      },
+      {
+        "id": 491,
+        "name": "Crunchyroll Premium (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 421,
+        "name": "Curiosity Stream",
+        "type": "sub"
+      },
+      {
+        "id": 284,
+        "name": "The CW",
+        "type": "free"
+      },
+      {
+        "id": 573,
+        "name": "dAnime Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 405,
+        "name": "Darkmatter TV",
+        "type": "sub"
+      },
+      {
+        "id": 530,
+        "name": "DAZN",
+        "type": "sub"
+      },
+      {
+        "id": 86,
+        "name": "Destination America GO",
+        "type": "tve"
+      },
+      {
+        "id": 520,
+        "name": "DIRECTV Stream",
+        "type": "sub"
+      },
+      {
+        "id": 91,
+        "name": "Discovery GO",
+        "type": "tve"
+      },
+      {
+        "id": 93,
+        "name": "Discovery Life GO",
+        "type": "tve"
+      },
+      {
+        "id": 445,
+        "name": "Discovery+",
+        "type": "sub"
+      },
+      {
+        "id": 493,
+        "name": "Discovery+ (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 778,
+        "name": "Empire 8 Network",
+        "type": "free"
+      },
+      {
+        "id": 526,
+        "name": "ESPN",
+        "type": "tve"
+      },
+      {
+        "id": 525,
+        "name": "ESPN Deportes",
+        "type": "tve"
+      },
+      {
+        "id": 521,
+        "name": "ESPN+",
+        "type": "sub"
+      },
+      {
+        "id": 759,
+        "name": "Fanatiz",
+        "type": "sub"
+      },
+      {
+        "id": 308,
+        "name": "Fandango at Home Free",
+        "type": "free"
+      },
+      {
+        "id": 772,
+        "name": "Filmzie",
+        "type": "free"
+      },
+      {
+        "id": 422,
+        "name": "Flix Premiere",
+        "type": "sub"
+      },
+      {
+        "id": 399,
+        "name": "FlixFling",
+        "type": "sub"
+      },
+      {
+        "id": 531,
+        "name": "Flo Rugby",
+        "type": "sub"
+      },
+      {
+        "id": 751,
+        "name": "FloCollege",
+        "type": "sub"
+      },
+      {
+        "id": 131,
+        "name": "Food Network",
+        "type": "free"
+      },
+      {
+        "id": 114,
+        "name": "FOX",
+        "type": "tve"
+      },
+      {
+        "id": 115,
+        "name": "FOX",
+        "type": "free"
+      },
+      {
+        "id": 563,
+        "name": "FOX One",
+        "type": "sub"
+      },
+      {
+        "id": 564,
+        "name": "FOX One Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 527,
+        "name": "Fox Sports 1",
+        "type": "tve"
+      },
+      {
+        "id": 361,
+        "name": "Freeform",
+        "type": "free"
+      },
+      {
+        "id": 132,
+        "name": "Freeform",
+        "type": "tve"
+      },
+      {
+        "id": 373,
+        "name": "fuboTV",
+        "type": "sub"
+      },
+      {
+        "id": 347,
+        "name": "fyi",
+        "type": "free"
+      },
+      {
+        "id": 348,
+        "name": "fyi",
+        "type": "tve"
+      },
+      {
+        "id": 771,
+        "name": "GAC Sports Network",
+        "type": "sub"
+      },
+      {
+        "id": 763,
+        "name": "GLVC Sports Network",
+        "type": "free"
+      },
+      {
+        "id": 401,
+        "name": "GuideDoc",
+        "type": "sub"
+      },
+      {
+        "id": 151,
+        "name": "Hallmark Channel Everywhere",
+        "type": "tve"
+      },
+      {
+        "id": 152,
+        "name": "Hallmark Movies Now",
+        "type": "sub"
+      },
+      {
+        "id": 385,
+        "name": "HBO (Via Hulu)",
+        "type": "sub"
+      },
+      {
+        "id": 147,
+        "name": "HGTV",
+        "type": "free"
+      },
+      {
+        "id": 420,
+        "name": "HiDive",
+        "type": "sub"
+      },
+      {
+        "id": 287,
+        "name": "The History Channel",
+        "type": "tve"
+      },
+      {
+        "id": 288,
+        "name": "The History Channel",
+        "type": "free"
+      },
+      {
+        "id": 390,
+        "name": "Hoopla",
+        "type": "sub"
+      },
+      {
+        "id": 795,
+        "name": "Howdy on Roku Channel",
+        "type": "sub"
+      },
+      {
+        "id": 160,
+        "name": "IFC",
+        "type": "tve"
+      },
+      {
+        "id": 165,
+        "name": "Investigation Discovery",
+        "type": "free"
+      },
+      {
+        "id": 166,
+        "name": "Investigation Discovery GO",
+        "type": "tve"
+      },
+      {
+        "id": 788,
+        "name": "JustWatch TV Free",
+        "type": "free"
+      },
+      {
+        "id": 789,
+        "name": "JustWatch TV Plus",
+        "type": "sub"
+      },
+      {
+        "id": 790,
+        "name": "JustWatch TV Store",
+        "type": "purchase"
+      },
+      {
+        "id": 470,
+        "name": "Kocowa",
+        "type": "sub"
+      },
+      {
+        "id": 654,
+        "name": "KQED",
+        "type": "free"
+      },
+      {
+        "id": 170,
+        "name": "Lifetime",
+        "type": "free"
+      },
+      {
+        "id": 171,
+        "name": "Lifetime",
+        "type": "tve"
+      },
+      {
+        "id": 533,
+        "name": "Lionsgate+ (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 169,
+        "name": "LOGO",
+        "type": "tve"
+      },
+      {
+        "id": 768,
+        "name": "MACtv",
+        "type": "free"
+      },
+      {
+        "id": 784,
+        "name": "MASCAC TV",
+        "type": "free"
+      },
+      {
+        "id": 753,
+        "name": "MEAC Network",
+        "type": "free"
+      },
+      {
+        "id": 375,
+        "name": "MGM+ (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 479,
+        "name": "MHz Choice",
+        "type": "sub"
+      },
+      {
+        "id": 762,
+        "name": "MIAA Digital Network",
+        "type": "sub"
+      },
+      {
+        "id": 780,
+        "name": "MIAC",
+        "type": "free"
+      },
+      {
+        "id": 752,
+        "name": "Midco Sports Plus",
+        "type": "sub"
+      },
+      {
+        "id": 523,
+        "name": "MLB.TV",
+        "type": "sub"
+      },
+      {
+        "id": 755,
+        "name": "Mountain West+",
+        "type": "sub"
+      },
+      {
+        "id": 178,
+        "name": "MTV",
+        "type": "tve"
+      },
+      {
+        "id": 179,
+        "name": "MTV",
+        "type": "free"
+      },
+      {
+        "id": 181,
+        "name": "MUBI",
+        "type": "sub"
+      },
+      {
+        "id": 198,
+        "name": "National Geographic",
+        "type": "free"
+      },
+      {
+        "id": 199,
+        "name": "National Geographic",
+        "type": "tve"
+      },
+      {
+        "id": 190,
+        "name": "NBA League Pass",
+        "type": "sub"
+      },
+      {
+        "id": 191,
+        "name": "NBC",
+        "type": "free"
+      },
+      {
+        "id": 194,
+        "name": "NBC News",
+        "type": "tve"
+      },
+      {
+        "id": 756,
+        "name": "NEC Front Row",
+        "type": "free"
+      },
+      {
+        "id": 651,
+        "name": "NFL Sunday Ticket",
+        "type": "sub"
+      },
+      {
+        "id": 650,
+        "name": "NFL+",
+        "type": "sub"
+      },
+      {
+        "id": 769,
+        "name": "North Coast Network",
+        "type": "free"
+      },
+      {
+        "id": 480,
+        "name": "OnDemandKorea",
+        "type": "free"
+      },
+      {
+        "id": 214,
+        "name": "Oxygen",
+        "type": "tve"
+      },
+      {
+        "id": 767,
+        "name": "PAC Digital Network",
+        "type": "free"
+      },
+      {
+        "id": 221,
+        "name": "Paramount Network",
+        "type": "tve"
+      },
+      {
+        "id": 489,
+        "name": "Paramount+ (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 501,
+        "name": "Paramount+ (Via Apple TV)",
+        "type": "sub"
+      },
+      {
+        "id": 217,
+        "name": "PBS Kids",
+        "type": "free"
+      },
+      {
+        "id": 485,
+        "name": "PBS Masterpiece (Via Amazon Prime)",
+        "type": "sub"
+      },
+      {
+        "id": 565,
+        "name": "Peacock Premium Plus Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 468,
+        "name": "Philo",
+        "type": "sub"
+      },
+      {
+        "id": 666,
+        "name": "Philo Free",
+        "type": "free"
+      },
+      {
+        "id": 463,
+        "name": "Plex",
+        "type": "purchase"
+      },
+      {
+        "id": 391,
+        "name": "Pluto TV",
+        "type": "free"
+      },
+      {
+        "id": 225,
+        "name": "Popcornflix",
+        "type": "free"
+      },
+      {
+        "id": 25,
+        "name": "Prime Video Free",
+        "type": "free"
+      },
+      {
+        "id": 760,
+        "name": "PSAC Sports Digital Network",
+        "type": "free"
+      },
+      {
+        "id": 471,
+        "name": "Rakuten Viki",
+        "type": "sub"
+      },
+      {
+        "id": 770,
+        "name": "RMAC Network",
+        "type": "sub"
+      },
+      {
+        "id": 237,
+        "name": "Science GO",
+        "type": "tve"
+      },
+      {
+        "id": 246,
+        "name": "Shout! Factory TV",
+        "type": "free"
+      },
+      {
+        "id": 764,
+        "name": "SIAC Network",
+        "type": "free"
+      },
+      {
+        "id": 787,
+        "name": "Sling Freestream",
+        "type": "free"
+      },
+      {
+        "id": 519,
+        "name": "Sling TV",
+        "type": "sub"
+      },
+      {
+        "id": 668,
+        "name": "Sling TV Orange",
+        "type": "sub"
+      },
+      {
+        "id": 259,
+        "name": "South Park Studios",
+        "type": "free"
+      },
+      {
+        "id": 386,
+        "name": "STARZ (Via Hulu)",
+        "type": "sub"
+      },
+      {
+        "id": 433,
+        "name": "Sun Nxt",
+        "type": "sub"
+      },
+      {
+        "id": 267,
+        "name": "Sundance",
+        "type": "tve"
+      },
+      {
+        "id": 268,
+        "name": "SundanceNow Doc Club",
+        "type": "sub"
+      },
+      {
+        "id": 781,
+        "name": "SUNYAC",
+        "type": "free"
+      },
+      {
+        "id": 754,
+        "name": "SWAC TV",
+        "type": "free"
+      },
+      {
+        "id": 272,
+        "name": "TBS",
+        "type": "tve"
+      },
+      {
+        "id": 528,
+        "name": "Tennis Channel",
+        "type": "sub"
+      },
+      {
+        "id": 529,
+        "name": "Tennis Channel Amazon Channel",
+        "type": "sub"
+      },
+      {
+        "id": 274,
+        "name": "TLC GO",
+        "type": "tve"
+      },
+      {
+        "id": 276,
+        "name": "TNT",
+        "type": "tve"
+      },
+      {
+        "id": 292,
+        "name": "Travel Channel",
+        "type": "free"
+      },
+      {
+        "id": 353,
+        "name": "truTV",
+        "type": "tve"
+      },
+      {
+        "id": 277,
+        "name": "TV Land",
+        "type": "tve"
+      },
+      {
+        "id": 278,
+        "name": "TV Land",
+        "type": "free"
+      },
+      {
+        "id": 783,
+        "name": "UMAC Sports Network",
+        "type": "free"
+      },
+      {
+        "id": 298,
+        "name": "USA",
+        "type": "free"
+      },
+      {
+        "id": 302,
+        "name": "VH1",
+        "type": "free"
+      },
+      {
+        "id": 303,
+        "name": "VH1",
+        "type": "tve"
+      },
+      {
+        "id": 305,
+        "name": "Vice TV",
+        "type": "tve"
+      },
+      {
+        "id": 313,
+        "name": "Vimeo",
+        "type": "free"
+      },
+      {
+        "id": 474,
+        "name": "ViX",
+        "type": "free"
+      },
+      {
+        "id": 330,
+        "name": "Watch Food Network",
+        "type": "tve"
+      },
+      {
+        "id": 331,
+        "name": "Watch HGTV",
+        "type": "tve"
+      },
+      {
+        "id": 332,
+        "name": "Watch TCM",
+        "type": "tve"
+      },
+      {
+        "id": 333,
+        "name": "Watch Travel Channel",
+        "type": "tve"
+      },
+      {
+        "id": 315,
+        "name": "WE tv",
+        "type": "tve"
+      },
+      {
+        "id": 478,
+        "name": "WETA+",
+        "type": "sub"
+      },
+      {
+        "id": 765,
+        "name": "WIAC Network",
+        "type": "free"
+      },
+      {
+        "id": 398,
+        "name": "Windows Store",
+        "type": "purchase"
+      },
+      {
+        "id": 524,
+        "name": "WNBA League Pass",
+        "type": "sub"
+      },
+      {
+        "id": 540,
+        "name": "WOW Presents Plus",
+        "type": "sub"
+      },
+      {
+        "id": 472,
+        "name": "Xumo Play",
+        "type": "free"
+      },
+      {
+        "id": 345,
+        "name": "YouTube",
+        "type": "free"
+      },
+      {
+        "id": 469,
+        "name": "YouTube TV",
+        "type": "sub"
+      }
+    ]
   }
 }

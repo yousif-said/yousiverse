@@ -78,6 +78,13 @@
       "when": 1794613323367,
       "tag": "0010_quiet_stone_men",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794613516966,
+      "tag": "0011_handy_mad_thinker",
+      "breakpoints": true
     }
   ]
 }

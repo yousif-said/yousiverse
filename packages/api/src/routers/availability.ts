@@ -1,10 +1,26 @@
 import { TRPCError } from "@trpc/server";
-import { gameDeals, offerKinds, streamingOffers, streamingServices } from "@yousiverse/db/schema";
+import {
+  gameDeals,
+  offerKinds,
+  streamingOffers,
+  streamingServices,
+  userSubscriptions,
+} from "@yousiverse/db/schema";
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { ensureGamePrices, findGame } from "../availability/game-prices";
 import { ensureStreamingOffers, findStreamableTitle } from "../availability/streaming";
-import { publicProcedure, router } from "../trpc";
+import { type Context, publicProcedure, router } from "../trpc";
+
+/** The services the signed-in person says they subscribe to. Null for a signed-out visitor. */
+async function viewerSubscriptions(ctx: Context): Promise<Set<string> | null> {
+  if (!ctx.session) return null;
+  const rows = await ctx.db
+    .select({ serviceId: userSubscriptions.serviceId })
+    .from(userSubscriptions)
+    .where(eq(userSubscriptions.userId, ctx.session.user.id));
+  return new Set(rows.map((row) => row.serviceId));
+}
 
 export const availabilityRouter = router({
   /**
@@ -20,25 +36,40 @@ export const availabilityRouter = router({
       const check = await ensureStreamingOffers(ctx.db, title);
       if (!check) return { offers: null };
 
-      const offers = await ctx.db
-        .select({
-          id: streamingOffers.id,
-          kind: streamingOffers.kind,
-          service: streamingServices.name,
-          priceCents: streamingOffers.priceCents,
-          url: streamingOffers.url,
-        })
-        .from(streamingOffers)
-        .innerJoin(streamingServices, eq(streamingServices.id, streamingOffers.serviceId))
-        .where(eq(streamingOffers.mediaId, title.id))
-        .orderBy(asc(streamingServices.name));
+      const [found, subscribed] = await Promise.all([
+        ctx.db
+          .select({
+            id: streamingOffers.id,
+            kind: streamingOffers.kind,
+            serviceId: streamingServices.id,
+            service: streamingServices.name,
+            priceCents: streamingOffers.priceCents,
+            url: streamingOffers.url,
+          })
+          .from(streamingOffers)
+          .innerJoin(streamingServices, eq(streamingServices.id, streamingOffers.serviceId))
+          .where(eq(streamingOffers.mediaId, title.id))
+          .orderBy(asc(streamingServices.name)),
+        viewerSubscriptions(ctx),
+      ]);
       // Grouped by kind in the order of `offerKinds`, cheapest first within a kind.
-      offers.sort(
+      found.sort(
         (a, b) =>
           offerKinds.indexOf(a.kind) - offerKinds.indexOf(b.kind) ||
           (a.priceCents ?? 0) - (b.priceCents ?? 0),
       );
-      return { offers, checkedAt: check.checkedAt, outOfDate: check.outOfDate };
+      const offers = found.map(({ serviceId, ...offer }) => ({
+        ...offer,
+        /** True when the signed-in person says they subscribe to this service. */
+        included: offer.kind === "subscription" && (subscribed?.has(serviceId) ?? false),
+      }));
+      return {
+        offers,
+        checkedAt: check.checkedAt,
+        outOfDate: check.outOfDate,
+        /** How many subscriptions the signed-in person says they have. Null when signed out. */
+        subscriptionCount: subscribed?.size ?? null,
+      };
     }),
 
   /**
