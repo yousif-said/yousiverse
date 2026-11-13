@@ -6,7 +6,9 @@ import { Button } from "@yousiverse/ui/components/button";
 import { Label } from "@yousiverse/ui/components/label";
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
+import { isVisibility, visibilityNote } from "@/lib/visibility";
 import { useTRPC } from "@/trpc/client";
+import { VisibilitySelect } from "./visibility-select";
 
 type Review = NonNullable<RouterOutputs["reviews"]["list"]["mine"]>;
 type Props = { target: { mediaId: string } | { episodeId: string }; initialReview: Review | null };
@@ -30,9 +32,10 @@ export function ReviewEditor({ target, initialReview }: Props) {
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const visibility = form.get("visibility");
     const next: Review = {
       body: String(form.get("body")).trim(),
-      visibility: form.get("private") ? "private" : "public",
+      visibility: isVisibility(visibility) ? visibility : "public",
     };
     setProblem(undefined);
     try {
@@ -67,7 +70,7 @@ export function ReviewEditor({ target, initialReview }: Props) {
     return (
       <div className="space-y-3 rounded-lg border bg-card p-5">
         <h3 className="text-sm text-muted-foreground">
-          Your review{review.visibility === "private" && ", visible only to you"}
+          Your review{visibilityNote(review.visibility, "visible only to you")}
         </h3>
         <p className="max-w-[65ch] text-pretty leading-relaxed whitespace-pre-line">
           {review.body}
@@ -98,15 +101,11 @@ export function ReviewEditor({ target, initialReview }: Props) {
         placeholder="What did you think?"
         className="block w-full rounded-md border border-input bg-card px-3 py-2 leading-relaxed outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
       />
-      <label className="flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          name="private"
-          defaultChecked={review?.visibility === "private"}
-          className="size-4 accent-primary"
-        />
-        Only I can see this review
-      </label>
+      <VisibilitySelect
+        label="Who can read this review"
+        name="visibility"
+        defaultValue={review?.visibility ?? "public"}
+      />
       <div className="flex gap-2">
         <Button type="submit" disabled={save.isPending}>
           {review ? "Save changes" : "Post review"}

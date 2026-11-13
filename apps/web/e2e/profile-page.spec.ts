@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 import { signIn } from "./session";
 import { expect, test } from "./test";
 
-async function andStore(page: Page, request: RegExp, action: Promise<void>) {
+async function andStore(page: Page, request: RegExp, action: Promise<unknown>) {
   const stored = page.waitForResponse(request);
   await action;
   await stored;
@@ -37,7 +37,10 @@ test("a public profile shows what its owner made public and nothing private", as
   await andStore(
     page,
     /library\.save/,
-    page.getByRole("checkbox", { name: "Only I can see this in my library" }).check(),
+    page
+      .getByLabel("Who can see this in your library")
+      .selectOption("Only me")
+      .then(() => {}),
   );
 
   await page.goto("/lists");
@@ -73,7 +76,7 @@ test("a public profile shows what its owner made public and nothing private", as
   await page.goto("/account");
   await page.getByRole("link", { name: "View your public profile" }).click();
   await expect(page).toHaveURL(`/u/${username}`);
-  await expect(page.getByText("This is your profile as other people see it")).toBeVisible();
+  await expect(page.getByText("This is your profile as the public sees it")).toBeVisible();
   await expect(page.getByText("Hades")).toHaveCount(0);
 });
 

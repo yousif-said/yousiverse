@@ -7,8 +7,11 @@ export type LibraryStatus = (typeof libraryStatuses)[number];
 
 export const libraryStatus = pgEnum("library_status", libraryStatuses);
 
-/** Who can see a piece of user content. "friends" joins this list with the social features. */
-export const visibilities = ["public", "private"] as const;
+/**
+ * Who can see a piece of user content: everyone, only the owner's friends (people the owner
+ * follows who follow them back), or only the owner.
+ */
+export const visibilities = ["public", "friends", "private"] as const;
 export type Visibility = (typeof visibilities)[number];
 
 export const visibility = pgEnum("visibility", visibilities);

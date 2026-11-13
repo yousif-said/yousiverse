@@ -11,6 +11,7 @@ import {
 } from "@/lib/library";
 import { isMediaType, MEDIA, MEDIA_TYPES } from "@/lib/media";
 import { requireSession } from "@/lib/session";
+import { visibilityNote } from "@/lib/visibility";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Library" };
@@ -88,10 +89,7 @@ export default async function LibraryPage({ searchParams }: PageProps<"/library"
             <li key={entry.mediaId}>
               <TitleCard
                 {...entry}
-                note={
-                  statusLabel(entry.status, entry.type) +
-                  (entry.visibility === "private" ? ", only you" : "")
-                }
+                note={statusLabel(entry.status, entry.type) + visibilityNote(entry.visibility)}
               />
             </li>
           ))}

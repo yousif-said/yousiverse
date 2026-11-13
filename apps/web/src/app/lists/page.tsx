@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CreateListForm } from "@/components/create-list-form";
 import { pluralize } from "@/lib/format";
 import { requireSession } from "@/lib/session";
+import { visibilityNote } from "@/lib/visibility";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Lists" };
@@ -35,7 +36,7 @@ export default async function ListsPage() {
                 <span className="font-medium">{list.name}</span>
                 <span className="shrink-0 text-sm text-muted-foreground tabular-nums">
                   {pluralize(list.itemCount, "title")}
-                  {list.visibility === "private" && ", only you"}
+                  {visibilityNote(list.visibility)}
                 </span>
               </Link>
             </li>

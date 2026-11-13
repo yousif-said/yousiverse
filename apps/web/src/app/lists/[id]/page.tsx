@@ -3,6 +3,7 @@ import { ListSettings } from "@/components/list-settings";
 import { MemberName } from "@/components/member-name";
 import { RemoveListItemButton } from "@/components/remove-list-item-button";
 import { TitleCard, titleGridClasses } from "@/components/title-card";
+import { visibilityNote } from "@/lib/visibility";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
 
 type Props = PageProps<"/lists/[id]">;
@@ -33,7 +34,7 @@ export default async function ListPage({ params }: Props) {
             A list by <MemberName username={list.owner} />
           </>
         )}
-        {list.visibility === "private" && ", visible only to you"}
+        {visibilityNote(list.visibility, "visible only to you")}
       </p>
       {list.description && (
         <p className="mt-6 max-w-[65ch] text-pretty leading-relaxed whitespace-pre-line">

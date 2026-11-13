@@ -6,6 +6,7 @@ import { useState } from "react";
 import { LIBRARY_STATUSES, type LibraryEntry, statusLabel } from "@/lib/library";
 import type { MediaType } from "@/lib/media";
 import { useTRPC } from "@/trpc/client";
+import { VisibilitySelect } from "./visibility-select";
 
 type Props = { mediaId: string; type: MediaType; initialEntry: LibraryEntry | null };
 
@@ -53,17 +54,11 @@ export function LibraryControl({ mediaId, type, initialEntry }: Props) {
 
       {entry && (
         <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={entry.visibility === "private"}
-              onChange={(event) =>
-                change({ ...entry, visibility: event.target.checked ? "private" : "public" })
-              }
-              className="size-4 accent-primary"
-            />
-            Only I can see this in my library
-          </label>
+          <VisibilitySelect
+            label="Who can see this in your library"
+            value={entry.visibility}
+            onChange={(visibility) => change({ ...entry, visibility })}
+          />
           <button
             type="button"
             onClick={() => change(null)}

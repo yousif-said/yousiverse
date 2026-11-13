@@ -50,7 +50,7 @@ test("makes a list, fills it from title pages, shares it, then hides and deletes
   await page.getByText("Edit list").click();
   await page.getByLabel("Name").fill("Saturday picks");
   await page.getByLabel("Description").fill("For a slow weekend.");
-  await page.getByRole("checkbox", { name: "Only I can see this list" }).check();
+  await page.getByLabel("Who can see this list").selectOption("Only me");
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Saturday picks" })).toBeVisible();
   await expect(page.getByText("Your list, visible only to you")).toBeVisible();

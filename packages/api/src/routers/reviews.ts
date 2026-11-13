@@ -3,6 +3,7 @@ import { and, desc, eq, isNull, ne, sql } from "drizzle-orm";
 import { z } from "zod";
 import { resolveTarget, type Target, target } from "../targets";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { visibleToOthers } from "../visibility";
 
 const MAX_REVIEW_LENGTH = 10_000;
 const MAX_REVIEWS_SHOWN = 50;
@@ -43,8 +44,9 @@ export const reviewsRouter = router({
   }),
 
   /**
-   * The asking person's own review, whoever can see it, and other people's public reviews,
-   * newest first. A private review is never returned to anyone but its author.
+   * The asking person's own review, whoever can see it, and the reviews by other people that
+   * they may see, newest first: public ones, and friends-only ones by their friends. A private
+   * review is never returned to anyone but its author.
    */
   list: publicProcedure.input(z.object({ target })).query(async ({ ctx, input }) => {
     const userId = ctx.session?.user.id;
@@ -79,7 +81,7 @@ export const reviewsRouter = router({
       .where(
         and(
           reviewsOf(input.target),
-          eq(reviews.visibility, "public"),
+          visibleToOthers(userId, reviews.userId, reviews.visibility),
           userId ? ne(reviews.userId, userId) : undefined,
         ),
       )

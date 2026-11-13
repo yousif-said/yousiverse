@@ -7,7 +7,9 @@ import { Input } from "@yousiverse/ui/components/input";
 import { Label } from "@yousiverse/ui/components/label";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { isVisibility } from "@/lib/visibility";
 import { useTRPC } from "@/trpc/client";
+import { VisibilitySelect } from "./visibility-select";
 
 type List = Pick<RouterOutputs["lists"]["get"], "id" | "name" | "description" | "visibility">;
 
@@ -23,13 +25,14 @@ export function ListSettings({ list }: { list: List }) {
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
+    const visibility = form.get("visibility");
     setProblem(undefined);
     try {
       await update.mutateAsync({
         id: list.id,
         name: String(form.get("name")),
         description: String(form.get("description")),
-        visibility: form.get("private") ? "private" : "public",
+        visibility: isVisibility(visibility) ? visibility : undefined,
       });
       if (disclosure.current) disclosure.current.open = false;
       router.refresh();
@@ -71,15 +74,11 @@ export function ListSettings({ list }: { list: List }) {
             className="block w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm leading-relaxed outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
           />
         </div>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            name="private"
-            defaultChecked={list.visibility === "private"}
-            className="size-4 accent-primary"
-          />
-          Only I can see this list
-        </label>
+        <VisibilitySelect
+          label="Who can see this list"
+          name="visibility"
+          defaultValue={list.visibility}
+        />
         <div className="flex flex-wrap justify-between gap-2">
           <Button type="submit" disabled={update.isPending}>
             Save changes

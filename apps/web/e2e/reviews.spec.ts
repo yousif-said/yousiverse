@@ -19,7 +19,7 @@ test("writes, edits, hides, and deletes a review of a book", async ({ page, brow
 
   await page.getByRole("button", { name: "Edit review" }).click();
   await page.getByLabel("Your review").fill(`${body} Edited.`);
-  await page.getByRole("checkbox", { name: "Only I can see this review" }).check();
+  await page.getByLabel("Who can read this review").selectOption("Only me");
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(
     page.getByRole("heading", { name: "Your review, visible only to you" }),
