@@ -51,7 +51,7 @@ describe("reviews", () => {
     });
   });
 
-  it("publishes a review to everyone by default, with its author's name and rating", async () => {
+  it("publishes a review to everyone by default, with its author's username and rating", async () => {
     const ada = await signedInAs("Ada");
     const grace = await signedInAs("Grace");
     await ada.caller.ratings.save({ target: targets.movie, value: 38 });
@@ -64,7 +64,7 @@ describe("reviews", () => {
     for (const reader of [grace.caller, anonymous]) {
       const { mine, others } = await reader.reviews.list({ target: targets.movie });
       expect(mine).toBeNull();
-      expect(others).toMatchObject([{ author: "Ada", body: "Still holds up.", rating: 38 }]);
+      expect(others).toMatchObject([{ author: "ada", body: "Still holds up.", rating: 38 }]);
     }
   });
 
@@ -74,7 +74,16 @@ describe("reviews", () => {
 
     const { others } = await anonymous.reviews.list({ target: targets.movie });
 
-    expect(others).toMatchObject([{ author: "Ada", rating: null }]);
+    expect(others).toMatchObject([{ author: "ada", rating: null }]);
+  });
+
+  it("credits nobody by name when the author has not chosen a username", async () => {
+    const ada = await signedInAs("Ada", { username: false });
+    await ada.caller.reviews.save({ target: targets.movie, body: "Anonymous for now." });
+
+    const { others } = await anonymous.reviews.list({ target: targets.movie });
+
+    expect(others).toMatchObject([{ author: null, body: "Anonymous for now." }]);
   });
 
   it("never shows a private review to anyone but its author", async () => {

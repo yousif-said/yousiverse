@@ -43,7 +43,7 @@ describe("lists", () => {
       name: "Comfort rewatches",
       description: null,
       visibility: "public",
-      owner: "Ada",
+      owner: "ada",
       isOwner: false,
       items: [],
     });

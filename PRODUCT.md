@@ -7,7 +7,8 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 ### Foundation
 
 - **App shell:** header, navigation, and a home page with a search box and a shelf of the titles most recently added to the catalog. The shelf can be filtered by type and each title links to its page. Light and dark mode, keyboard navigable.
-- **Sign-in:** Google. A protected account page shows name, email, and join date, with sign out.
+- **Sign-in:** Google. A protected account page shows email and join date, with sign out.
+- **Usernames:** on the account page a person chooses a username and a display name. Public reviews and lists are credited to the username; until one is chosen they show no name. Email addresses and Google account names are never shown to others.
 - **Development sign-in:** email sign-in link printed to the server terminal. Not available in production.
 
 ### Catalog
@@ -35,7 +36,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 - **Text reviews** on every title: one per person, which can be edited or deleted. Reviews are public by default and can be marked so only the author sees them.
 - **TV episode pages**, opened from a season, where an episode can be rated and reviewed separately from its show.
-- A title's or episode's page lists other people's public reviews, newest first, each with its author's name and rating.
+- A title's or episode's page lists other people's public reviews, newest first, each with its author's username and rating.
 
 ### Lists
 
@@ -71,7 +72,8 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 ### Accounts and sign-in
 
 - **Emailed sign-in links** for sign-up and sign-in, alongside the Google sign-in already in the app.
-- Apple sign-in and passkeys are not planned. Apple requires an equivalent to Apple sign-in in any iOS app that offers Google sign-in, so an iOS app would offer emailed sign-in links only.
+- **Apple sign-in**, added later; it needs a paid Apple Developer membership. Apple requires it (or an equivalent) in any iOS app that offers Google sign-in, so it must be in place before an iOS app ships.
+- Passkeys are not planned.
 
 ### Social
 

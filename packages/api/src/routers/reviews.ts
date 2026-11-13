@@ -1,4 +1,4 @@
-import { ratings, reviews, users, visibilities } from "@yousiverse/db/schema";
+import { profiles, ratings, reviews, visibilities } from "@yousiverse/db/schema";
 import { and, desc, eq, isNull, ne, sql } from "drizzle-orm";
 import { z } from "zod";
 import { resolveTarget, type Target, target } from "../targets";
@@ -59,14 +59,15 @@ export const reviewsRouter = router({
     const others = await ctx.db
       .select({
         id: reviews.id,
-        author: users.name,
+        // Null when the author has not chosen a username.
+        author: profiles.username,
         body: reviews.body,
         // The author's rating of the same title or episode, in quarter points.
         rating: ratings.value,
         createdAt: reviews.createdAt,
       })
       .from(reviews)
-      .innerJoin(users, eq(users.id, reviews.userId))
+      .leftJoin(profiles, eq(profiles.userId, reviews.userId))
       .leftJoin(
         ratings,
         and(
