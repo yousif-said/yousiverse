@@ -91,7 +91,7 @@ packages/
 - **Franchise links are typed edges** (e.g. adaptation_of, same_franchise, sequel_of) between any two media items. A link is only visible in the app once it is verified. Suggested links from Wikidata or elsewhere stay hidden until reviewed.
 - **Privacy:** reviews, lists, and libraries carry an explicit visibility, public by default (public or private today; friends is added with the social features). Every query that returns user content must respect it. Add tests for visibility rules.
 - **Library statuses:** want, in_progress, finished, dropped.
-- **Names shown to others:** credit user content to the username in `profiles`, never to `users.name` or an email address. A person without a username is shown as "A Yousiverse member".
+- **Names shown to others:** credit user content to the username in `profiles`, never to `users.name` or an email address. A person without a username is shown as "A Yousiverse member" (`MemberName`). Profiles live at `/u/<username>`.
 - **Clubs:** each club has an allowlist of media types; club views and queries must filter to it.
 - UI should feel fast, clean, and modern. Use the frontend-design plugin for new screens. Support light and dark mode and keyboard navigation from the start.
 - Write or update tests with every feature. Use Playwright for critical user flows (sign-in, adding to library, rating, reviewing).
