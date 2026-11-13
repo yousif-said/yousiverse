@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ListSettings } from "@/components/list-settings";
+import { MemberName } from "@/components/member-name";
 import { RemoveListItemButton } from "@/components/remove-list-item-button";
 import { TitleCard, titleGridClasses } from "@/components/title-card";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
@@ -25,7 +26,13 @@ export default async function ListPage({ params }: Props) {
         {list.name}
       </h1>
       <p className="mt-4 text-muted-foreground">
-        {list.isOwner ? "Your list" : `A list by ${list.owner ?? "a Yousiverse member"}`}
+        {list.isOwner ? (
+          "Your list"
+        ) : (
+          <>
+            A list by <MemberName username={list.owner} />
+          </>
+        )}
         {list.visibility === "private" && ", visible only to you"}
       </p>
       {list.description && (

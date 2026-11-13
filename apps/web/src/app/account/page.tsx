@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ProfileForm } from "@/components/profile-form";
 import { SignOutButton } from "@/components/sign-out-button";
+import { profilePath } from "@/lib/profile";
 import { requireSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
 
@@ -23,6 +25,16 @@ export default async function AccountPage() {
 
       <h2 className="mt-10 mb-4 font-display text-2xl font-bold tracking-tight">Profile</h2>
       <ProfileForm initialProfile={profile} />
+      {profile.username && (
+        <p className="mt-3 text-sm">
+          <Link
+            href={profilePath(profile.username)}
+            className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          >
+            View your public profile
+          </Link>
+        </p>
+      )}
 
       <h2 className="mt-10 mb-4 font-display text-2xl font-bold tracking-tight">Sign-in</h2>
       <dl className="divide-y rounded-lg border bg-card">

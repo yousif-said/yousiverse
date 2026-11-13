@@ -11,6 +11,11 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Usernames:** on the account page a person chooses a username and a display name. Public reviews and lists are credited to the username; until one is chosen they show no name. Email addresses and Google account names are never shown to others.
 - **Development sign-in:** email sign-in link printed to the server terminal. Not available in production.
 
+### Profiles
+
+- **Public profile pages** at `/u/<username>` for everyone who has chosen a username, showing their display name, public library (filterable by type and status), public lists, and public reviews. Anything marked private is left out, for the owner too, so a profile always shows what other people see.
+- Usernames on reviews and lists link to the author's profile.
+
 ### Catalog
 
 - **Search** for movies, TV shows, games, and books by title, with results as you type. Results are grouped by type and each group appears as soon as its source answers. A filter narrows the search to one type. If one source is down, the rest still show and the page says what is missing.
@@ -24,7 +29,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 - **Personal library** across all four media types. Each title page has a status control: want, in progress, finished, or dropped, worded for the type (want to read, playing). A title can be marked so only its owner can see it, and removed again.
 - **Library page** showing everything in the library, most recently changed first, filterable by media type and by status.
-- Library entries are public by default. Nothing shows another person's library yet; that arrives with profiles.
+- Library entries are public by default and appear on their owner's profile.
 
 ### Ratings
 
@@ -78,7 +83,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 ### Social
 
 - **Friends and following.**
-- **View a friend's profile read-only**, laid out like your own.
 - **Clubs/groups:** cross-medium clubs that are invite-only or public. The creator picks which media types the club covers, and the club only shows those (a book club sees only books).
 
 ### Recommendations
