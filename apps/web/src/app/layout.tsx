@@ -56,6 +56,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 IGDB
               </a>
+              . Streaming availability comes from{" "}
+              <a
+                href="https://www.watchmode.com"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                Watchmode
+              </a>
               . Book data and covers come from{" "}
               <a
                 href="https://openlibrary.org"

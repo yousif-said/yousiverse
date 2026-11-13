@@ -1,6 +1,7 @@
 /**
  * Records real provider responses into src/fixtures for tests to replay.
- * Run `bun run --cwd packages/integrations record` after adding a request below.
+ * Run `bun run --cwd packages/integrations record` after adding a request below. Name providers
+ * to record only those (`record watchmode`), which leaves the other fixture files untouched.
  */
 import { writeFile } from "node:fs/promises";
 import { fixtureKey } from "../src/fixtures/fixture-fetch";
@@ -54,6 +55,15 @@ const openLibraryWork = (workId: string) => [
   openLibrary("/search.json", { q: `key:/works/${workId}`, fields: WORK_FIELDS, limit: "1" }),
 ];
 
+function watchmode(path: string, params: Record<string, string> = {}): Recording {
+  const url = new URL(`https://api.watchmode.com/v1${path}`);
+  url.search = new URLSearchParams({
+    ...params,
+    apiKey: process.env.WATCHMODE_API_KEY ?? "",
+  }).toString();
+  return { url: url.href };
+}
+
 // Responses that must not be recorded as they are, because the real ones contain credentials.
 const handWritten: Record<string, Record<string, { status: number; body: unknown }>> = {
   igdb: {
@@ -94,6 +104,12 @@ const recordings: Record<string, Recording[]> = {
     ...openLibraryWork("OL893414W"),
     ...openLibraryWork("OL99999999999W"),
   ],
+  watchmode: [
+    watchmode("/title/movie-603/sources/", { regions: "US" }),
+    watchmode("/title/tv-95396/sources/", { regions: "US" }),
+    watchmode("/title/tv-1396/sources/", { regions: "US" }),
+    watchmode("/title/movie-999999999/sources/", { regions: "US" }),
+  ],
 };
 
 // Bulky fields no client reads; dropping them keeps the fixture files reviewable.
@@ -103,7 +119,14 @@ const withoutOmittedKeys = (_key: string, value: unknown) =>
     ? Object.fromEntries(Object.entries(value).filter(([key]) => !OMITTED_KEYS.has(key)))
     : value;
 
+const onlyProviders = process.argv.slice(2);
+const unknownProviders = onlyProviders.filter((provider) => !(provider in recordings));
+if (unknownProviders.length > 0) {
+  throw new Error(`No recordings for: ${unknownProviders.join(", ")}`);
+}
+
 for (const [provider, requests] of Object.entries(recordings)) {
+  if (onlyProviders.length > 0 && !onlyProviders.includes(provider)) continue;
   const fixtures: Record<string, { status: number; body: unknown }> = { ...handWritten[provider] };
   for (const { url, init, headers } of requests) {
     const response = await fetch(url, { ...init, headers: { ...init?.headers, ...headers } });

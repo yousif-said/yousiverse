@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { formatAverageRating, formatDate, formatRating, formatRuntime, pluralize } from "./format";
+import {
+  formatAverageRating,
+  formatDate,
+  formatPrice,
+  formatRating,
+  formatRuntime,
+  pluralize,
+} from "./format";
 
 describe("formatDate", () => {
   it("keeps the calendar day regardless of time zone", () => {
@@ -15,6 +22,16 @@ describe("formatRuntime", () => {
     [136, "2h 16m"],
   ])("formats %i minutes as %s", (minutes, expected) => {
     expect(formatRuntime(minutes)).toBe(expected);
+  });
+});
+
+describe("formatPrice", () => {
+  it.each([
+    [499, "$4.99"],
+    [1000, "$10.00"],
+    [0, "$0.00"],
+  ])("formats %i cents as %s", (cents, expected) => {
+    expect(formatPrice(cents)).toBe(expected);
   });
 });
 

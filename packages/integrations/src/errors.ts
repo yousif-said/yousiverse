@@ -1,4 +1,4 @@
-export type ProviderName = "tmdb" | "igdb" | "open_library";
+export type ProviderName = "tmdb" | "igdb" | "open_library" | "watchmode";
 
 export type ProviderErrorKind = "not_found" | "rate_limited" | "unavailable" | "invalid_response";
 

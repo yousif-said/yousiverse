@@ -17,6 +17,13 @@ export function formatRuntime(minutes: number): string {
   return remainder === 0 ? `${hours}h` : `${hours}h ${remainder}m`;
 }
 
+const dollars = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+
+/** Prices are stored in cents: 499 is shown as "$4.99". */
+export function formatPrice(cents: number): string {
+  return dollars.format(cents / 100);
+}
+
 export function pluralize(count: number, singular: string, plural = `${singular}s`): string {
   return `${count} ${count === 1 ? singular : plural}`;
 }

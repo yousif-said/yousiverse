@@ -121,6 +121,7 @@ packages/
 - **Updates happen in place.** A refresh never deletes seasons or episodes, because ratings and reviews attach to them.
 - **URLs** use the provider's id: `/movies/<id>`, `/tv/<id>`, `/games/<id>`, `/books/<id>`. Seasons and episodes go by number under their show: `/tv/<id>/seasons/<n>/episodes/<n>`.
 - **Tests never call a provider.** With `PROVIDER_FIXTURES=true` (set by the Vitest and Playwright configs), requests are answered from recorded responses in `packages/integrations/src/fixtures`. To cover a new request, add it to `packages/integrations/scripts/record.ts` and run the `record` script.
+- **Availability and prices** (Watchmode) are fetched the first time a title's page asks for them and kept for 7 days, like catalog data. Watchmode allows 2,500 requests a month, so never fetch offers for titles nobody opened. Prices are stored in cents.
 - **Attribution:** every provider whose data is shown is credited in the site footer, in the wording its terms require.
 
 ## Source control

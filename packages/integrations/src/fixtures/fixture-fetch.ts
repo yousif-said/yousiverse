@@ -1,12 +1,13 @@
 import igdb from "./igdb.json" with { type: "json" };
 import openLibrary from "./open-library.json" with { type: "json" };
 import tmdb from "./tmdb.json" with { type: "json" };
+import watchmode from "./watchmode.json" with { type: "json" };
 
 type Fixture = { status: number; body: unknown };
 
-const fixtures: Record<string, Fixture> = { ...tmdb, ...igdb, ...openLibrary };
+const fixtures: Record<string, Fixture> = { ...tmdb, ...igdb, ...openLibrary, ...watchmode };
 
-const CREDENTIAL_PARAMS = ["api_key"];
+const CREDENTIAL_PARAMS = ["api_key", "apiKey"];
 
 /** Identifies a request by method, host, path, and sorted query, leaving credentials out. */
 export function fixtureKey(url: URL, init?: RequestInit): string {
