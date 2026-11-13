@@ -64,6 +64,24 @@ function watchmode(path: string, params: Record<string, string> = {}): Recording
   return { url: url.href };
 }
 
+const itadKey = process.env.ITAD_API_KEY ?? "";
+
+function itadLookup(steamAppId: string): Recording {
+  const url = new URL("https://api.isthereanydeal.com/games/lookup/v1");
+  url.search = new URLSearchParams({ appid: steamAppId, key: itadKey }).toString();
+  return { url: url.href };
+}
+
+function itadPrices(gameId: string): Recording {
+  const url = new URL("https://api.isthereanydeal.com/games/prices/v3");
+  url.search = new URLSearchParams({ country: "US", key: itadKey }).toString();
+  return {
+    url: url.href,
+    init: { method: "POST", body: JSON.stringify([gameId]) },
+    headers: { "Content-Type": "application/json" },
+  };
+}
+
 // Responses that must not be recorded as they are, because the real ones contain credentials.
 const handWritten: Record<string, Record<string, { status: number; body: unknown }>> = {
   igdb: {
@@ -104,6 +122,12 @@ const recordings: Record<string, Recording[]> = {
     ...openLibraryWork("OL893414W"),
     ...openLibraryWork("OL99999999999W"),
   ],
+  itad: [
+    // Hades, by its Steam id, then by the id IsThereAnyDeal answers with.
+    itadLookup("1145360"),
+    itadPrices("018d937f-33f0-7200-80fc-87f769196c84"),
+    itadLookup("999999999"),
+  ],
   watchmode: [
     watchmode("/title/movie-603/sources/", { regions: "US" }),
     watchmode("/title/tv-95396/sources/", { regions: "US" }),
@@ -113,11 +137,15 @@ const recordings: Record<string, Recording[]> = {
 };
 
 // Bulky fields no client reads; dropping them keeps the fixture files reviewable.
-const OMITTED_KEYS = new Set(["crew", "guest_stars"]);
-const withoutOmittedKeys = (_key: string, value: unknown) =>
-  value && typeof value === "object" && !Array.isArray(value)
+const OMITTED_KEYS = new Set(["crew", "guest_stars", "assets"]);
+// IsThereAnyDeal tags its store links with the id of the app that asked for them.
+const withoutAppId = (text: string) => text.replace(/([?&]app=)\w+/, "$1fixture");
+const forFixture = (_key: string, value: unknown) => {
+  if (typeof value === "string") return withoutAppId(value);
+  return value && typeof value === "object" && !Array.isArray(value)
     ? Object.fromEntries(Object.entries(value).filter(([key]) => !OMITTED_KEYS.has(key)))
     : value;
+};
 
 const onlyProviders = process.argv.slice(2);
 const unknownProviders = onlyProviders.filter((provider) => !(provider in recordings));
@@ -135,5 +163,5 @@ for (const [provider, requests] of Object.entries(recordings)) {
     console.info(response.status, key);
   }
   const file = new URL(`../src/fixtures/${provider}.json`, import.meta.url);
-  await writeFile(file, `${JSON.stringify(fixtures, withoutOmittedKeys, 2)}\n`);
+  await writeFile(file, `${JSON.stringify(fixtures, forFixture, 2)}\n`);
 }

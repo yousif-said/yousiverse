@@ -9,6 +9,7 @@
     "./igdb": "./src/igdb/index.ts",
     "./open-library": "./src/open-library/index.ts",
     "./watchmode": "./src/watchmode/index.ts",
+    "./itad": "./src/itad/index.ts",
     "./errors": "./src/errors.ts",
     "./env": "./src/env.ts"
   },

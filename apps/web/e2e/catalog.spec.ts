@@ -49,6 +49,21 @@ test("shows where a movie and a show can be watched", async ({ page }) => {
   await expect(whereToWatch).toHaveCount(0);
 });
 
+test("shows what a game costs in PC stores", async ({ page }) => {
+  await page.goto("/games/113112");
+
+  const whereToBuy = page.getByRole("region", { name: "Where to buy" });
+  const steam = whereToBuy.getByRole("link", { name: /^Steam .*\$24\.99$/ });
+  await expect(steam).toHaveAttribute("href", /^https:\/\//);
+  await expect(steam).toHaveAttribute("target", "_blank");
+  await expect(whereToBuy.getByText(/Lowest price ever: \$6\.24\./)).toBeVisible();
+  await expect(whereToBuy.getByText(/Only PC stores are covered\./)).toBeVisible();
+
+  await page.goto("/movies/603");
+  await expect(page.getByRole("heading", { level: 1, name: "The Matrix" })).toBeVisible();
+  await expect(whereToBuy).toHaveCount(0);
+});
+
 test("shows the not-found page for a title that does not exist", async ({ page }) => {
   const response = await page.goto("/movies/999999999");
 

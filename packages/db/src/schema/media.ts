@@ -48,6 +48,8 @@ export const games = pgTable("games", {
   platforms: text().array().notNull().default([]),
   developers: text().array().notNull().default([]),
   publishers: text().array().notNull().default([]),
+  // The game's id on Steam, used to find its prices. Null when it is not sold there.
+  steamAppId: text(),
 });
 
 export const books = pgTable("books", {

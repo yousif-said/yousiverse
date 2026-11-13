@@ -63,6 +63,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 Watchmode
               </a>
+              . PC game prices come from{" "}
+              <a
+                href="https://isthereanydeal.com"
+                className="underline underline-offset-4 hover:text-foreground"
+              >
+                IsThereAnyDeal
+              </a>
               . Book data and covers come from{" "}
               <a
                 href="https://openlibrary.org"

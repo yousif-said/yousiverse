@@ -38,4 +38,23 @@ export const availabilityChecks = pgTable("availability_checks", {
     .primaryKey()
     .references(() => media.id, { onDelete: "cascade" }),
   checkedAt: timestamp({ withTimezone: true }).notNull(),
+  // Games only: the lowest price the game has ever had in any PC store.
+  lowestPriceCents: integer(),
 });
+
+/** One PC store's current US price for a game. Replaced wholesale on every check. */
+export const gameDeals = pgTable(
+  "game_deals",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    mediaId: uuid()
+      .notNull()
+      .references(() => media.id, { onDelete: "cascade" }),
+    shop: text().notNull(),
+    priceCents: integer().notNull(),
+    // The price without any discount. Equal to `priceCents` when the game is not on sale.
+    regularPriceCents: integer().notNull(),
+    url: text().notNull(),
+  },
+  (table) => [unique().on(table.mediaId, table.shop)],
+);

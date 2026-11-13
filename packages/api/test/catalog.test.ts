@@ -1,5 +1,5 @@
 import { db } from "@yousiverse/db";
-import { episodes, media, seasons } from "@yousiverse/db/schema";
+import { episodes, games, media, seasons } from "@yousiverse/db/schema";
 import { ProviderError } from "@yousiverse/integrations/errors";
 import * as igdb from "@yousiverse/integrations/igdb";
 import * as tmdb from "@yousiverse/integrations/tmdb";
@@ -166,6 +166,7 @@ describe("media.game", () => {
     expect(await db.select().from(media)).toMatchObject([
       { type: "game", provider: "igdb", providerId: HADES },
     ]);
+    expect(await db.select().from(games)).toMatchObject([{ steamAppId: "1145360" }]);
   });
 
   it("serves the stored copy without asking the provider again", async () => {
