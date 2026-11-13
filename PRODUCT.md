@@ -49,6 +49,10 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Lists page** showing a person's lists and how many titles each holds, with a form to create a new one.
 - Lists are public by default: anyone with the link can open one. A list can be made private, renamed, or deleted by its owner.
 
+### Where to watch
+
+- **Movie and TV show pages list where to watch** in the US: streaming subscriptions, free services, services that need a TV provider login, and rent and buy prices, each linking to the title on that service. Prices for TV shows are for one episode. Data comes from Watchmode and is checked at most once a week per title.
+
 ## Future features
 
 ### Library and catalog
@@ -66,9 +70,9 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Where to watch, play, or read
 
-- **Availability and pricing** for every item: where it's available, what's cheapest, and which of the user's subscriptions already include it.
+- **PC game prices** and historical lows, and **which of the user's subscriptions** already include a movie or show.
 - **Price drop and availability alerts.**
-- Data notes: movies/TV via Watchmode (streaming + rent/buy prices). PC games via IsThereAnyDeal. Console game and book pricing have thinner data; launch with partial coverage there and show clearly what isn't covered.
+- Data notes: PC games via IsThereAnyDeal. Console game and book pricing have thinner data; launch with partial coverage there and show clearly what isn't covered.
 
 ### Franchises
 

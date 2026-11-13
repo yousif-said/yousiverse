@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { MediaHeader } from "@/components/media-header";
 import { ReviewSection } from "@/components/review-section";
+import { WhereToWatch } from "@/components/where-to-watch";
 import { formatDate, pluralize } from "@/lib/format";
 import { mediaPath } from "@/lib/media";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
@@ -35,6 +36,8 @@ export default async function TvShowPage({ params }: PageProps<"/tv/[id]">) {
           { label: "Genres", value: show.genres.join(", ") },
         ]}
       />
+
+      <WhereToWatch mediaId={show.id} type="tv" />
 
       {show.seasons.length > 0 && (
         <section aria-labelledby="seasons-heading" className="mt-16 max-w-3xl">

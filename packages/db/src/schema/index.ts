@@ -1,4 +1,5 @@
 export * from "./auth";
+export * from "./availability";
 export * from "./library";
 export * from "./lists";
 export * from "./media";

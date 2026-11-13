@@ -30,6 +30,25 @@ test("opens a movie page directly", async ({ page }) => {
   await expect(page).toHaveTitle("The Matrix | Yousiverse");
 });
 
+test("shows where a movie and a show can be watched", async ({ page }) => {
+  await page.goto("/movies/603");
+
+  const whereToWatch = page.getByRole("region", { name: "Where to watch" });
+  await expect(whereToWatch.getByText("Rent", { exact: true })).toBeVisible();
+  const amazon = whereToWatch.getByRole("link", { name: /^Amazon \$4\.99/ });
+  await expect(amazon).toHaveAttribute("href", /^https:\/\//);
+  await expect(amazon).toHaveAttribute("target", "_blank");
+  await expect(whereToWatch.getByText(/US only\. Checked /)).toBeVisible();
+
+  await page.goto("/tv/95396");
+  await expect(whereToWatch.getByRole("link", { name: /^AppleTV\+ \(/ })).toBeVisible();
+  await expect(whereToWatch.getByText(/prices are for one episode/)).toBeVisible();
+
+  await page.goto("/games/113112");
+  await expect(page.getByRole("heading", { level: 1, name: "Hades" })).toBeVisible();
+  await expect(whereToWatch).toHaveCount(0);
+});
+
 test("shows the not-found page for a title that does not exist", async ({ page }) => {
   const response = await page.goto("/movies/999999999");
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { MediaHeader } from "@/components/media-header";
 import { ReviewSection } from "@/components/review-section";
+import { WhereToWatch } from "@/components/where-to-watch";
 import { formatDate, formatRuntime } from "@/lib/format";
 import { mediaPath } from "@/lib/media";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
@@ -37,6 +38,7 @@ export default async function MoviePage({ params }: PageProps<"/movies/[id]">) {
           { label: "Genres", value: movie.genres.join(", ") },
         ]}
       />
+      <WhereToWatch mediaId={movie.id} type="movie" />
       <ReviewSection target={{ mediaId: movie.id }} path={mediaPath("movie", id)} />
     </>
   );

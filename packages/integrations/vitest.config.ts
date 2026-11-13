@@ -8,6 +8,7 @@ export default defineConfig({
       TMDB_API_TOKEN: "test-token",
       IGDB_CLIENT_ID: "test-id",
       IGDB_CLIENT_SECRET: "test-secret",
+      WATCHMODE_API_KEY: "test-key",
     },
   },
 });
