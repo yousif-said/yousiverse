@@ -25,6 +25,7 @@ export default defineConfig({
       IGDB_CLIENT_ID: "e2e-id",
       IGDB_CLIENT_SECRET: "e2e-secret",
       WATCHMODE_API_KEY: "e2e-key",
+      ITAD_API_KEY: "e2e-key",
     },
     timeout: 120_000,
   },

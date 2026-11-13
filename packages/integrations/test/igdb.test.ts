@@ -30,6 +30,7 @@ describe("igdb.getGame", () => {
       publishers: expect.arrayContaining(["Supergiant Games"]),
       platforms: expect.arrayContaining(["Nintendo Switch"]),
       genres: expect.arrayContaining(["Indie"]),
+      steamAppId: "1145360",
     });
   });
 

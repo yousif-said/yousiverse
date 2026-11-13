@@ -10,5 +10,5 @@ export function searchQuery(query: string): string {
 
 export function gameQuery(providerId: string): string {
   if (!/^\d+$/.test(providerId)) throw new Error(`Not an IGDB game id: ${providerId}`);
-  return `fields name,summary,first_release_date,cover.image_id,artworks.image_id,genres.name,platforms.name,involved_companies.developer,involved_companies.publisher,involved_companies.company.name; where id = ${providerId};`;
+  return `fields name,summary,first_release_date,cover.image_id,artworks.image_id,genres.name,platforms.name,involved_companies.developer,involved_companies.publisher,involved_companies.company.name,external_games.uid,external_games.external_game_source; where id = ${providerId};`;
 }

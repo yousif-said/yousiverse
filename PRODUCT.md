@@ -52,6 +52,8 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 ### Where to watch
 
 - **Movie and TV show pages list where to watch** in the US: streaming subscriptions, free services, services that need a TV provider login, and rent and buy prices, each linking to the title on that service. Prices for TV shows are for one episode. Data comes from Watchmode and is checked at most once a week per title.
+- **Game pages list what the game costs in US PC stores**, cheapest first, with any discount and the lowest price it has ever had. Each store links to the game there. Data comes from IsThereAnyDeal, found through the game's Steam id, so games that were never on Steam have no prices. Console prices are not covered, and the page says so.
+- Book prices are not covered.
 
 ## Future features
 
@@ -70,9 +72,9 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Where to watch, play, or read
 
-- **PC game prices** and historical lows, and **which of the user's subscriptions** already include a movie or show.
+- **Which of the user's subscriptions** already include a movie or show.
 - **Price drop and availability alerts.**
-- Data notes: PC games via IsThereAnyDeal. Console game and book pricing have thinner data; launch with partial coverage there and show clearly what isn't covered.
+- **Console game and book prices.** Both have thinner data than PC games; show clearly what isn't covered.
 
 ### Franchises
 

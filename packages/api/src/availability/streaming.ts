@@ -1,15 +1,9 @@
 import type { Database } from "@yousiverse/db";
-import {
-  availabilityChecks,
-  media,
-  streamingOffers,
-  streamingServices,
-} from "@yousiverse/db/schema";
+import { media, streamingOffers, streamingServices } from "@yousiverse/db/schema";
 import { ProviderError } from "@yousiverse/integrations/errors";
 import { getStreamingOffers, type StreamingOffer } from "@yousiverse/integrations/watchmode";
 import { eq, inArray } from "drizzle-orm";
-
-const RECHECK_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
+import { ensureChecked, recordCheck } from "./check";
 
 type StreamableTitle = { id: string; type: "movie" | "tv"; providerId: string };
 
@@ -38,44 +32,25 @@ async function saveOffers(db: Database, mediaId: string, offers: StreamingOffer[
         }),
       );
     }
-
-    const checkedAt = new Date();
-    await tx
-      .insert(availabilityChecks)
-      .values({ mediaId, checkedAt })
-      .onConflictDoUpdate({ target: availabilityChecks.mediaId, set: { checkedAt } });
+    await recordCheck(tx, mediaId);
   });
 }
 
-/**
- * Makes sure a title's stored offers are at most a week old, and says when they were checked.
- * Returns null when they have never been fetched and the provider cannot be reached.
- */
-export async function ensureStreamingOffers(
-  db: Database,
-  title: StreamableTitle,
-): Promise<{ checkedAt: Date; outOfDate: boolean } | null> {
-  const [check] = await db
-    .select({ checkedAt: availabilityChecks.checkedAt })
-    .from(availabilityChecks)
-    .where(eq(availabilityChecks.mediaId, title.id));
-  if (check && Date.now() - check.checkedAt.getTime() < RECHECK_AFTER_MS) {
-    return { checkedAt: check.checkedAt, outOfDate: false };
-  }
-
+async function fetchOffers(title: StreamableTitle): Promise<StreamingOffer[]> {
   try {
-    await saveOffers(db, title.id, await getStreamingOffers(title.type, title.providerId));
+    return await getStreamingOffers(title.type, title.providerId);
   } catch (error) {
-    if (!(error instanceof ProviderError)) throw error;
-    if (error.kind === "not_found") {
-      // The provider does not know this title, which is an answer: nowhere to watch it.
-      await saveOffers(db, title.id, []);
-    } else {
-      console.warn(`Could not check where to watch ${title.type} ${title.providerId}.`, error);
-      return check ? { checkedAt: check.checkedAt, outOfDate: true } : null;
-    }
+    // The provider not knowing a title is an answer: there is nowhere to watch it.
+    if (error instanceof ProviderError && error.kind === "not_found") return [];
+    throw error;
   }
-  return { checkedAt: new Date(), outOfDate: false };
+}
+
+/** Makes sure a movie's or show's stored offers are at most a week old. */
+export function ensureStreamingOffers(db: Database, title: StreamableTitle) {
+  return ensureChecked(db, title.id, async () =>
+    saveOffers(db, title.id, await fetchOffers(title)),
+  );
 }
 
 /** The movie or TV show with this id, if it is one that streaming offers exist for. */

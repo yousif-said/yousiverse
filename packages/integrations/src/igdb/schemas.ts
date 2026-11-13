@@ -30,5 +30,9 @@ export const gamesResponse = z.array(
     involved_companies: z
       .array(z.object({ company: named, developer: z.boolean(), publisher: z.boolean() }))
       .default([]),
+    // The same game's id on other sites. Source 1 is Steam.
+    external_games: z
+      .array(z.object({ uid: z.string().optional(), external_game_source: z.number().optional() }))
+      .default([]),
   }),
 );

@@ -29,6 +29,8 @@ export type CatalogGame = CatalogItem & {
   platforms: string[];
   developers: string[];
   publishers: string[];
+  /** The game's id on Steam, when it is sold there. */
+  steamAppId: string | null;
 };
 
 export type CatalogBook = CatalogItem & {

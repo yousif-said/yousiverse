@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { MediaHeader } from "@/components/media-header";
 import { ReviewSection } from "@/components/review-section";
+import { WhereToBuy } from "@/components/where-to-buy";
 import { formatDate } from "@/lib/format";
 import { mediaPath } from "@/lib/media";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
@@ -36,6 +37,7 @@ export default async function GamePage({ params }: PageProps<"/games/[id]">) {
           { label: "Genres", value: game.genres.join(", ") },
         ]}
       />
+      <WhereToBuy mediaId={game.id} />
       <ReviewSection target={{ mediaId: game.id }} path={mediaPath("game", id)} />
     </>
   );

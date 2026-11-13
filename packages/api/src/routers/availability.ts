@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
-import { offerKinds, streamingOffers, streamingServices } from "@yousiverse/db/schema";
+import { gameDeals, offerKinds, streamingOffers, streamingServices } from "@yousiverse/db/schema";
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
+import { ensureGamePrices, findGame } from "../availability/game-prices";
 import { ensureStreamingOffers, findStreamableTitle } from "../availability/streaming";
 import { publicProcedure, router } from "../trpc";
 
@@ -38,5 +39,37 @@ export const availabilityRouter = router({
           (a.priceCents ?? 0) - (b.priceCents ?? 0),
       );
       return { offers, checkedAt: check.checkedAt, outOfDate: check.outOfDate };
+    }),
+
+  /**
+   * What a game costs in US PC stores, cheapest first. `deals` is null when that is not known
+   * yet because the provider could not be reached.
+   */
+  gamePrices: publicProcedure
+    .input(z.object({ mediaId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const game = await findGame(ctx.db, input.mediaId);
+      if (!game) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const check = await ensureGamePrices(ctx.db, game);
+      if (!check) return { deals: null };
+
+      const deals = await ctx.db
+        .select({
+          id: gameDeals.id,
+          shop: gameDeals.shop,
+          priceCents: gameDeals.priceCents,
+          regularPriceCents: gameDeals.regularPriceCents,
+          url: gameDeals.url,
+        })
+        .from(gameDeals)
+        .where(eq(gameDeals.mediaId, game.id))
+        .orderBy(asc(gameDeals.priceCents), asc(gameDeals.shop));
+      return {
+        deals,
+        lowestEverCents: check.lowestPriceCents,
+        checkedAt: check.checkedAt,
+        outOfDate: check.outOfDate,
+      };
     }),
 });

@@ -4,7 +4,7 @@ Your movies, shows, games, and books on one shelf. See [PRODUCT.md](PRODUCT.md) 
 
 ## Local setup
 
-You need [Bun](https://bun.sh) 1.4+, Node 22+, Docker (OrbStack works), a free [TMDB API key](https://www.themoviedb.org/settings/api) for movie and TV data, a free [Twitch developer app](https://dev.twitch.tv/console) for game data (IGDB uses Twitch credentials), and a free [Watchmode API key](https://api.watchmode.com) for where-to-watch data. Book data comes from Open Library, which needs no key.
+You need [Bun](https://bun.sh) 1.4+, Node 22+, Docker (OrbStack works), a free [TMDB API key](https://www.themoviedb.org/settings/api) for movie and TV data, a free [Twitch developer app](https://dev.twitch.tv/console) for game data (IGDB uses Twitch credentials), a free [Watchmode API key](https://api.watchmode.com) for where-to-watch data, and a free [IsThereAnyDeal API key](https://isthereanydeal.com/apps/my/) for PC game prices. Book data comes from Open Library, which needs no key.
 
 ```sh
 bun install
@@ -26,7 +26,7 @@ bun run test                # Vitest; uses a separate <database>_test database
 bun run e2e                 # Playwright; stop `bun dev` first, it starts its own server on port 3000
 ```
 
-Tests never call TMDB, IGDB, Open Library, or Watchmode: they replay recorded responses, so they need no API keys.
+Tests never call TMDB, IGDB, Open Library, Watchmode, or IsThereAnyDeal: they replay recorded responses, so they need no API keys.
 
 The first time, install the Playwright browser: `cd apps/web && bunx playwright install chromium`.
 
@@ -38,7 +38,7 @@ Environment variables on Vercel:
 
 - `DATABASE_URL` and `DATABASE_URL_UNPOOLED`: set by Neon's Vercel integration (one database branch per preview).
 - `BETTER_AUTH_SECRET`: all environments.
-- `TMDB_API_TOKEN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`, `WATCHMODE_API_KEY`: all environments.
+- `TMDB_API_TOKEN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`, `WATCHMODE_API_KEY`, `ITAD_API_KEY`: all environments.
 - `BETTER_AUTH_URL`: production only, set to the public origin. Previews fall back to their own deploy URL.
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: optional.
 

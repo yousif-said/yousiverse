@@ -84,6 +84,7 @@ function saveGame(db: Database, game: CatalogGame) {
       platforms: game.platforms,
       developers: game.developers,
       publishers: game.publishers,
+      steamAppId: game.steamAppId,
     };
     await tx
       .insert(games)

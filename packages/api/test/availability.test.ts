@@ -1,6 +1,8 @@
 import { db } from "@yousiverse/db";
 import {
   availabilityChecks,
+  gameDeals,
+  games,
   media,
   streamingOffers,
   streamingServices,
@@ -131,5 +133,80 @@ describe("availability.streaming", () => {
     await expect(
       anonymous.availability.streaming({ mediaId: "00000000-0000-4000-8000-000000000000" }),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
+  });
+});
+
+async function addGame(steamAppId: string | null) {
+  const mediaId = await addTitle({ type: "game", title: "Hades", provider: "igdb" });
+  await db.insert(games).values({ mediaId, steamAppId });
+  return mediaId;
+}
+
+describe("availability.gamePrices", () => {
+  beforeEach(async () => {
+    await db.delete(media);
+  });
+
+  it("lists a game's PC store prices, cheapest first, with its lowest price ever", async () => {
+    const mediaId = await addGame("1145360");
+
+    const result = await anonymous.availability.gamePrices({ mediaId });
+
+    expect(result).toMatchObject({ lowestEverCents: 624, outOfDate: false });
+    expect(result.deals).toContainEqual(
+      expect.objectContaining({ shop: "Steam", priceCents: 2499, regularPriceCents: 2499 }),
+    );
+    const prices = result.deals?.map((deal) => deal.priceCents) ?? [];
+    expect(prices).toEqual([...prices].sort((a, b) => a - b));
+  });
+
+  it("keeps the stored prices for a week instead of asking the provider again", async () => {
+    const mediaId = await addGame("1145360");
+    await anonymous.availability.gamePrices({ mediaId });
+    await db.delete(gameDeals);
+
+    expect(await anonymous.availability.gamePrices({ mediaId })).toMatchObject({
+      deals: [],
+      lowestEverCents: 624,
+    });
+
+    await db
+      .update(availabilityChecks)
+      .set({ checkedAt: new Date(Date.now() - 8 * DAY_MS) })
+      .where(eq(availabilityChecks.mediaId, mediaId));
+    const refreshed = await anonymous.availability.gamePrices({ mediaId });
+    expect(refreshed.deals?.length).toBeGreaterThan(0);
+  });
+
+  it("has no prices for a game that is not on Steam or that the provider does not know", async () => {
+    const notOnSteam = await addGame(null);
+    const unknown = await addGame("999999999");
+
+    for (const mediaId of [notOnSteam, unknown]) {
+      expect(await anonymous.availability.gamePrices({ mediaId })).toMatchObject({
+        deals: [],
+        lowestEverCents: null,
+      });
+    }
+  });
+
+  it("says the prices are unknown when the provider cannot be reached and nothing is stored", async () => {
+    // No response is recorded for this Steam id, so the request fails like an outage would.
+    const mediaId = await addGame("424242");
+
+    expect(await anonymous.availability.gamePrices({ mediaId })).toEqual({ deals: null });
+  });
+
+  it("has nothing for a title that is not a game", async () => {
+    const movieId = await addTitle({
+      type: "movie",
+      title: "The Matrix",
+      provider: "tmdb",
+      providerId: "603",
+    });
+
+    await expect(anonymous.availability.gamePrices({ mediaId: movieId })).rejects.toMatchObject({
+      code: "NOT_FOUND",
+    });
   });
 });

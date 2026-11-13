@@ -9,6 +9,7 @@ const TOKEN_URL = "https://id.twitch.tv/oauth2/token";
 const GAMES_URL = "https://api.igdb.com/v4/games";
 const IMAGE_URL = "https://images.igdb.com/igdb/image/upload";
 const TOKEN_EXPIRY_MARGIN_MS = 60_000;
+const STEAM_SOURCE = 1;
 
 type ImageSize = "cover_big" | "cover_big_2x" | "1080p";
 
@@ -78,6 +79,13 @@ export async function getGame(providerId: string): Promise<CatalogGame> {
   const companies = (role: "developer" | "publisher") =>
     game.involved_companies.filter((involved) => involved[role]).map(({ company }) => company.name);
 
+  // A game can be on Steam more than once (demos, later editions). The original has the lowest id.
+  const steamAppIds = game.external_games
+    .filter((external) => external.external_game_source === STEAM_SOURCE)
+    .flatMap((external) =>
+      external.uid && /^\d+$/.test(external.uid) ? Number(external.uid) : [],
+    );
+
   return {
     providerId: String(game.id),
     title: game.name,
@@ -90,5 +98,6 @@ export async function getGame(providerId: string): Promise<CatalogGame> {
     platforms: game.platforms.map((platform) => platform.name),
     developers: companies("developer"),
     publishers: companies("publisher"),
+    steamAppId: steamAppIds.length > 0 ? String(Math.min(...steamAppIds)) : null,
   };
 }
