@@ -85,6 +85,13 @@
       "when": 1794613516966,
       "tag": "0011_handy_mad_thinker",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794613780576,
+      "tag": "0012_young_micromax",
+      "breakpoints": true
     }
   ]
 }

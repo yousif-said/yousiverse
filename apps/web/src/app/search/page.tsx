@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { FilterPill } from "@/components/filter-pill";
+import { PeopleList } from "@/components/people-list";
 import { SearchBox } from "@/components/search-box";
 import { TitleCard, titleGridClasses } from "@/components/title-card";
 import { isMediaType, MEDIA, MEDIA_TYPES, type MediaType, searchPath } from "@/lib/media";
@@ -62,6 +63,21 @@ async function Results({ query, type, preview }: SectionProps) {
   );
 }
 
+/** People whose username or name matches. Shows nothing at all when nobody does. */
+async function People({ query }: { query: string }) {
+  const people = await getQueryClient().fetchQuery(trpc.profiles.search.queryOptions({ query }));
+  if (people.length === 0) return null;
+
+  return (
+    <section aria-labelledby="people-results" className="mt-12 max-w-3xl">
+      <h2 id="people-results" className="mb-5 font-display text-2xl font-bold tracking-tight">
+        People
+      </h2>
+      <PeopleList people={people} />
+    </section>
+  );
+}
+
 function ResultsPlaceholder({ type }: { type: MediaType }) {
   return (
     <div className={titleGridClasses} role="status" aria-label={`Searching ${MEDIA[type].plural}`}>
@@ -109,6 +125,11 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
       </div>
       <TypeFilter query={query} selected={selected} />
 
+      {query && !selected && (
+        <Suspense key={`people-${query}`}>
+          <People query={query.slice(0, 50)} />
+        </Suspense>
+      )}
       {query ? (
         // Each media type comes from a different source, so each section shows up as soon as
         // its own source answers instead of waiting for the slowest one.
@@ -130,7 +151,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
         ))
       ) : (
         <p className="mt-10 text-muted-foreground">
-          Type a title to find a movie, TV show, game, or book.
+          Type a title to find a movie, TV show, game, or book, or a name to find a person.
         </p>
       )}
     </section>

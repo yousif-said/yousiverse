@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Database } from "@yousiverse/db";
 import {
   episodes,
+  follows,
   libraryEntries,
   libraryStatuses,
   listItems,
@@ -14,11 +15,12 @@ import {
   seasons,
   users,
 } from "@yousiverse/db/schema";
-import { and, count, desc, eq, ne, sql } from "drizzle-orm";
+import { and, count, desc, eq, ilike, ne, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const MAX_REVIEWS_SHOWN = 50;
+const MAX_PEOPLE_FOUND = 12;
 
 /** 3 to 20 lowercase letters, digits, or underscores. Capitals are lowered, not rejected. */
 const username = z
@@ -28,7 +30,7 @@ const username = z
   .regex(/^[a-z0-9_]{3,20}$/);
 
 /** Finds whose profile a username names. Capitals in the address do not matter. */
-async function requireProfileOwner(db: Database, name: string): Promise<string> {
+export async function requireProfileOwner(db: Database, name: string): Promise<string> {
   const [profile] = await db
     .select({ userId: profiles.userId })
     .from(profiles)
@@ -38,7 +40,7 @@ async function requireProfileOwner(db: Database, name: string): Promise<string> 
 }
 
 // Looser than `username`: any text is looked up, and text that is no username is simply not found.
-const profileOf = z.object({ username: z.string().max(100) });
+export const profileOf = z.object({ username: z.string().max(100) });
 
 export const profilesRouter = router({
   /** A person's public profile. */
@@ -50,8 +52,45 @@ export const profilesRouter = router({
       .innerJoin(users, eq(users.id, profiles.userId))
       .where(eq(profiles.userId, userId));
     if (!profile) throw new TRPCError({ code: "NOT_FOUND" });
-    return { ...profile, isOwner: userId === ctx.session?.user.id };
+
+    const viewerId = ctx.session?.user.id;
+    const isOwner = userId === viewerId;
+    const follow = (followerId: string, followedId: string) =>
+      ctx.db
+        .select({ id: follows.id })
+        .from(follows)
+        .where(and(eq(follows.followerId, followerId), eq(follows.followedId, followedId)));
+    const [[followers], [following], [viewerFollows], [followsViewer]] = await Promise.all([
+      ctx.db.select({ count: count() }).from(follows).where(eq(follows.followedId, userId)),
+      ctx.db.select({ count: count() }).from(follows).where(eq(follows.followerId, userId)),
+      viewerId && !isOwner ? follow(viewerId, userId) : [],
+      viewerId && !isOwner ? follow(userId, viewerId) : [],
+    ]);
+    return {
+      ...profile,
+      isOwner,
+      followerCount: followers?.count ?? 0,
+      followingCount: following?.count ?? 0,
+      /** Whether the signed-in person follows this one, and the other way round. */
+      isFollowing: Boolean(viewerFollows),
+      followsYou: Boolean(followsViewer),
+    };
   }),
+
+  /** People whose username or display name contains the text, for finding someone to follow. */
+  search: publicProcedure
+    .input(z.object({ query: z.string().trim().min(1).max(50) }))
+    .query(({ ctx, input }) => {
+      // The text is matched literally: % and _ would otherwise match anything.
+      const pattern = `%${input.query.replace(/[\\%_]/g, "\\$&")}%`;
+      return ctx.db
+        .select({ username: profiles.username, name: users.name })
+        .from(profiles)
+        .innerJoin(users, eq(users.id, profiles.userId))
+        .where(or(ilike(profiles.username, pattern), ilike(users.name, pattern)))
+        .orderBy(profiles.username)
+        .limit(MAX_PEOPLE_FOUND);
+    }),
 
   /**
    * The public part of a person's library, most recently changed first. Private entries are

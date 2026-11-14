@@ -16,6 +16,12 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Public profile pages** at `/u/<username>` for everyone who has chosen a username, showing their display name, public library (filterable by type and status), public lists, and public reviews. Anything marked private is left out, for the owner too, so a profile always shows what other people see.
 - Usernames on reviews and lists link to the author's profile.
 
+### Following
+
+- **Follow anyone with a profile**, with no approval needed, and unfollow again. Two people who follow each other are friends.
+- Profiles show how many followers a person has and how many people they follow, each opening a page that lists them. Followers who have not chosen a username are counted but not named.
+- **Finding people:** searching also matches usernames and display names, and lists the people found above the titles.
+
 ### Catalog
 
 - **Search** for movies, TV shows, games, and books by title, with results as you type. Results are grouped by type and each group appears as soon as its source answers. A filter narrows the search to one type. If one source is down, the rest still show and the page says what is missing.
@@ -88,7 +94,8 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Social
 
-- **Friends and following.**
+- **A "friends only" privacy option** for reviews, lists, and library entries.
+- **Activity from the people you follow.**
 - **Clubs/groups:** cross-medium clubs that are invite-only or public. The creator picks which media types the club covers, and the club only shows those (a book club sees only books).
 
 ### Recommendations
