@@ -94,7 +94,7 @@ packages/
 - **Names shown to others:** credit user content to the username in `profiles`, never to `users.name` or an email address. A person without a username is shown as "A Yousiverse member" (`MemberName`). Profiles live at `/u/<username>`.
 - **Following:** anyone can follow anyone who has a username, with no approval. Two people who follow each other are friends. Who follows whom is public.
 - **Imports** never overwrite: an existing library entry, rating, or review is kept. A row is added only when it matches one title with confidence; otherwise it is reported as not found. Rows are matched a few per request, driven by the open import page, so no request runs long.
-- **Clubs:** each club has an allowlist of media types; club views and queries must filter to it.
+- **Clubs:** each club has an allowlist of media types; club views and queries must filter to it. An invite-only club answers "not found" to anyone who is not a member and does not hold its invite code.
 - UI should feel fast, clean, and modern. Use the frontend-design plugin for new screens. Support light and dark mode and keyboard navigation from the start.
 - Write or update tests with every feature. Use Playwright for critical user flows (sign-in, adding to library, rating, reviewing).
 

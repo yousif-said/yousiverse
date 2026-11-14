@@ -1,0 +1,134 @@
+import type { Page } from "@playwright/test";
+import { signIn } from "./session";
+import { expect, test } from "./test";
+
+async function chooseUsername(page: Page, username: string, name: string) {
+  await page.goto("/account");
+  await page.getByLabel("Username").fill(username);
+  await page.getByLabel("Display name").fill(name);
+  await page.getByRole("button", { name: "Save profile" }).click();
+  await expect(page.getByRole("status")).toHaveText("Saved.");
+}
+
+test("starts an invite-only club that only people with its link can see and join", async ({
+  page,
+  browser,
+}) => {
+  const stamp = Date.now().toString(36);
+  const clubName = `Friday Films ${stamp}`;
+  await signIn(page);
+  await chooseUsername(page, `host_${stamp}`, "Club Host");
+
+  await page.goto("/library");
+  await page.getByRole("main").getByRole("link", { name: "Clubs" }).click();
+  await expect(page).toHaveURL("/clubs");
+  await expect(page.getByText("You are not in any clubs yet.")).toBeVisible();
+
+  const form = page.getByRole("region", { name: "Start a club" });
+  await form.getByLabel("Club name").fill(clubName);
+  await form.getByLabel("Description").fill("One film a week.");
+  await form.getByRole("checkbox", { name: "Movies" }).check();
+  await form.getByRole("checkbox", { name: "TV" }).check();
+  await form.getByRole("radio", { name: /Invite only/ }).check();
+  await form.getByRole("button", { name: "Start club" }).click();
+
+  await expect(page).toHaveURL(/\/clubs\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole("heading", { level: 1, name: clubName })).toBeVisible();
+  await expect(
+    page.getByText("Movies and TV. Invite only club run by you, 1 member."),
+  ).toBeVisible();
+  const clubUrl = page.url();
+  await page.getByText("Manage club").click();
+  const inviteLink = await page.getByLabel("Invite link", { exact: true }).inputValue();
+  expect(inviteLink).toContain(`${new URL(clubUrl).pathname}?invite=`);
+
+  // Someone without the link is told there is no such club, and it is not listed.
+  const guest = await browser.newPage();
+  await signIn(guest);
+  await chooseUsername(guest, `guest_${stamp}`, "Club Guest");
+  expect((await guest.goto(clubUrl))?.status()).toBe(404);
+  await guest.goto("/clubs");
+  await expect(guest.getByText(clubName)).toHaveCount(0);
+
+  // With the link they can look, then join.
+  await guest.goto(inviteLink);
+  await expect(guest.getByRole("heading", { level: 1, name: clubName })).toBeVisible();
+  await expect(guest.getByText("You have been invited to this club.")).toBeVisible();
+  await expect(guest.getByRole("heading", { name: "Members" })).toHaveCount(0);
+  const joined = guest.waitForResponse(/clubs\.join/);
+  await guest.getByRole("button", { name: "Join club" }).click();
+  await joined;
+  await expect(guest).toHaveURL(clubUrl);
+  const members = guest.getByRole("region", { name: "Members" });
+  await expect(members.getByRole("link")).toHaveCount(2);
+  await expect(members.getByRole("link", { name: /Club Host/ })).toBeVisible();
+
+  await guest.goto("/clubs");
+  await expect(
+    guest
+      .getByRole("region", { name: "Your clubs" })
+      .getByRole("link", { name: new RegExp(clubName) }),
+  ).toContainText("2 members");
+
+  // Leaving puts the club out of sight again.
+  await guest.goto(clubUrl);
+  guest.once("dialog", (dialog) => dialog.accept());
+  const left = guest.waitForResponse(/clubs\.leave/);
+  await guest.getByRole("button", { name: "Leave club" }).click();
+  await left;
+  await expect(guest).toHaveURL("/clubs");
+  expect((await guest.goto(clubUrl))?.status()).toBe(404);
+  await guest.close();
+
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.getByRole("button", { name: "Delete club" }).click();
+  await expect(page).toHaveURL("/clubs");
+  await expect(page.getByText(clubName)).toHaveCount(0);
+});
+
+test("lists a public club for everyone and asks visitors to sign in before joining", async ({
+  page,
+  browser,
+}) => {
+  const stamp = Date.now().toString(36);
+  const clubName = `Slow Readers ${stamp}`;
+  const owner = await browser.newPage();
+  await signIn(owner);
+  await chooseUsername(owner, `reader_${stamp}`, "Slow Reader");
+  await owner.goto("/clubs");
+  const form = owner.getByRole("region", { name: "Start a club" });
+  await form.getByLabel("Club name").fill(clubName);
+  await form.getByRole("button", { name: "Start club" }).click();
+  await expect(form.getByRole("alert")).toHaveText(
+    "Tick at least one kind of title for the club to cover.",
+  );
+  await form.getByRole("checkbox", { name: "Books" }).check();
+  await form.getByRole("button", { name: "Start club" }).click();
+  await expect(owner.getByText("Books. Public club run by you, 1 member.")).toBeVisible();
+  await owner.close();
+
+  await page.goto("/clubs");
+  await expect(page.getByText("to start a club or join one.")).toBeVisible();
+  await page
+    .getByRole("region", { name: "Public clubs" })
+    .getByRole("link", { name: new RegExp(clubName) })
+    .click();
+  await expect(page.getByRole("heading", { level: 1, name: clubName })).toBeVisible();
+  await expect(page.getByText("to join this club.")).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Members" }).getByRole("link", { name: /Slow Reader/ }),
+  ).toBeVisible();
+});
+
+test("asks for a username before starting a club", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/clubs");
+  const form = page.getByRole("region", { name: "Start a club" });
+  await form.getByLabel("Club name").fill("No Name Yet");
+  await form.getByRole("checkbox", { name: "Games" }).check();
+  await form.getByRole("button", { name: "Start club" }).click();
+
+  await expect(form.getByRole("alert")).toContainText(
+    "Choose a username on your account page first.",
+  );
+});

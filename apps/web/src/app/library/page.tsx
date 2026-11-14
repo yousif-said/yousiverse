@@ -32,21 +32,21 @@ export default async function LibraryPage({ searchParams }: PageProps<"/library"
   return (
     <section className="pt-10 sm:pt-16">
       <h1 className="font-display text-4xl font-extrabold tracking-tight">Library</h1>
-      <p className="mt-3 text-muted-foreground">
-        Everything you have added, by status. For your own groupings, see{" "}
+      <p className="mt-3 text-muted-foreground">Everything you have added, by status.</p>
+      <nav aria-label="More of yours" className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
         <Link href="/lists" className={textLink}>
-          your lists
+          Your lists
         </Link>
-        . To see what people you follow are up to, open{" "}
         <Link href="/feed" className={textLink}>
-          your feed
+          Your feed
         </Link>
-        . Coming from another service?{" "}
+        <Link href="/clubs" className={textLink}>
+          Clubs
+        </Link>
         <Link href="/import" className={textLink}>
           Import your history
         </Link>
-        .
-      </p>
+      </nav>
 
       <nav aria-label="Filter by type" className="mt-6 flex flex-wrap gap-2">
         <FilterPill href={libraryPath(undefined, status)} selected={!type}>
