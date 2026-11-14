@@ -41,6 +41,12 @@ export async function SiteHeader() {
               Lists
             </NavLink>
           )}
+          {/* Small screens reach the feed from the library page too. */}
+          {session && (
+            <NavLink href="/feed" className="hidden sm:block">
+              Feed
+            </NavLink>
+          )}
           <NavLink href="/account">Account</NavLink>
         </nav>
         <div className="ml-auto flex items-center gap-2">

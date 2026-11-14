@@ -21,6 +21,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Follow anyone with a profile**, with no approval needed, and unfollow again. Two people who follow each other are friends.
 - Profiles show how many followers a person has and how many people they follow, each opening a page that lists them. Followers who have not chosen a username are counted but not named.
 - **Friends-only privacy:** a library entry, review, or list can be shown to everyone, to friends only, or to its owner alone. Friends-only content appears to friends on the owner's profile, on title pages, and at a list's link; everyone else sees nothing.
+- **Feed:** a page listing what the people a person follows have lately added to their libraries (with their rating), reviewed, and made lists of, newest first. It only includes what the viewer is allowed to see.
 - **Finding people:** searching also matches usernames and display names, and lists the people found above the titles.
 
 ### Catalog
@@ -95,7 +96,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Social
 
-- **Activity from the people you follow.**
 - **Clubs/groups:** cross-medium clubs that are invite-only or public. The creator picks which media types the club covers, and the club only shows those (a book club sees only books).
 
 ### Recommendations

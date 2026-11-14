@@ -33,6 +33,19 @@ export function statusLabel(status: LibraryStatus, type: MediaType): string {
     : STATUS_LABELS[status];
 }
 
+const ACTIVITY: Record<MediaType, { want: string; in_progress: string }> = {
+  movie: { want: "wants to watch", in_progress: "is watching" },
+  tv: { want: "wants to watch", in_progress: "is watching" },
+  game: { want: "wants to play", in_progress: "is playing" },
+  book: { want: "wants to read", in_progress: "is reading" },
+};
+
+/** A status as something a person did, ready for a title to follow: "is reading", "finished". */
+export function activityPhrase(status: LibraryStatus, type: MediaType): string {
+  if (status === "want" || status === "in_progress") return ACTIVITY[type][status];
+  return status === "finished" ? "finished" : "dropped";
+}
+
 export function libraryPath(type?: MediaType, status?: LibraryStatus): string {
   const params = new URLSearchParams();
   if (type) params.set("type", type);

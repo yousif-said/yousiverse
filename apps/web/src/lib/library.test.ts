@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { libraryPath, statusLabel } from "./library";
+import { activityPhrase, libraryPath, statusLabel } from "./library";
 
 describe("statusLabel", () => {
   it("uses the verb that fits the type of title", () => {
@@ -21,5 +21,14 @@ describe("libraryPath", () => {
     expect(libraryPath("game")).toBe("/library?type=game");
     expect(libraryPath(undefined, "finished")).toBe("/library?status=finished");
     expect(libraryPath("book", "in_progress")).toBe("/library?type=book&status=in_progress");
+  });
+});
+
+describe("activityPhrase", () => {
+  it("words a status as something a person did, fitting the type of title", () => {
+    expect(activityPhrase("want", "book")).toBe("wants to read");
+    expect(activityPhrase("in_progress", "game")).toBe("is playing");
+    expect(activityPhrase("finished", "movie")).toBe("finished");
+    expect(activityPhrase("dropped", "tv")).toBe("dropped");
   });
 });
