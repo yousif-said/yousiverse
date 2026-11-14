@@ -13,13 +13,14 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Profiles
 
-- **Public profile pages** at `/u/<username>` for everyone who has chosen a username, showing their display name, public library (filterable by type and status), public lists, and public reviews. Anything marked private is left out, for the owner too, so a profile always shows what other people see.
+- **Public profile pages** at `/u/<username>` for everyone who has chosen a username, showing their display name, library (filterable by type and status), lists, and reviews. Visitors see what is public, friends also see what is friends only, and the owner sees their own profile as the public does.
 - Usernames on reviews and lists link to the author's profile.
 
 ### Following
 
 - **Follow anyone with a profile**, with no approval needed, and unfollow again. Two people who follow each other are friends.
 - Profiles show how many followers a person has and how many people they follow, each opening a page that lists them. Followers who have not chosen a username are counted but not named.
+- **Friends-only privacy:** a library entry, review, or list can be shown to everyone, to friends only, or to its owner alone. Friends-only content appears to friends on the owner's profile, on title pages, and at a list's link; everyone else sees nothing.
 - **Finding people:** searching also matches usernames and display names, and lists the people found above the titles.
 
 ### Catalog
@@ -33,7 +34,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Library
 
-- **Personal library** across all four media types. Each title page has a status control: want, in progress, finished, or dropped, worded for the type (want to read, playing). A title can be marked so only its owner can see it, and removed again.
+- **Personal library** across all four media types. Each title page has a status control: want, in progress, finished, or dropped, worded for the type (want to read, playing). A title can be shown to everyone, friends only, or its owner alone, and removed again.
 - **Library page** showing everything in the library, most recently changed first, filterable by media type and by status.
 - Library entries are public by default and appear on their owner's profile.
 
@@ -45,7 +46,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Reviews
 
-- **Text reviews** on every title: one per person, which can be edited or deleted. Reviews are public by default and can be marked so only the author sees them.
+- **Text reviews** on every title: one per person, which can be edited or deleted. Reviews are public by default and can be limited to friends or to the author alone.
 - **TV episode pages**, opened from a season, where an episode can be rated and reviewed separately from its show.
 - A title's or episode's page lists other people's public reviews, newest first, each with its author's username and rating.
 
@@ -53,7 +54,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 - **Custom lists** holding any mix of movies, shows, games, and books, each with a name and an optional description. Titles are added and removed from their own pages, or removed from the list's page, and appear in the order they were added.
 - **Lists page** showing a person's lists and how many titles each holds, with a form to create a new one.
-- Lists are public by default: anyone with the link can open one. A list can be made private, renamed, or deleted by its owner.
+- Lists are public by default: anyone with the link can open one. A list can be limited to friends or made private, renamed, or deleted by its owner.
 
 ### Where to watch
 
@@ -94,7 +95,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Social
 
-- **A "friends only" privacy option** for reviews, lists, and library entries.
 - **Activity from the people you follow.**
 - **Clubs/groups:** cross-medium clubs that are invite-only or public. The creator picks which media types the club covers, and the club only shows those (a book club sees only books).
 

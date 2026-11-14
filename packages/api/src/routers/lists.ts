@@ -4,6 +4,7 @@ import { listItems, lists, media, profiles, visibilities } from "@yousiverse/db/
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { areFriends } from "../visibility";
 
 const listId = z.uuid();
 const mediaId = z.uuid();
@@ -56,7 +57,10 @@ export const listsRouter = router({
       .orderBy(lists.name),
   ),
 
-  /** A list and its titles. A private list exists only for its owner. */
+  /**
+   * A list and its titles. A private list exists only for its owner, and a friends-only list
+   * only for its owner and their friends.
+   */
   get: publicProcedure.input(z.object({ id: listId })).query(async ({ ctx, input }) => {
     const [list] = await ctx.db
       .select({
@@ -71,10 +75,16 @@ export const listsRouter = router({
       .from(lists)
       .leftJoin(profiles, eq(profiles.userId, lists.userId))
       .where(eq(lists.id, input.id));
-    const isOwner = list?.userId === ctx.session?.user.id;
-    if (!list || (list.visibility === "private" && !isOwner)) {
-      throw new TRPCError({ code: "NOT_FOUND" });
-    }
+    if (!list) throw new TRPCError({ code: "NOT_FOUND" });
+    const viewerId = ctx.session?.user.id;
+    const isOwner = list.userId === viewerId;
+    const allowed =
+      isOwner ||
+      list.visibility === "public" ||
+      (list.visibility === "friends" &&
+        viewerId !== undefined &&
+        (await areFriends(ctx.db, viewerId, list.userId)));
+    if (!allowed) throw new TRPCError({ code: "NOT_FOUND" });
 
     const items = await ctx.db
       .select({

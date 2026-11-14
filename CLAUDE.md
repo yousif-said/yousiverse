@@ -89,7 +89,7 @@ packages/
 - **Ratings:** 0 to 10 in 0.25 steps. Store as an integer 0 to 40 (quarter points); convert only for display (`formatRating`). A rating or review is about a whole title or one episode; `packages/api/src/targets.ts` defines that choice.
 - **Media model:** one shared `media` concept with a `type` (movie, tv, game, book) plus type-specific detail tables. TV has seasons and episodes as first-class records so episodes can be rated/reviewed.
 - **Franchise links are typed edges** (e.g. adaptation_of, same_franchise, sequel_of) between any two media items. A link is only visible in the app once it is verified. Suggested links from Wikidata or elsewhere stay hidden until reviewed.
-- **Privacy:** reviews, lists, and libraries carry an explicit visibility, public by default (public or private today; friends is added with the social features). Every query that returns user content must respect it. Add tests for visibility rules.
+- **Privacy:** reviews, lists, and libraries carry an explicit visibility: public (the default), friends, or private. Every query that returns user content must respect it, using the helpers in `packages/api/src/visibility.ts`. Add tests for visibility rules.
 - **Library statuses:** want, in_progress, finished, dropped.
 - **Names shown to others:** credit user content to the username in `profiles`, never to `users.name` or an email address. A person without a username is shown as "A Yousiverse member" (`MemberName`). Profiles live at `/u/<username>`.
 - **Following:** anyone can follow anyone who has a username, with no approval. Two people who follow each other are friends. Who follows whom is public.

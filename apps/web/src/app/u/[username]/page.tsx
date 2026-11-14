@@ -87,7 +87,8 @@ export default async function ProfilePage({ params, searchParams }: Props) {
         )}
         {profile.isOwner && (
           <p className="mt-4 max-w-[65ch] text-sm text-muted-foreground">
-            This is your profile as other people see it, so anything you marked private is left out.{" "}
+            This is your profile as the public sees it. Your friends also see what you marked
+            friends only, and nobody sees what you marked private.{" "}
             <Link href="/account" className={linkClasses}>
               Edit your profile
             </Link>

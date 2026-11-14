@@ -1,0 +1,1 @@
+ALTER TYPE "public"."visibility" ADD VALUE 'friends' BEFORE 'private';

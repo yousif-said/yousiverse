@@ -66,6 +66,52 @@ test("finds a person by searching, follows them, and is followed back", async ({
   await other.close();
 });
 
+test("shows friends-only library entries to friends and to no one else", async ({
+  page,
+  browser,
+}) => {
+  const stamp = Date.now().toString(36);
+  const [owner, friend] = [`owner_${stamp}`, `friend_${stamp}`];
+  await signIn(page);
+  await chooseUsername(page, owner, "Careful Owner");
+  const other = await browser.newPage();
+  await signIn(other);
+  await chooseUsername(other, friend, "Close Friend");
+
+  await page.goto("/movies/603");
+  let stored = page.waitForResponse(/library\.save/);
+  await page.getByRole("button", { name: "Finished" }).click();
+  await stored;
+  stored = page.waitForResponse(/library\.save/);
+  await page.getByLabel("Who can see this in your library").selectOption("Friends only");
+  await stored;
+  await page.goto("/library");
+  await expect(page.getByRole("main").getByRole("listitem")).toContainText(
+    "Finished, friends only",
+  );
+
+  // Following one way is not friendship.
+  await other.goto(`/u/${owner}`);
+  let followed = other.waitForResponse(/follows\.follow/);
+  await other.getByRole("button", { name: "Follow", exact: true }).click();
+  await followed;
+  await other.reload();
+  await expect(other.getByText("Nothing in this library yet.")).toBeVisible();
+
+  await page.goto(`/u/${friend}`);
+  followed = page.waitForResponse(/follows\.follow/);
+  await page.getByRole("button", { name: "Follow", exact: true }).click();
+  await followed;
+
+  await other.reload();
+  await expect(other.getByRole("link", { name: /The Matrix/ })).toBeVisible();
+  const visitor = await browser.newPage();
+  await visitor.goto(`/u/${owner}`);
+  await expect(visitor.getByText("Nothing in this library yet.")).toBeVisible();
+  await visitor.close();
+  await other.close();
+});
+
 test("asks a signed-out visitor to sign in before following", async ({ page, browser }) => {
   const username = `solo_${Date.now().toString(36)}`;
   const owner = await browser.newPage();

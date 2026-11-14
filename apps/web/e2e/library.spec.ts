@@ -3,7 +3,7 @@ import { signIn } from "./session";
 import { expect, test } from "./test";
 
 /** Runs a click that changes the library and waits until the server has stored the change. */
-async function andSave(page: Page, action: Promise<void>) {
+async function andSave(page: Page, action: Promise<unknown>) {
   const stored = page.waitForResponse(/library\.(save|remove)/);
   await action;
   await stored;
@@ -62,7 +62,10 @@ test("adds titles to the library, filters it, changes a status, and removes a ti
   await andSave(page, page.getByRole("button", { name: "Finished" }).click());
   await andSave(
     page,
-    page.getByRole("checkbox", { name: "Only I can see this in my library" }).check(),
+    page
+      .getByLabel("Who can see this in your library")
+      .selectOption("Only me")
+      .then(() => {}),
   );
   await page.goto("/library?status=finished");
   await expect(titles).toHaveCount(1);

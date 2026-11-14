@@ -18,6 +18,7 @@ import {
 import { and, count, desc, eq, ilike, ne, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { visibleFrom } from "../visibility";
 
 const MAX_REVIEWS_SHOWN = 50;
 const MAX_PEOPLE_FOUND = 12;
@@ -93,8 +94,9 @@ export const profilesRouter = router({
     }),
 
   /**
-   * The public part of a person's library, most recently changed first. Private entries are
-   * left out for everyone, the owner included: a profile shows what other people see.
+   * The part of a person's library the viewer may see, most recently changed first: public
+   * entries, plus friends-only ones for a friend. Private entries are left out for everyone, and
+   * the owner sees their own profile as the public does.
    */
   library: publicProcedure
     .input(
@@ -120,7 +122,7 @@ export const profilesRouter = router({
         .where(
           and(
             eq(libraryEntries.userId, userId),
-            eq(libraryEntries.visibility, "public"),
+            await visibleFrom(ctx.db, ctx.session?.user.id, userId, libraryEntries.visibility),
             input.type && eq(media.type, input.type),
             input.status && eq(libraryEntries.status, input.status),
           ),
@@ -132,19 +134,24 @@ export const profilesRouter = router({
       );
     }),
 
-  /** A person's public lists, most recently changed first. */
+  /** A person's lists that the viewer may see, most recently changed first. */
   lists: publicProcedure.input(profileOf).query(async ({ ctx, input }) => {
     const userId = await requireProfileOwner(ctx.db, input.username);
     return ctx.db
       .select({ id: lists.id, name: lists.name, itemCount: count(listItems.id) })
       .from(lists)
       .leftJoin(listItems, eq(listItems.listId, lists.id))
-      .where(and(eq(lists.userId, userId), eq(lists.visibility, "public")))
+      .where(
+        and(
+          eq(lists.userId, userId),
+          await visibleFrom(ctx.db, ctx.session?.user.id, userId, lists.visibility),
+        ),
+      )
       .groupBy(lists.id)
       .orderBy(desc(lists.updatedAt), lists.name);
   }),
 
-  /** A person's public reviews, newest first, each with the title or episode it is about. */
+  /** A person's reviews that the viewer may see, newest first, each with what it is about. */
   reviews: publicProcedure.input(profileOf).query(async ({ ctx, input }) => {
     const userId = await requireProfileOwner(ctx.db, input.username);
     const found = await ctx.db
@@ -173,7 +180,12 @@ export const profilesRouter = router({
           sql`${ratings.episodeId} is not distinct from ${reviews.episodeId}`,
         ),
       )
-      .where(and(eq(reviews.userId, userId), eq(reviews.visibility, "public")))
+      .where(
+        and(
+          eq(reviews.userId, userId),
+          await visibleFrom(ctx.db, ctx.session?.user.id, userId, reviews.visibility),
+        ),
+      )
       .orderBy(desc(reviews.createdAt))
       .limit(MAX_REVIEWS_SHOWN);
     return found.flatMap(({ providerId, episodeName, episodeNumber, seasonNumber, ...review }) => {
