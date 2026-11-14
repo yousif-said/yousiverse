@@ -176,6 +176,55 @@ describe("imports", () => {
     expect(await caller.imports.mine()).toEqual([]);
   });
 
+  it("imports a public Trakt profile by TMDB id, with full details for each title", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    const { id } = await caller.imports.createFromTrakt({
+      profile: "https://trakt.tv/users/FixtureWatcher",
+      visibility: "public",
+    });
+
+    expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
+    expect(await caller.imports.get({ id })).toMatchObject({
+      source: "trakt",
+      skippedCount: 1,
+      unmatched: [{ title: "A Film Nobody Has" }],
+    });
+    const library = await caller.library.list();
+    expect(library.map((entry) => `${entry.type} ${entry.title}: ${entry.status}`).sort()).toEqual([
+      "movie The Matrix: finished",
+      // Five plays of a show with nineteen aired episodes.
+      "tv Severance: in_progress",
+    ]);
+    const matrix = library.find((entry) => entry.title === "The Matrix");
+    if (!matrix) throw new Error("The film was not imported.");
+    expect(await caller.ratings.summary({ target: { mediaId: matrix.mediaId } })).toMatchObject({
+      mine: 36,
+    });
+    // Imported in full, like a title someone opened: the poster is there.
+    expect(matrix.posterUrl).toEqual(expect.stringContaining("image.tmdb.org"));
+  });
+
+  it("explains when a Trakt profile cannot be found or is private", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    for (const profile of ["nobody-has-this", "not a username"]) {
+      await expect(
+        caller.imports.createFromTrakt({ profile, visibility: "public" }),
+      ).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: expect.stringContaining("No Trakt profile matches that."),
+      });
+    }
+    await expect(
+      caller.imports.createFromTrakt({ profile: "privatewatcher", visibility: "public" }),
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: expect.stringContaining("That Trakt profile is private."),
+    });
+    expect(await caller.imports.mine()).toEqual([]);
+  });
+
   it("never changes what the person already has", async () => {
     const { caller } = await signedInAs("Ada");
     const first = await caller.imports.createFromFiles({

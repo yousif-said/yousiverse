@@ -27,6 +27,7 @@ export default defineConfig({
       WATCHMODE_API_KEY: "e2e-key",
       ITAD_API_KEY: "e2e-key",
       STEAM_API_KEY: "e2e-key",
+      TRAKT_CLIENT_ID: "e2e-id",
     },
     timeout: 120_000,
   },

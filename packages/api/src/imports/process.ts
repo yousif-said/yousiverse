@@ -14,7 +14,7 @@ import * as igdb from "@yousiverse/integrations/igdb";
 import * as openLibrary from "@yousiverse/integrations/open-library";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { and, asc, eq, inArray } from "drizzle-orm";
-import { ensureListed } from "../catalog/import";
+import { ensureImported, ensureListed } from "../catalog/import";
 
 /** How many rows one request matches. Small enough to finish well inside a request's time limit. */
 const BATCH_SIZE = 8;
@@ -51,6 +51,25 @@ async function findTitle(item: Item, steamGames: SteamGames): Promise<CatalogSea
     return openLibrary.findBook({ isbn, title: item.title, author: item.creator });
   }
   return null;
+}
+
+/** The catalog title an imported row names, listed in the catalog if it was not yet. */
+async function findMediaId(
+  db: Database,
+  item: Item,
+  steamGames: SteamGames,
+): Promise<string | null> {
+  // A TMDB id names the title outright, so it is imported like a title someone opened.
+  if (
+    item.externalKind === "tmdb" &&
+    item.externalId &&
+    item.type !== "game" &&
+    item.type !== "book"
+  ) {
+    return ensureImported(db, { type: item.type, providerId: item.externalId });
+  }
+  const found = await findTitle(item, steamGames);
+  return found ? ensureListed(db, found) : null;
 }
 
 /**
@@ -93,9 +112,8 @@ async function processItem(
   item: Item,
   steamGames: SteamGames,
 ): Promise<ImportItemState> {
-  const found = await findTitle(item, steamGames);
-  if (!found) return "not_found";
-  const mediaId = await ensureListed(db, found);
+  const mediaId = await findMediaId(db, item, steamGames);
+  if (!mediaId) return "not_found";
   const added = await apply(db, job, item, mediaId);
   await db.update(importItems).set({ mediaId }).where(eq(importItems.id, item.id));
   return added ? "imported" : "already";

@@ -11,6 +11,7 @@ export default defineConfig({
       WATCHMODE_API_KEY: "test-key",
       ITAD_API_KEY: "test-key",
       STEAM_API_KEY: "test-key",
+      TRAKT_CLIENT_ID: "test-id",
     },
   },
 });

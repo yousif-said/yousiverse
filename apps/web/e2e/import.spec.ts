@@ -85,6 +85,30 @@ test("imports a Steam library and explains a profile it cannot read", async ({ p
   await expect(titles.filter({ hasText: "Portal 2" })).toContainText("Want to play");
 });
 
+test("imports a Trakt profile and explains a private one", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/import");
+  const trakt = page.getByRole("region", { name: "From Trakt" });
+
+  await trakt.getByLabel("Trakt username").fill("privatewatcher");
+  await trakt.getByRole("button", { name: "Import from Trakt" }).click();
+  await expect(trakt.getByRole("alert")).toContainText("That Trakt profile is private.");
+
+  await trakt.getByLabel("Trakt username").fill("fixturewatcher");
+  await trakt.getByRole("button", { name: "Import from Trakt" }).click();
+
+  await expect(page).toHaveURL(/\/import\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Trakt import" })).toBeVisible();
+  await expect(page.getByText("Added to your library")).toBeVisible();
+  await expect(page.getByRole("definition")).toHaveText(["2", "1", "1"]);
+
+  await page.goto("/library");
+  const titles = page.getByRole("main").getByRole("listitem");
+  await expect(titles).toHaveCount(2);
+  await expect(titles.filter({ hasText: "The Matrix" })).toContainText("Finished");
+  await expect(titles.filter({ hasText: "Severance" })).toContainText("Watching");
+});
+
 test("explains what is wrong with a file from a different service", async ({ page }) => {
   await signIn(page);
   await page.goto("/import");

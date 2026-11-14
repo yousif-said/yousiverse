@@ -98,7 +98,48 @@ const steamApi = "GET api.steampowered.com";
 const ownedGames = (steamId: string) =>
   `${steamApi}/IPlayerService/GetOwnedGames/v1/?include_appinfo=1&include_played_free_games=1&steamid=${steamId}`;
 
+const traktTitle = (trakt: number, title: string, year: number, tmdb: number | null) => ({
+  title,
+  year,
+  ids: { trakt, slug: `fixture-${trakt}`, imdb: null, tmdb },
+});
+const MATRIX = traktTitle(481, "The Matrix", 1999, 603);
+const SEVERANCE = { ...traktTitle(154997, "Severance", 2022, 95396), aired_episodes: 19 };
+const UNKNOWN_FILM = traktTitle(900001, "A Film Nobody Has", 2001, 999999999);
+const NO_TMDB_ID = traktTitle(900002, "Only On Trakt", 2002, null);
+
+/** One Trakt list for the test profile: its first page, then the empty page that ends it. */
+function traktList(username: string, list: string, items: unknown[]) {
+  const key = (page: number) =>
+    `GET api.trakt.tv/users/${username}/${list}?extended=noseasons&limit=250&page=${page}`;
+  return {
+    [key(1)]: { status: 200, body: items },
+    ...(items.length > 0 ? { [key(2)]: { status: 200, body: [] } } : {}),
+  };
+}
+
 const handWritten: Record<string, Record<string, { status: number; body: unknown }>> = {
+  // Trakt has no test account, and a real person's history should not be recorded.
+  trakt: {
+    "GET api.trakt.tv/users/fixturewatcher": {
+      status: 200,
+      body: { username: "fixturewatcher", private: false, ids: { slug: "fixturewatcher" } },
+    },
+    "GET api.trakt.tv/users/privatewatcher": {
+      status: 200,
+      body: { username: "privatewatcher", private: true, ids: { slug: "privatewatcher" } },
+    },
+    "GET api.trakt.tv/users/nobody-has-this": { status: 404, body: "" },
+    ...traktList("fixturewatcher", "watched/movies", [{ plays: 2, movie: MATRIX }]),
+    ...traktList("fixturewatcher", "watched/shows", [{ plays: 5, show: SEVERANCE }]),
+    ...traktList("fixturewatcher", "ratings/movies", [{ rating: 9, type: "movie", movie: MATRIX }]),
+    ...traktList("fixturewatcher", "ratings/shows", []),
+    ...traktList("fixturewatcher", "watchlist/movies", [
+      { rank: 1, type: "movie", movie: UNKNOWN_FILM },
+      { rank: 2, type: "movie", movie: NO_TMDB_ID },
+    ]),
+    ...traktList("fixturewatcher", "watchlist/shows", []),
+  },
   // Steam has no public test account, and a real person's library should not be recorded.
   steam: {
     [`${steamApi}/ISteamUser/ResolveVanityURL/v1/?vanityurl=fixtureplayer`]: {
@@ -180,6 +221,7 @@ const recordings: Record<string, Recording[]> = {
     openLibraryTitle("Zzzzqqqqxxxx"),
   ],
   steam: [],
+  trakt: [],
   itad: [
     // Hades, by its Steam id, then by the id IsThereAnyDeal answers with.
     itadLookup("1145360"),

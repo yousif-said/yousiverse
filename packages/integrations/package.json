@@ -11,6 +11,7 @@
     "./watchmode": "./src/watchmode/index.ts",
     "./itad": "./src/itad/index.ts",
     "./steam": "./src/steam/index.ts",
+    "./trakt": "./src/trakt/index.ts",
     "./errors": "./src/errors.ts",
     "./env": "./src/env.ts"
   },

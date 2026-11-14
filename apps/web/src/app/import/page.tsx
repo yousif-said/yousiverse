@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ImportForm } from "@/components/import-form";
 import { SteamImportForm } from "@/components/steam-import-form";
+import { TraktImportForm } from "@/components/trakt-import-form";
 import { formatDay, pluralize } from "@/lib/format";
 import { SOURCE_LABELS } from "@/lib/imports";
 import { requireSession } from "@/lib/session";
@@ -38,6 +39,15 @@ export default async function ImportPage() {
         </h2>
         <div className="mt-4">
           <SteamImportForm />
+        </div>
+      </section>
+
+      <section aria-labelledby="trakt-import-heading" className="mt-12">
+        <h2 id="trakt-import-heading" className={sectionHeading}>
+          From Trakt
+        </h2>
+        <div className="mt-4">
+          <TraktImportForm />
         </div>
       </section>
 
