@@ -70,7 +70,8 @@ function comparable(title: string): string {
 
 /**
  * Finds the one movie a title and release year name, for matching rows imported from another
- * service. Returns null rather than guess: with no year, only an exact title match counts.
+ * service. Returns null rather than guess: the title must match exactly, or, when the year is
+ * known, differ only by a subtitle.
  */
 export async function findMovie(
   title: string,
@@ -81,9 +82,17 @@ export async function findMovie(
     include_adult: "false",
     ...(year ? { year: String(year) } : {}),
   });
-  const exact = results.find((result) => comparable(result.title) === comparable(title));
-  // With a year, TMDB has already narrowed the results to that year and ordered them by fit.
-  const movie = exact ?? (year ? results[0] : undefined);
+  const wanted = comparable(title);
+  const exact = results.find((result) => comparable(result.title) === wanted);
+  // With a year, TMDB has already narrowed the results to that year, so a title that only
+  // differs by a subtitle is accepted too. Anything looser would be a guess.
+  const close = year
+    ? results.find((result) => {
+        const found = comparable(result.title);
+        return found !== "" && wanted !== "" && (found.includes(wanted) || wanted.includes(found));
+      })
+    : undefined;
+  const movie = exact ?? close;
   if (!movie) return null;
   return {
     type: "movie",
