@@ -1,4 +1,14 @@
-import { integer, pgEnum, pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  unique,
+  uuid,
+} from "drizzle-orm/pg-core";
+import { users } from "./auth";
 import { media } from "./media";
 
 export const offerKinds = ["subscription", "free", "tv_provider", "rent", "buy"] as const;
@@ -11,7 +21,30 @@ export const streamingServices = pgTable("streaming_services", {
   id: uuid().primaryKey().defaultRandom(),
   watchmodeId: integer().notNull().unique(),
   name: text().notNull(),
+  // True for services people pay a subscription for, which they can say they have.
+  subscription: boolean().notNull().default(false),
+  // Position in Watchmode's list of US services, most widely used first. Null for a service
+  // seen only on a title's offers.
+  rank: integer(),
+  // When the service was last seen in that list.
+  listedAt: timestamp({ withTimezone: true }),
 });
+
+/** The subscriptions a person says they have. Only ever shown to that person. */
+export const userSubscriptions = pgTable(
+  "user_subscriptions",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    userId: text()
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    serviceId: uuid()
+      .notNull()
+      .references(() => streamingServices.id, { onDelete: "cascade" }),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [unique().on(table.userId, table.serviceId)],
+);
 
 /** One way to watch a movie or TV show in the US. Replaced wholesale on every check. */
 export const streamingOffers = pgTable(

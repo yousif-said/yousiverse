@@ -1,4 +1,5 @@
 import type { RouterOutputs } from "@yousiverse/api";
+import Link from "next/link";
 import { Suspense } from "react";
 import { formatDay, formatPrice } from "@/lib/format";
 import { getQueryClient, trpc } from "@/trpc/server";
@@ -38,16 +39,19 @@ async function Offers({ mediaId, type }: Props) {
   }
 
   const { offers } = availability;
-  const groups = KINDS.map((kind) => ({
-    kind,
-    offers: offers.filter((offer) => offer.kind === kind),
-  })).filter((group) => group.offers.length > 0);
+  const groups = [
+    { label: "Your subscriptions", offers: offers.filter((offer) => offer.included) },
+    ...KINDS.map((kind) => ({
+      label: KIND_LABELS[kind],
+      offers: offers.filter((offer) => offer.kind === kind && !offer.included),
+    })),
+  ].filter((group) => group.offers.length > 0);
   return (
     <>
       <dl className="mt-4 divide-y border-y">
-        {groups.map(({ kind, offers }) => (
-          <div key={kind} className="grid gap-x-8 gap-y-3 py-4 sm:grid-cols-[9rem_1fr]">
-            <dt className="pt-1.5 text-sm text-muted-foreground">{KIND_LABELS[kind]}</dt>
+        {groups.map(({ label, offers }) => (
+          <div key={label} className="grid gap-x-8 gap-y-3 py-4 sm:grid-cols-[9rem_1fr]">
+            <dt className="pt-1.5 text-sm text-muted-foreground">{label}</dt>
             <dd>
               <ul className="flex flex-wrap gap-2">
                 {offers.map((offer) => (
@@ -56,7 +60,11 @@ async function Offers({ mediaId, type }: Props) {
                       href={offer.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-baseline gap-2 rounded-full border bg-card px-3.5 py-1.5 text-sm font-medium outline-none transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                      className={`inline-flex items-baseline gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50 ${
+                        offer.included
+                          ? "border-foreground bg-foreground text-background hover:bg-foreground/85"
+                          : "bg-card hover:bg-accent"
+                      }`}
                     >
                       {offer.service}
                       {offer.priceCents !== null && (
@@ -78,6 +86,18 @@ async function Offers({ mediaId, type }: Props) {
         {formatDay(new Date(availability.checkedAt))}
         {availability.outOfDate && ", and it could not be checked again just now"}. Prices and
         availability can change.
+        {availability.subscriptionCount === 0 && (
+          <>
+            {" "}
+            <Link
+              href="/account"
+              className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            >
+              Tick your subscriptions
+            </Link>{" "}
+            to see what you can already watch.
+          </>
+        )}
       </p>
     </>
   );

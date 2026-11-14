@@ -1,6 +1,6 @@
 import { env } from "../env";
 import { requestJson } from "../http";
-import { titleSourcesResponse } from "./schemas";
+import { sourcesResponse, titleSourcesResponse } from "./schemas";
 
 const API_URL = "https://api.watchmode.com/v1";
 const REGION = "US";
@@ -62,4 +62,25 @@ export async function getStreamingOffers(
     }
   }
   return [...offers.values()];
+}
+
+export type StreamingService = {
+  /** Watchmode's id for the service. */
+  id: number;
+  name: string;
+  /** True for services people pay a subscription for, such as Netflix. */
+  subscription: boolean;
+};
+
+/** Every service available in the US, most widely used first. */
+export async function getStreamingServices(): Promise<StreamingService[]> {
+  const url = new URL(`${API_URL}/sources/`);
+  url.search = new URLSearchParams({ regions: REGION, apiKey: env.WATCHMODE_API_KEY }).toString();
+  const sources = await requestJson("watchmode", url, sourcesResponse);
+
+  return sources.map((source) => ({
+    id: source.id,
+    name: source.name,
+    subscription: KIND_FOR[source.type] === "subscription",
+  }));
 }

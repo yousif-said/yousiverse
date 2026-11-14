@@ -14,3 +14,7 @@ export const titleSourcesResponse = z.array(
     price: z.number().nullable(),
   }),
 );
+
+export const sourcesResponse = z.array(
+  z.object({ id: z.number(), name: z.string(), type: z.string() }),
+);

@@ -38,7 +38,7 @@ const PROVIDER_FOR = {
 } as const satisfies Record<MediaType, Provider>;
 
 /** For bulk upserts: sets each column to the value from the row that conflicted. */
-function fromIncomingRow<Column extends string>(columns: Column[]) {
+export function fromIncomingRow<Column extends string>(columns: Column[]) {
   const toSnakeCase = (name: string) => name.replace(/[A-Z]/g, (char) => `_${char.toLowerCase()}`);
   return Object.fromEntries(
     columns.map((column) => [column, sql.raw(`excluded."${toSnakeCase(column)}"`)]),

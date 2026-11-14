@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ProfileForm } from "@/components/profile-form";
 import { SignOutButton } from "@/components/sign-out-button";
+import { SubscriptionPicker } from "@/components/subscription-picker";
 import { profilePath } from "@/lib/profile";
 import { requireSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
@@ -12,7 +13,11 @@ const joinedDateFormat = new Intl.DateTimeFormat("en-US", { dateStyle: "long" })
 
 export default async function AccountPage() {
   const { user } = await requireSession("/account");
-  const profile = await getQueryClient().fetchQuery(trpc.profiles.me.queryOptions());
+  const queryClient = getQueryClient();
+  const [profile, services] = await Promise.all([
+    queryClient.fetchQuery(trpc.profiles.me.queryOptions()),
+    queryClient.fetchQuery(trpc.subscriptions.services.queryOptions()),
+  ]);
 
   const details = [
     { label: "Email", value: user.email },
@@ -33,6 +38,19 @@ export default async function AccountPage() {
           >
             View your public profile
           </Link>
+        </p>
+      )}
+
+      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight">Subscriptions</h2>
+      <p className="mt-2 mb-4 text-sm text-muted-foreground">
+        Tick the streaming services you pay for, and movie and show pages will point out what you
+        can already watch. Only you can see this.
+      </p>
+      {services ? (
+        <SubscriptionPicker initialServices={services} />
+      ) : (
+        <p className="text-muted-foreground">
+          The list of services could not be loaded right now. Try again in a little while.
         </p>
       )}
 
