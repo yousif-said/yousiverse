@@ -21,6 +21,8 @@ export async function requestJson<Schema extends z.ZodType>(
   url: URL,
   schema: Schema,
   init?: RequestInit,
+  /** Statuses besides 404 that this provider uses to say "no such thing". */
+  options: { notFoundStatuses?: number[] } = {},
 ): Promise<z.output<Schema>> {
   const send = await transport();
 
@@ -35,7 +37,7 @@ export async function requestJson<Schema extends z.ZodType>(
 
   if (!response.ok) {
     const kind =
-      response.status === 404
+      response.status === 404 || options.notFoundStatuses?.includes(response.status)
         ? "not_found"
         : response.status === 429
           ? "rate_limited"

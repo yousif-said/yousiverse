@@ -136,6 +136,46 @@ describe("imports", () => {
     expect(stored.map((book) => book.providerId)).toContain("OL20893680W");
   });
 
+  it("imports a Steam library, with played games at the chosen status", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    const { id } = await caller.imports.createFromSteam({
+      profile: "https://steamcommunity.com/id/fixtureplayer",
+      visibility: "public",
+      playedStatus: "finished",
+    });
+
+    expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
+    const library = await caller.library.list();
+    expect(library.map((entry) => `${entry.type} ${entry.title}: ${entry.status}`).sort()).toEqual([
+      "game Hades: finished",
+      "game Portal 2: want",
+    ]);
+    expect(await caller.imports.get({ id })).toMatchObject({
+      source: "steam",
+      unmatched: [{ title: "Some Tool" }],
+    });
+  });
+
+  it("explains when a Steam profile cannot be found or hides its games", async () => {
+    const { caller } = await signedInAs("Ada");
+    const options = { visibility: "public", playedStatus: "in_progress" } as const;
+
+    await expect(
+      caller.imports.createFromSteam({ profile: "nobody-has-this", ...options }),
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: expect.stringContaining("No Steam profile matches that."),
+    });
+    for (const profile of ["76561198000000002", "76561198000000003"]) {
+      await expect(caller.imports.createFromSteam({ profile, ...options })).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: expect.stringContaining("set Game details to Public"),
+      });
+    }
+    expect(await caller.imports.mine()).toEqual([]);
+  });
+
   it("never changes what the person already has", async () => {
     const { caller } = await signedInAs("Ada");
     const first = await caller.imports.createFromFiles({

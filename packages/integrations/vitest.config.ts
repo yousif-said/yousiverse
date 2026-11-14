@@ -10,6 +10,7 @@ export default defineConfig({
       IGDB_CLIENT_SECRET: "test-secret",
       WATCHMODE_API_KEY: "test-key",
       ITAD_API_KEY: "test-key",
+      STEAM_API_KEY: "test-key",
     },
   },
 });

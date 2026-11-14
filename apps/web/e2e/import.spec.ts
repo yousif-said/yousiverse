@@ -19,7 +19,7 @@ test("imports a Letterboxd export into the library", async ({ page }) => {
   await expect(page).toHaveURL("/import");
 
   await page
-    .getByLabel("Files")
+    .getByLabel("Files", { exact: true })
     .setInputFiles([
       csv(
         "ratings.csv",
@@ -60,13 +60,38 @@ test("imports a Letterboxd export into the library", async ({ page }) => {
   ).toContainText("2 titles");
 });
 
+test("imports a Steam library and explains a profile it cannot read", async ({ page }) => {
+  await signIn(page);
+  await page.goto("/import");
+  const steam = page.getByRole("region", { name: "From Steam" });
+
+  await steam.getByLabel("Steam profile").fill("76561198000000002");
+  await steam.getByRole("button", { name: "Import from Steam" }).click();
+  await expect(steam.getByRole("alert")).toContainText("set Game details to Public");
+
+  await steam.getByLabel("Steam profile").fill("https://steamcommunity.com/id/fixtureplayer");
+  await steam.getByLabel("Games you have played go in as").selectOption("Finished");
+  await steam.getByRole("button", { name: "Import from Steam" }).click();
+
+  await expect(page).toHaveURL(/\/import\/[0-9a-f-]{36}$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Steam import" })).toBeVisible();
+  await expect(page.getByText("Added to your library")).toBeVisible();
+  await expect(page.getByRole("definition")).toHaveText(["2", "1"]);
+
+  await page.goto("/library?type=game");
+  const titles = page.getByRole("main").getByRole("listitem");
+  await expect(titles).toHaveCount(2);
+  await expect(titles.filter({ hasText: "Hades" })).toContainText("Finished");
+  await expect(titles.filter({ hasText: "Portal 2" })).toContainText("Want to play");
+});
+
 test("explains what is wrong with a file from a different service", async ({ page }) => {
   await signIn(page);
   await page.goto("/import");
 
   await page.getByText("IMDb", { exact: true }).click();
   await page
-    .getByLabel("Files")
+    .getByLabel("Files", { exact: true })
     .setInputFiles(csv("watched.csv", "Date,Name,Year,Letterboxd URI\n2024-01-05,Heat,1995,x\n"));
   await page.getByRole("button", { name: "Start import" }).click();
 

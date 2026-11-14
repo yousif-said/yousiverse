@@ -10,6 +10,7 @@ import {
 } from "@yousiverse/db/schema";
 import type { CatalogSearchResult } from "@yousiverse/integrations/catalog";
 import { ProviderError } from "@yousiverse/integrations/errors";
+import * as igdb from "@yousiverse/integrations/igdb";
 import * as openLibrary from "@yousiverse/integrations/open-library";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { and, asc, eq, inArray } from "drizzle-orm";
@@ -18,6 +19,8 @@ import { ensureListed } from "../catalog/import";
 /** How many rows one request matches. Small enough to finish well inside a request's time limit. */
 const BATCH_SIZE = 8;
 const BATCH_SIZE_ONE_AT_A_TIME = 4;
+// Steam games need no request of their own once the batch has been looked up.
+const BATCH_SIZE_STEAM = 40;
 
 /**
  * Imports whose rows are looked up one after another. Open Library asks unregistered clients to
@@ -25,11 +28,20 @@ const BATCH_SIZE_ONE_AT_A_TIME = 4;
  */
 const ONE_AT_A_TIME = new Set<ImportSource>(["goodreads", "storygraph"]);
 
+function batchSize(source: ImportSource): number {
+  if (source === "steam") return BATCH_SIZE_STEAM;
+  return ONE_AT_A_TIME.has(source) ? BATCH_SIZE_ONE_AT_A_TIME : BATCH_SIZE;
+}
+
 type Import = typeof imports.$inferSelect;
 type Item = typeof importItems.$inferSelect;
 
+/** Games found ahead of time for a whole batch, by Steam id. */
+type SteamGames = Map<string, CatalogSearchResult>;
+
 /** Finds the catalog title an imported row names, or null when there is no confident match. */
-async function findTitle(item: Item): Promise<CatalogSearchResult | null> {
+async function findTitle(item: Item, steamGames: SteamGames): Promise<CatalogSearchResult | null> {
+  if (item.externalKind === "steam") return steamGames.get(item.externalId ?? "") ?? null;
   if (item.externalKind === "imdb" && item.externalId) {
     return tmdb.findByImdbId(item.externalId);
   }
@@ -75,8 +87,13 @@ async function apply(db: Database, job: Import, item: Item, mediaId: string): Pr
   });
 }
 
-async function processItem(db: Database, job: Import, item: Item): Promise<ImportItemState> {
-  const found = await findTitle(item);
+async function processItem(
+  db: Database,
+  job: Import,
+  item: Item,
+  steamGames: SteamGames,
+): Promise<ImportItemState> {
+  const found = await findTitle(item, steamGames);
   if (!found) return "not_found";
   const mediaId = await ensureListed(db, found);
   const added = await apply(db, job, item, mediaId);
@@ -104,13 +121,28 @@ export async function processNextBatch(db: Database, job: Import): Promise<{ pau
     .from(importItems)
     .where(and(eq(importItems.importId, job.id), eq(importItems.state, "pending")))
     .orderBy(asc(importItems.position))
-    .limit(ONE_AT_A_TIME.has(job.source) ? BATCH_SIZE_ONE_AT_A_TIME : BATCH_SIZE);
+    .limit(batchSize(job.source));
+
+  // IGDB allows only a few requests a second, so a batch of Steam games is found in one request.
+  let steamGames: SteamGames = new Map();
+  const steamIds = batch.flatMap((item) =>
+    item.externalKind === "steam" && item.externalId ? item.externalId : [],
+  );
+  if (steamIds.length > 0) {
+    try {
+      steamGames = await igdb.findBySteamIds(steamIds);
+    } catch (error) {
+      if (!(error instanceof ProviderError)) throw error;
+      console.warn(`Import ${job.id}: could not look up Steam games.`, error);
+      return { paused: true };
+    }
+  }
 
   let paused = false;
   const process = async (item: Item) => {
     let state: ImportItemState;
     try {
-      state = await processItem(db, job, item);
+      state = await processItem(db, job, item, steamGames);
     } catch (error) {
       if (!(error instanceof ProviderError)) throw error;
       if (error.kind === "rate_limited" || error.kind === "unavailable") {

@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ImportForm } from "@/components/import-form";
+import { SteamImportForm } from "@/components/steam-import-form";
 import { formatDay, pluralize } from "@/lib/format";
 import { SOURCE_LABELS } from "@/lib/imports";
 import { requireSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Import" };
+
+const sectionHeading = "font-display text-2xl font-bold tracking-tight";
 
 export default async function ImportPage() {
   await requireSession("/import");
@@ -20,13 +23,27 @@ export default async function ImportPage() {
         want to get to, your ratings, and your reviews.
       </p>
 
-      <div className="mt-8">
-        <ImportForm />
-      </div>
+      <section aria-labelledby="file-import-heading" className="mt-10">
+        <h2 id="file-import-heading" className={sectionHeading}>
+          From exported files
+        </h2>
+        <div className="mt-4">
+          <ImportForm />
+        </div>
+      </section>
+
+      <section aria-labelledby="steam-import-heading" className="mt-12">
+        <h2 id="steam-import-heading" className={sectionHeading}>
+          From Steam
+        </h2>
+        <div className="mt-4">
+          <SteamImportForm />
+        </div>
+      </section>
 
       {imports.length > 0 && (
         <section aria-labelledby="past-imports-heading" className="mt-14">
-          <h2 id="past-imports-heading" className="font-display text-2xl font-bold tracking-tight">
+          <h2 id="past-imports-heading" className={sectionHeading}>
             Your imports
           </h2>
           <ul className="mt-4 divide-y border-y">

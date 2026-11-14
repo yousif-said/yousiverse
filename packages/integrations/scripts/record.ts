@@ -7,7 +7,7 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { fixtureKey } from "../src/fixtures/fixture-fetch";
-import { gameQuery, searchQuery } from "../src/igdb/queries";
+import { gameQuery, searchQuery, steamGamesQuery } from "../src/igdb/queries";
 import { SEARCH_FIELDS, WORK_FIELDS } from "../src/open-library/fields";
 
 type Recording = { url: string; init?: RequestInit; headers?: Record<string, string> };
@@ -36,9 +36,9 @@ const igdbTokenResponse = await fetch("https://id.twitch.tv/oauth2/token", {
 });
 const { access_token: igdbToken } = (await igdbTokenResponse.json()) as { access_token: string };
 
-function igdb(body: string): Recording {
+function igdb(body: string, endpoint = "games"): Recording {
   return {
-    url: "https://api.igdb.com/v4/games",
+    url: `https://api.igdb.com/v4/${endpoint}`,
     init: { method: "POST", body },
     headers: { "Client-ID": igdbClientId, Authorization: `Bearer ${igdbToken}` },
   };
@@ -94,7 +94,39 @@ function itadPrices(gameId: string): Recording {
 }
 
 // Responses that must not be recorded as they are, because the real ones contain credentials.
+const steamApi = "GET api.steampowered.com";
+const ownedGames = (steamId: string) =>
+  `${steamApi}/IPlayerService/GetOwnedGames/v1/?include_appinfo=1&include_played_free_games=1&steamid=${steamId}`;
+
 const handWritten: Record<string, Record<string, { status: number; body: unknown }>> = {
+  // Steam has no public test account, and a real person's library should not be recorded.
+  steam: {
+    [`${steamApi}/ISteamUser/ResolveVanityURL/v1/?vanityurl=fixtureplayer`]: {
+      status: 200,
+      body: { response: { steamid: "76561198000000001", success: 1 } },
+    },
+    [`${steamApi}/ISteamUser/ResolveVanityURL/v1/?vanityurl=nobody-has-this`]: {
+      status: 200,
+      body: { response: { success: 42, message: "No match" } },
+    },
+    [ownedGames("76561198000000001")]: {
+      status: 200,
+      body: {
+        response: {
+          game_count: 3,
+          games: [
+            { appid: 1145360, name: "Hades", playtime_forever: 1234, img_icon_url: "" },
+            { appid: 620, name: "Portal 2", playtime_forever: 0, img_icon_url: "" },
+            { appid: 999999999, name: "Some Tool", playtime_forever: 5, img_icon_url: "" },
+          ],
+        },
+      },
+    },
+    // A profile whose game details are private.
+    [ownedGames("76561198000000002")]: { status: 200, body: { response: {} } },
+    // An account id that does not exist.
+    [ownedGames("76561198000000003")]: { status: 400, body: "Bad Request" },
+  },
   igdb: {
     "POST id.twitch.tv/oauth2/token": {
       status: 200,
@@ -127,6 +159,8 @@ const recordings: Record<string, Recording[]> = {
     igdb(searchQuery("zzzzqqqqxxxx")),
     igdb(gameQuery("113112")),
     igdb(gameQuery("999999999")),
+    // Hades, Portal 2, and an id no game has: the Steam library used in tests.
+    igdb(steamGamesQuery(["1145360", "620", "999999999"]), "external_games"),
   ],
   "open-library": [
     openLibrarySearch("piranesi"),
@@ -145,6 +179,7 @@ const recordings: Record<string, Recording[]> = {
     openLibraryTitle("Zzzzqqqqxxxx", "Nobody"),
     openLibraryTitle("Zzzzqqqqxxxx"),
   ],
+  steam: [],
   itad: [
     // Hades, by its Steam id, then by the id IsThereAnyDeal answers with.
     itadLookup("1145360"),
