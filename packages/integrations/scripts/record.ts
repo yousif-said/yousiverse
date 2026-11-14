@@ -52,6 +52,15 @@ function openLibrary(path: string, params: Record<string, string> = {}): Recordi
 
 const openLibrarySearch = (query: string) =>
   openLibrary("/search.json", { q: query, fields: SEARCH_FIELDS, limit: "20" });
+const openLibraryIsbn = (isbn: string) =>
+  openLibrary("/search.json", { q: `isbn:${isbn}`, fields: SEARCH_FIELDS, limit: "1" });
+const openLibraryTitle = (title: string, author?: string) =>
+  openLibrary("/search.json", {
+    title,
+    ...(author ? { author } : {}),
+    fields: SEARCH_FIELDS,
+    limit: "5",
+  });
 const openLibraryWork = (workId: string) => [
   openLibrary(`/works/${workId}.json`),
   openLibrary("/search.json", { q: `key:/works/${workId}`, fields: WORK_FIELDS, limit: "1" }),
@@ -129,6 +138,12 @@ const recordings: Record<string, Recording[]> = {
     ...openLibraryWork("OL893415W"),
     ...openLibraryWork("OL893414W"),
     ...openLibraryWork("OL99999999999W"),
+    openLibraryIsbn("9781635575637"),
+    openLibraryIsbn("9780000000002"),
+    openLibraryTitle("Piranesi", "Susanna Clarke"),
+    openLibraryTitle("Dune", "Frank Herbert"),
+    openLibraryTitle("Zzzzqqqqxxxx", "Nobody"),
+    openLibraryTitle("Zzzzqqqqxxxx"),
   ],
   itad: [
     // Hades, by its Steam id, then by the id IsThereAnyDeal answers with.

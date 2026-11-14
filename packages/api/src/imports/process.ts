@@ -1,6 +1,7 @@
 import type { Database } from "@yousiverse/db";
 import {
   type ImportItemState,
+  type ImportSource,
   importItems,
   type imports,
   libraryEntries,
@@ -9,12 +10,20 @@ import {
 } from "@yousiverse/db/schema";
 import type { CatalogSearchResult } from "@yousiverse/integrations/catalog";
 import { ProviderError } from "@yousiverse/integrations/errors";
+import * as openLibrary from "@yousiverse/integrations/open-library";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { and, asc, eq, inArray } from "drizzle-orm";
 import { ensureListed } from "../catalog/import";
 
 /** How many rows one request matches. Small enough to finish well inside a request's time limit. */
 const BATCH_SIZE = 8;
+const BATCH_SIZE_ONE_AT_A_TIME = 4;
+
+/**
+ * Imports whose rows are looked up one after another. Open Library asks unregistered clients to
+ * keep to about a request a second, so book lookups must not run side by side.
+ */
+const ONE_AT_A_TIME = new Set<ImportSource>(["goodreads", "storygraph"]);
 
 type Import = typeof imports.$inferSelect;
 type Item = typeof importItems.$inferSelect;
@@ -25,6 +34,10 @@ async function findTitle(item: Item): Promise<CatalogSearchResult | null> {
     return tmdb.findByImdbId(item.externalId);
   }
   if (item.type === "movie") return tmdb.findMovie(item.title, item.year);
+  if (item.type === "book") {
+    const isbn = item.externalKind === "isbn" ? item.externalId : null;
+    return openLibrary.findBook({ isbn, title: item.title, author: item.creator });
+  }
   return null;
 }
 
@@ -91,28 +104,35 @@ export async function processNextBatch(db: Database, job: Import): Promise<{ pau
     .from(importItems)
     .where(and(eq(importItems.importId, job.id), eq(importItems.state, "pending")))
     .orderBy(asc(importItems.position))
-    .limit(BATCH_SIZE);
+    .limit(ONE_AT_A_TIME.has(job.source) ? BATCH_SIZE_ONE_AT_A_TIME : BATCH_SIZE);
 
   let paused = false;
-  await Promise.all(
-    batch.map(async (item) => {
-      let state: ImportItemState;
-      try {
-        state = await processItem(db, job, item);
-      } catch (error) {
-        if (!(error instanceof ProviderError)) throw error;
-        if (error.kind === "rate_limited" || error.kind === "unavailable") {
-          paused = true;
-          return;
-        }
-        console.warn(`Import ${job.id}: could not match "${item.title}".`, error);
-        state = error.kind === "not_found" ? "not_found" : "failed";
+  const process = async (item: Item) => {
+    let state: ImportItemState;
+    try {
+      state = await processItem(db, job, item);
+    } catch (error) {
+      if (!(error instanceof ProviderError)) throw error;
+      if (error.kind === "rate_limited" || error.kind === "unavailable") {
+        paused = true;
+        return;
       }
-      await db
-        .update(importItems)
-        .set({ state })
-        .where(and(eq(importItems.id, item.id), inArray(importItems.state, replaceable(state))));
-    }),
-  );
+      console.warn(`Import ${job.id}: could not match "${item.title}".`, error);
+      state = error.kind === "not_found" ? "not_found" : "failed";
+    }
+    await db
+      .update(importItems)
+      .set({ state })
+      .where(and(eq(importItems.id, item.id), inArray(importItems.state, replaceable(state))));
+  };
+
+  if (ONE_AT_A_TIME.has(job.source)) {
+    for (const item of batch) {
+      if (paused) break;
+      await process(item);
+    }
+  } else {
+    await Promise.all(batch.map(process));
+  }
   return { paused };
 }

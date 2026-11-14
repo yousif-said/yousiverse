@@ -105,6 +105,37 @@ describe("imports", () => {
     ]);
   });
 
+  it("imports books by ISBN, then by exact title and author", async () => {
+    const { caller } = await signedInAs("Ada");
+    const goodreads = {
+      name: "goodreads_library_export.csv",
+      text: `Book Id,Title,Author,ISBN,ISBN13,My Rating,Original Publication Year,Exclusive Shelf,My Review
+1,Piranesi,Susanna Clarke,"=""""","=""9781635575637""",4,2020,read,The House is kind.
+2,"Dune (Dune Chronicles, #1)",Frank Herbert,"=""""","=""""",0,1965,to-read,
+3,Zzzzqqqqxxxx,Nobody,"=""""","=""9780000000002""",5,2001,read,
+`,
+    };
+
+    const { id } = await caller.imports.createFromFiles({
+      source: "goodreads",
+      visibility: "public",
+      files: [goodreads],
+    });
+
+    expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
+    const library = await caller.library.list();
+    expect(library.map((entry) => `${entry.title}: ${entry.status}`).sort()).toEqual([
+      "Dune: want",
+      "Piranesi: finished",
+    ]);
+    expect(library.every((entry) => entry.type === "book")).toBe(true);
+    expect(await caller.imports.get({ id })).toMatchObject({
+      unmatched: [{ title: "Zzzzqqqqxxxx", creator: "Nobody" }],
+    });
+    const stored = await db.select().from(media);
+    expect(stored.map((book) => book.providerId)).toContain("OL20893680W");
+  });
+
   it("never changes what the person already has", async () => {
     const { caller } = await signedInAs("Ada");
     const first = await caller.imports.createFromFiles({

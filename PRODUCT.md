@@ -66,10 +66,10 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Imports
 
-- **Import from Letterboxd and IMDb:** a person uploads the files those services export, and the films and shows in them are matched to the catalog and added to their library with status, rating, and review. The person chooses who can see what is imported.
+- **Import from Letterboxd, IMDb, Goodreads, and StoryGraph:** a person uploads the files those services export, and the films, shows, and books in them are matched to the catalog and added to their library with status, rating, and review. The person chooses who can see what is imported.
 - Matching runs while the import's page is open and shows its progress; leaving and coming back carries on. The page then lists what was added, what was already there, and what could not be matched, with a search link for each unmatched title.
 - An import never changes anything already in the library: an existing status, rating, or review is kept.
-- Letterboxd films are matched by title and year, IMDb titles by their IMDb id. Single episodes and games in an IMDb export are left out.
+- Letterboxd films are matched by title and year, IMDb titles by their IMDb id, and books by ISBN or, failing that, by exact title and author. A match has to be confident: anything doubtful is reported as not found instead of guessed. Single episodes and games in an IMDb export are left out, as are unrated books on shelves of a person's own making.
 
 ## Future features
 
@@ -112,7 +112,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Imports and connected accounts
 
-- **More imports:** Goodreads and StoryGraph (CSV exports), Trakt (API).
+- **Import from Trakt** (API).
 - **Connect other accounts** to sync libraries and activity: Steam (Web API) first. Xbox and PlayStation only have unofficial APIs, so treat them as experimental. Epic and Kindle currently have no usable API.
 
 ### Platforms

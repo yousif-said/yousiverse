@@ -46,6 +46,64 @@ export async function search(query: string): Promise<CatalogSearchResult[]> {
   }));
 }
 
+/** Lowercase letters and digits only, so punctuation and capitals do not stop titles matching. */
+function comparable(title: string): string {
+  return title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+}
+
+const ISBN = /^(\d{9}[\dXx]|\d{13})$/;
+
+/**
+ * Finds the one book an ISBN, or failing that a title and author, names, for matching rows
+ * imported from another service. Returns null rather than guess: an ISBN match must have a
+ * title that agrees, and without one only a book with exactly that title counts.
+ */
+export async function findBook(book: {
+  isbn: string | null;
+  title: string;
+  author: string | null;
+}): Promise<CatalogSearchResult | null> {
+  const toResult = (doc: {
+    key: string;
+    title: string;
+    first_publish_year?: number;
+    cover_i?: number;
+  }) =>
+    ({
+      type: "book",
+      providerId: workIdOf(doc.key),
+      title: doc.title,
+      releaseYear: doc.first_publish_year ?? null,
+      posterUrl: coverUrl(doc.cover_i, "M"),
+    }) satisfies CatalogSearchResult;
+
+  if (book.isbn && ISBN.test(book.isbn)) {
+    const byIsbn = await request("/search.json", searchResponse, {
+      q: `isbn:${book.isbn}`,
+      fields: SEARCH_FIELDS,
+      limit: "1",
+    });
+    // Open Library has some wrong ISBNs, so the titles must agree too. One containing the other
+    // is enough: editions differ in subtitles.
+    const [doc] = byIsbn.docs;
+    if (doc) {
+      const [found, wanted] = [comparable(doc.title), comparable(book.title)];
+      if (found && wanted && (found.includes(wanted) || wanted.includes(found))) {
+        return toResult(doc);
+      }
+    }
+  }
+
+  const byTitle = await request("/search.json", searchResponse, {
+    title: book.title,
+    ...(book.author ? { author: book.author } : {}),
+    fields: SEARCH_FIELDS,
+    limit: "5",
+  });
+  const exact = byTitle.docs.find((doc) => comparable(doc.title) === comparable(book.title));
+  return exact ? toResult(exact) : null;
+}
+
 /**
  * Fetches a work. Open Library merges duplicate works, so the returned `providerId` can differ
  * from the one asked for; callers should treat the returned id as the real one.
