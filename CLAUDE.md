@@ -58,8 +58,8 @@ Wrap every external API in its own module under `packages/integrations/<provider
 
 ## CI/CD
 
-- **Pull requests:** GitHub Actions runs typecheck, Biome lint, Vitest, and Playwright on every PR. All must pass before merging. GitHub does not enforce this on the current plan, so check before merging.
-- **Preview deploys:** Vercel builds every PR to its own preview URL. Each preview uses its own Neon database branch (Neon's Vercel integration), never the production database.
+- **Pull requests:** GitHub Actions runs typecheck, Biome lint, Vitest, and Playwright on every PR. All must pass before merging. GitHub does not enforce this on the current plan, so check before merging. Check the Vercel preview too: it reports as a commit status, separate from the Actions check run, and a PR whose preview failed must not be merged.
+- **Preview deploys:** Vercel builds every PR to its own preview URL. Each preview uses its own Neon database branch (Neon's Vercel integration), never the production database. Neon's free plan allows 10 branches per project, and a preview fails at "Provisioning Integrations" once they run out, so branches of merged PRs have to be deleted (automatic deletion is a setting of the Neon integration).
 - **Production:** merging to `main` deploys to production automatically. No manual deploy steps.
 - **Migrations:** Drizzle migrations run automatically as part of every deploy (preview and production) before the new code serves traffic. Migrations must be backward compatible with the previously deployed code (add columns before using them; remove in a later deploy).
 - **Caching:** use Turborepo remote caching on Vercel so CI and builds skip unchanged packages.
