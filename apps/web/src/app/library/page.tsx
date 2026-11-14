@@ -16,6 +16,9 @@ import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Library" };
 
+const textLink =
+  "rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50";
+
 export default async function LibraryPage({ searchParams }: PageProps<"/library">) {
   const params = await searchParams;
   const type = isMediaType(params.type) ? params.type : undefined;
@@ -31,11 +34,12 @@ export default async function LibraryPage({ searchParams }: PageProps<"/library"
       <h1 className="font-display text-4xl font-extrabold tracking-tight">Library</h1>
       <p className="mt-3 text-muted-foreground">
         Everything you have added, by status. For your own groupings, see{" "}
-        <Link
-          href="/lists"
-          className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-        >
+        <Link href="/lists" className={textLink}>
           your lists
+        </Link>
+        . To see what people you follow are up to, open{" "}
+        <Link href="/feed" className={textLink}>
+          your feed
         </Link>
         .
       </p>
