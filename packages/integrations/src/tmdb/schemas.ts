@@ -77,3 +77,23 @@ export const appendedSeasonsResponse = z.record(z.string(), z.unknown()).transfo
       episodes: z.object({ episodes: z.array(episode).default([]) }).parse(value).episodes,
     })),
 );
+
+const movieSummary = z.object({
+  id: z.number(),
+  title: z.string(),
+  release_date: isoDate,
+  poster_path: imagePath,
+});
+const tvSummary = z.object({
+  id: z.number(),
+  name: z.string(),
+  first_air_date: isoDate,
+  poster_path: imagePath,
+});
+
+export const movieSearchResponse = z.object({ results: z.array(movieSummary) });
+
+export const findResponse = z.object({
+  movie_results: z.array(movieSummary).default([]),
+  tv_results: z.array(tvSummary).default([]),
+});

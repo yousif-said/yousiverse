@@ -15,6 +15,7 @@ import type {
   CatalogGame,
   CatalogItem,
   CatalogMovie,
+  CatalogSearchResult,
   CatalogTvShow,
 } from "@yousiverse/integrations/catalog";
 import { ProviderError } from "@yousiverse/integrations/errors";
@@ -30,7 +31,7 @@ type Transaction = Parameters<Parameters<Database["transaction"]>[0]>[0];
 export type CatalogRef = { type: MediaType; providerId: string };
 
 /** Each media type comes from exactly one provider. */
-const PROVIDER_FOR = {
+export const PROVIDER_FOR = {
   movie: "tmdb",
   tv: "tmdb",
   game: "igdb",
@@ -142,6 +143,37 @@ function saveTvShow(db: Database, show: CatalogTvShow) {
       });
     return mediaId;
   });
+}
+
+/**
+ * Makes sure a title found by a search has a row, without fetching its details: those load the
+ * first time its page is opened. Returns the media id.
+ */
+export async function ensureListed(db: Database, found: CatalogSearchResult): Promise<string> {
+  const provider = PROVIDER_FOR[found.type];
+  await db
+    .insert(media)
+    .values({
+      type: found.type,
+      provider,
+      providerId: found.providerId,
+      title: found.title,
+      releaseYear: found.releaseYear,
+      posterUrl: found.posterUrl,
+    })
+    .onConflictDoNothing({ target: [media.provider, media.type, media.providerId] });
+  const [listed] = await db
+    .select({ id: media.id })
+    .from(media)
+    .where(
+      and(
+        eq(media.provider, provider),
+        eq(media.type, found.type),
+        eq(media.providerId, found.providerId),
+      ),
+    );
+  if (!listed) throw new Error(`Listing ${found.type} ${found.providerId} returned no row.`);
+  return listed.id;
 }
 
 /**

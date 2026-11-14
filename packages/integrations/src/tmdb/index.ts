@@ -1,7 +1,14 @@
 import type { CatalogMovie, CatalogSearchResult, CatalogSeason, CatalogTvShow } from "../catalog";
 import { env } from "../env";
 import { requestJson } from "../http";
-import { appendedSeasonsResponse, movieResponse, searchResponse, tvShowResponse } from "./schemas";
+import {
+  appendedSeasonsResponse,
+  findResponse,
+  movieResponse,
+  movieSearchResponse,
+  searchResponse,
+  tvShowResponse,
+} from "./schemas";
 
 const API_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p";
@@ -54,6 +61,74 @@ export async function search(query: string): Promise<CatalogSearchResult[]> {
       posterUrl: imageUrl(result.poster_path, "w342"),
     };
   });
+}
+
+/** Lowercase letters and digits only, so punctuation and capitals do not stop titles matching. */
+function comparable(title: string): string {
+  return title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
+}
+
+/**
+ * Finds the one movie a title and release year name, for matching rows imported from another
+ * service. Returns null rather than guess: the title must match exactly, or, when the year is
+ * known, differ only by a subtitle.
+ */
+export async function findMovie(
+  title: string,
+  year: number | null,
+): Promise<CatalogSearchResult | null> {
+  const { results } = await request("/search/movie", movieSearchResponse, {
+    query: title,
+    include_adult: "false",
+    ...(year ? { year: String(year) } : {}),
+  });
+  const wanted = comparable(title);
+  const exact = results.find((result) => comparable(result.title) === wanted);
+  // With a year, TMDB has already narrowed the results to that year, so a title that only
+  // differs by a subtitle is accepted too. Anything looser would be a guess.
+  const close = year
+    ? results.find((result) => {
+        const found = comparable(result.title);
+        return found !== "" && wanted !== "" && (found.includes(wanted) || wanted.includes(found));
+      })
+    : undefined;
+  const movie = exact ?? close;
+  if (!movie) return null;
+  return {
+    type: "movie",
+    providerId: String(movie.id),
+    title: movie.title,
+    releaseYear: yearOf(movie.release_date),
+    posterUrl: imageUrl(movie.poster_path, "w342"),
+  };
+}
+
+/** Finds the movie or TV show with an IMDb id such as "tt0133093". */
+export async function findByImdbId(imdbId: string): Promise<CatalogSearchResult | null> {
+  if (!/^tt\d{5,12}$/.test(imdbId)) return null;
+  const found = await request(`/find/${imdbId}`, findResponse, { external_source: "imdb_id" });
+
+  const [movie] = found.movie_results;
+  if (movie) {
+    return {
+      type: "movie",
+      providerId: String(movie.id),
+      title: movie.title,
+      releaseYear: yearOf(movie.release_date),
+      posterUrl: imageUrl(movie.poster_path, "w342"),
+    };
+  }
+  const [show] = found.tv_results;
+  if (show) {
+    return {
+      type: "tv",
+      providerId: String(show.id),
+      title: show.name,
+      releaseYear: yearOf(show.first_air_date),
+      posterUrl: imageUrl(show.poster_path, "w342"),
+    };
+  }
+  return null;
 }
 
 export async function getMovie(providerId: string): Promise<CatalogMovie> {
