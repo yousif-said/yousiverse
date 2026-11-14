@@ -13,6 +13,7 @@ import { VisibilitySelect } from "./visibility-select";
 // Matches the limits the API enforces.
 const MAX_FILES = 8;
 const MAX_FILE_CHARACTERS = 3_000_000;
+const MAX_UPLOAD_CHARACTERS = 3_500_000;
 
 /** Uploads the files another service exported and starts an import from them. */
 export function ImportForm() {
@@ -40,6 +41,12 @@ export function ImportForm() {
     const tooLarge = files.find((file) => file.text.length > MAX_FILE_CHARACTERS);
     if (tooLarge) {
       setProblem(`${tooLarge.name} is too large to import. Files can be up to about 3 MB.`);
+      return;
+    }
+    // The whole upload travels in one request, which the host caps at about 4.5 MB.
+    const totalCharacters = files.reduce((sum, file) => sum + file.text.length, 0);
+    if (totalCharacters > MAX_UPLOAD_CHARACTERS) {
+      setProblem("Those files are too large to send together. Import them a few at a time.");
       return;
     }
     if (files.some((file) => file.text.trim() === "")) {

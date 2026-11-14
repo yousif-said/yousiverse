@@ -35,18 +35,20 @@ export async function SiteHeader() {
           </NavLink>
           <NavLink href="/search">Search</NavLink>
           {session && <NavLink href="/library">Library</NavLink>}
-          {/* Small screens reach lists from the library page instead. */}
+          {/* Narrow screens reach these three from the library page instead. */}
           {session && (
-            <NavLink href="/lists" className="hidden sm:block">
-              Lists
-            </NavLink>
+            <>
+              <NavLink href="/lists" className="hidden md:block">
+                Lists
+              </NavLink>
+              <NavLink href="/feed" className="hidden md:block">
+                Feed
+              </NavLink>
+            </>
           )}
-          {/* Small screens reach the feed from the library page too. */}
-          {session && (
-            <NavLink href="/feed" className="hidden sm:block">
-              Feed
-            </NavLink>
-          )}
+          <NavLink href="/clubs" className="hidden md:block">
+            Clubs
+          </NavLink>
           <NavLink href="/account">Account</NavLink>
         </nav>
         <div className="ml-auto flex items-center gap-2">
