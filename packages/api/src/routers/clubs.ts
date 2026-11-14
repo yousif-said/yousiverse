@@ -136,13 +136,16 @@ export const clubsRouter = router({
       .orderBy(asc(clubs.name)),
   ),
 
-  /** Public clubs anyone can join, largest first. Invite-only clubs are never listed. */
+  /**
+   * Public clubs anyone can join, largest first and newest first among clubs of a size.
+   * Invite-only clubs are never listed.
+   */
   discover: publicProcedure.query(({ ctx }) =>
     ctx.db
       .select(summaryFields)
       .from(clubs)
       .where(eq(clubs.access, "public"))
-      .orderBy(desc(memberCount), asc(clubs.name))
+      .orderBy(desc(memberCount), desc(clubs.createdAt))
       .limit(MAX_CLUBS_LISTED),
   ),
 

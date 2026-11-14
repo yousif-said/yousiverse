@@ -1,5 +1,6 @@
 import { db } from "@yousiverse/db";
 import { clubMembers, clubs, users } from "@yousiverse/db/schema";
+import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { anonymous, signedInAs } from "./helpers";
 
@@ -90,6 +91,28 @@ describe("clubs", () => {
       inviteCode: null,
     });
     expect(await grace.caller.clubs.mine()).toMatchObject([{ id }]);
+  });
+
+  it("lists public clubs largest first, and newest first among clubs of the same size", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const first = await ada.caller.clubs.create({ ...BOOK_CLUB, name: "First" });
+    const second = await ada.caller.clubs.create({ ...BOOK_CLUB, name: "Second" });
+    const third = await ada.caller.clubs.create({ ...BOOK_CLUB, name: "Third" });
+    await db
+      .update(clubs)
+      .set({ createdAt: new Date("2020-01-01T00:00:00Z") })
+      .where(eq(clubs.id, first.id));
+    await db
+      .update(clubs)
+      .set({ createdAt: new Date("2021-01-01T00:00:00Z") })
+      .where(eq(clubs.id, second.id));
+    await grace.caller.clubs.join({ id: first.id });
+
+    const listed = await anonymous.clubs.discover();
+
+    expect(listed.map((club) => club.name)).toEqual(["First", "Third", "Second"]);
+    expect(listed.map((club) => club.id)).toContain(third.id);
   });
 
   it("hides an invite-only club from everyone without its invite code", async () => {
