@@ -2,8 +2,10 @@
  * Records real provider responses into src/fixtures for tests to replay.
  * Run `bun run --cwd packages/integrations record` after adding a request below. Name providers
  * to record only those (`record watchmode`), which leaves the other fixture files untouched.
+ * Add `--missing` to keep every response already recorded and fetch only the new requests, so
+ * existing tests do not shift when a provider's data has changed.
  */
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { fixtureKey } from "../src/fixtures/fixture-fetch";
 import { gameQuery, searchQuery } from "../src/igdb/queries";
 import { SEARCH_FIELDS, WORK_FIELDS } from "../src/open-library/fields";
@@ -102,6 +104,12 @@ const recordings: Record<string, Recording[]> = {
     tmdb("/movie/999999999"),
     tmdb("/tv/95396"),
     tmdb("/tv/95396", { append_to_response: "season/0,season/1,season/2,season/3" }),
+    tmdb("/search/movie", { query: "The Matrix", include_adult: "false", year: "1999" }),
+    tmdb("/search/movie", { query: "the matrix", include_adult: "false" }),
+    tmdb("/search/movie", { query: "Zzzzqqqqxxxx", include_adult: "false", year: "1999" }),
+    tmdb("/find/tt0133093", { external_source: "imdb_id" }),
+    tmdb("/find/tt11280740", { external_source: "imdb_id" }),
+    tmdb("/find/tt99999999", { external_source: "imdb_id" }),
   ],
   igdb: [
     igdb(searchQuery("hades")),
@@ -161,7 +169,8 @@ const forFixture = (_key: string, value: unknown) => {
     : value;
 };
 
-const onlyProviders = process.argv.slice(2);
+const onlyMissing = process.argv.includes("--missing");
+const onlyProviders = process.argv.slice(2).filter((argument) => !argument.startsWith("--"));
 const unknownProviders = onlyProviders.filter((provider) => !(provider in recordings));
 if (unknownProviders.length > 0) {
   throw new Error(`No recordings for: ${unknownProviders.join(", ")}`);
@@ -169,13 +178,17 @@ if (unknownProviders.length > 0) {
 
 for (const [provider, requests] of Object.entries(recordings)) {
   if (onlyProviders.length > 0 && !onlyProviders.includes(provider)) continue;
-  const fixtures: Record<string, { status: number; body: unknown }> = { ...handWritten[provider] };
+  const file = new URL(`../src/fixtures/${provider}.json`, import.meta.url);
+  const recorded: Record<string, { status: number; body: unknown }> = onlyMissing
+    ? JSON.parse(await readFile(file, "utf8"))
+    : {};
+  const fixtures = { ...recorded, ...handWritten[provider] };
   for (const { url, init, headers } of requests) {
-    const response = await fetch(url, { ...init, headers: { ...init?.headers, ...headers } });
     const key = fixtureKey(new URL(url), init);
+    if (key in fixtures) continue;
+    const response = await fetch(url, { ...init, headers: { ...init?.headers, ...headers } });
     fixtures[key] = { status: response.status, body: await response.json() };
     console.info(response.status, key);
   }
-  const file = new URL(`../src/fixtures/${provider}.json`, import.meta.url);
   await writeFile(file, `${JSON.stringify(fixtures, forFixture, 2)}\n`);
 }

@@ -41,6 +41,10 @@ export default async function LibraryPage({ searchParams }: PageProps<"/library"
         <Link href="/feed" className={textLink}>
           your feed
         </Link>
+        . Coming from another service?{" "}
+        <Link href="/import" className={textLink}>
+          Import your history
+        </Link>
         .
       </p>
 
