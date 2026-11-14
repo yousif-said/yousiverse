@@ -4,18 +4,22 @@ import type { Database } from "@yousiverse/db";
 import {
   clubAccessLevels,
   clubMembers,
+  clubPicks,
   clubs,
+  media,
   mediaTypes,
   profiles,
+  ratings,
   users,
 } from "@yousiverse/db/schema";
-import { and, asc, count, desc, eq, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const MAX_CLUBS_LISTED = 50;
 
 const clubId = z.uuid();
+const mediaId = z.uuid();
 const details = {
   name: z.string().trim().min(1).max(80),
   description: z.string().trim().max(500).optional(),
@@ -264,4 +268,139 @@ export const clubsRouter = router({
       .delete(clubs)
       .where(and(eq(clubs.id, input.id), eq(clubs.ownerId, ctx.session.user.id)));
   }),
+
+  /**
+   * The titles a club has picked, newest first, each with the average of its members' ratings.
+   * Only titles of the media types the club covers are returned, even if it covered more once.
+   */
+  picks: publicProcedure.input(z.object({ id: clubId })).query(async ({ ctx, input }) => {
+    const userId = ctx.session?.user.id;
+    const { club } = await requireVisibleClub(ctx.db, input.id, userId);
+
+    const [picked, memberRatings] = await Promise.all([
+      ctx.db
+        .select({
+          mediaId: media.id,
+          type: media.type,
+          title: media.title,
+          releaseYear: media.releaseYear,
+          posterUrl: media.posterUrl,
+          providerId: media.providerId,
+          addedById: clubPicks.addedBy,
+          // Null when the member who picked it has since deleted their account.
+          addedBy: profiles.username,
+        })
+        .from(clubPicks)
+        .innerJoin(media, eq(media.id, clubPicks.mediaId))
+        .leftJoin(profiles, eq(profiles.userId, clubPicks.addedBy))
+        .where(and(eq(clubPicks.clubId, club.id), inArray(media.type, club.mediaTypes)))
+        .orderBy(desc(clubPicks.createdAt), asc(media.title)),
+      // Ratings of whole titles, by people who are members now.
+      ctx.db
+        .select({
+          mediaId: clubPicks.mediaId,
+          average: sql<number>`avg(${ratings.value})::float`,
+          count: count(ratings.id),
+        })
+        .from(clubPicks)
+        .innerJoin(clubMembers, eq(clubMembers.clubId, clubPicks.clubId))
+        .innerJoin(
+          ratings,
+          and(
+            eq(ratings.userId, clubMembers.userId),
+            eq(ratings.mediaId, clubPicks.mediaId),
+            isNull(ratings.episodeId),
+          ),
+        )
+        .where(eq(clubPicks.clubId, club.id))
+        .groupBy(clubPicks.mediaId),
+    ]);
+
+    const ratingOf = new Map(memberRatings.map((rating) => [rating.mediaId, rating]));
+    return picked.flatMap(({ addedById, providerId, ...pick }) => {
+      // Every title with a page has a provider id; this narrows the type for callers.
+      if (!providerId) return [];
+      const rating = ratingOf.get(pick.mediaId);
+      return {
+        ...pick,
+        providerId,
+        /** The members' average rating in quarter points, and how many of them rated it. */
+        clubRating: rating ? { average: rating.average, count: rating.count } : null,
+        // The owner can remove any pick; a member can remove their own.
+        canRemove: userId !== undefined && (club.ownerId === userId || addedById === userId),
+      };
+    });
+  }),
+
+  /** The signed-in person's clubs that cover a title's media type, saying which picked it. */
+  forTitle: protectedProcedure.input(z.object({ mediaId })).query(async ({ ctx, input }) => {
+    const [title] = await ctx.db
+      .select({ type: media.type })
+      .from(media)
+      .where(eq(media.id, input.mediaId));
+    if (!title) throw new TRPCError({ code: "NOT_FOUND" });
+
+    return ctx.db
+      .select({
+        id: clubs.id,
+        name: clubs.name,
+        picked: sql<boolean>`${clubPicks.id} is not null`,
+      })
+      .from(clubs)
+      .innerJoin(clubMembers, eq(clubMembers.clubId, clubs.id))
+      .leftJoin(
+        clubPicks,
+        and(eq(clubPicks.clubId, clubs.id), eq(clubPicks.mediaId, input.mediaId)),
+      )
+      .where(
+        and(
+          eq(clubMembers.userId, ctx.session.user.id),
+          sql`${title.type} = any(${clubs.mediaTypes})`,
+        ),
+      )
+      .orderBy(asc(clubs.name));
+  }),
+
+  /** Picks a title for a club. Any member can, for titles of a type the club covers. */
+  addPick: protectedProcedure
+    .input(z.object({ id: clubId, mediaId }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const club = await requireMembership(ctx.db, input.id, userId);
+      const [title] = await ctx.db
+        .select({ type: media.type })
+        .from(media)
+        .where(eq(media.id, input.mediaId));
+      if (!title) throw new TRPCError({ code: "NOT_FOUND" });
+      if (!club.mediaTypes.includes(title.type)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "This club does not cover that kind of title.",
+        });
+      }
+      await ctx.db
+        .insert(clubPicks)
+        .values({ clubId: club.id, mediaId: input.mediaId, addedBy: userId })
+        .onConflictDoNothing();
+    }),
+
+  /** Takes a pick back. The club's owner can remove any pick; a member only their own. */
+  removePick: protectedProcedure
+    .input(z.object({ id: clubId, mediaId }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const club = await requireMembership(ctx.db, input.id, userId);
+      const [pick] = await ctx.db
+        .select({ id: clubPicks.id, addedBy: clubPicks.addedBy })
+        .from(clubPicks)
+        .where(and(eq(clubPicks.clubId, club.id), eq(clubPicks.mediaId, input.mediaId)));
+      if (!pick) return;
+      if (club.ownerId !== userId && pick.addedBy !== userId) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only the member who picked it, or the club's owner, can remove a pick.",
+        });
+      }
+      await ctx.db.delete(clubPicks).where(eq(clubPicks.id, pick.id));
+    }),
 });

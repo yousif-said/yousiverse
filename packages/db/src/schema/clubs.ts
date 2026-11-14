@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { check, index, pgEnum, pgTable, text, timestamp, unique, uuid } from "drizzle-orm/pg-core";
 import { users } from "./auth";
-import { mediaType } from "./media";
+import { media, mediaType } from "./media";
 
 /** Who may join a club: anyone, or only people given its invite link. */
 export const clubAccessLevels = ["public", "invite_only"] as const;
@@ -44,4 +44,22 @@ export const clubMembers = pgTable(
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [unique().on(table.clubId, table.userId), index().on(table.userId)],
+);
+
+/** A title a club has chosen. Always one of the media types the club covers. */
+export const clubPicks = pgTable(
+  "club_picks",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    clubId: uuid()
+      .notNull()
+      .references(() => clubs.id, { onDelete: "cascade" }),
+    mediaId: uuid()
+      .notNull()
+      .references(() => media.id, { onDelete: "cascade" }),
+    // The member who picked it. The pick stays if they leave or delete their account.
+    addedBy: text().references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [unique().on(table.clubId, table.mediaId)],
 );

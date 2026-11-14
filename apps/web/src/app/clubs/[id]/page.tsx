@@ -5,9 +5,11 @@ import { ClubMembership } from "@/components/club-membership";
 import { ClubSettings } from "@/components/club-settings";
 import { MemberName } from "@/components/member-name";
 import { PeopleList } from "@/components/people-list";
+import { RemovePickButton } from "@/components/remove-pick-button";
 import { SignInPrompt } from "@/components/sign-in-prompt";
+import { TitleCard, titleGridClasses } from "@/components/title-card";
 import { ACCESS_LABELS, clubPath, coveredTypes } from "@/lib/clubs";
-import { pluralize } from "@/lib/format";
+import { formatAverageRating, pluralize } from "@/lib/format";
 import { getSession } from "@/lib/session";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
 
@@ -41,6 +43,10 @@ async function siteOrigin(): Promise<string> {
 export default async function ClubPage(props: Props) {
   const [{ club, invite }, session] = await Promise.all([getClub(props), getSession()]);
   const inside = club.isMember || club.access === "public";
+  // Someone only holding an invite is not shown the club's picks.
+  const picks = inside
+    ? await getQueryClient().fetchQuery(trpc.clubs.picks.queryOptions({ id: club.id }))
+    : [];
 
   return (
     <div className="pt-10 sm:pt-16">
@@ -79,6 +85,39 @@ export default async function ClubPage(props: Props) {
       )}
       {club.isOwner && club.inviteCode && (
         <ClubSettings club={club} inviteCode={club.inviteCode} origin={await siteOrigin()} />
+      )}
+
+      {inside && (
+        <section aria-labelledby="picks-heading" className="mt-14">
+          <h2 id="picks-heading" className={sectionHeading}>
+            Picks
+          </h2>
+          {picks.length === 0 ? (
+            <p className="mt-4 max-w-[65ch] text-muted-foreground">
+              No picks yet.
+              {club.isMember &&
+                ` Open the page of any of the ${coveredTypes(club.mediaTypes).toLowerCase()} this club covers and choose “Pick for a club”.`}
+            </p>
+          ) : (
+            <ul className={`mt-6 ${titleGridClasses}`}>
+              {picks.map((pick) => (
+                <li key={pick.mediaId}>
+                  <TitleCard
+                    {...pick}
+                    note={
+                      pick.clubRating
+                        ? `Club average ${formatAverageRating(pick.clubRating.average)} from ${pluralize(pick.clubRating.count, "rating")}`
+                        : "No club ratings yet"
+                    }
+                  />
+                  {pick.canRemove && (
+                    <RemovePickButton clubId={club.id} mediaId={pick.mediaId} title={pick.title} />
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
       )}
 
       {inside ? (

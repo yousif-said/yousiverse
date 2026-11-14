@@ -69,6 +69,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Clubs** are groups around some kinds of titles. Whoever starts a club names it, describes it, and picks which media types it covers (a book club covers only books).
 - A club is **public**, so anyone can find and join it, or **invite only**, so it can be seen and joined only through its invite link. The owner can make a new link, which stops the old one working.
 - The clubs page lists a person's clubs and the public clubs they could join. A club's page shows what it covers, who runs it, and its members.
+- **Club picks:** any member can pick a title for a club from the title's page, as long as it is a kind the club covers; the page only offers clubs that do. The club's page shows its picks with the average of its members' ratings. A member can remove their own picks and the owner any pick. If a club stops covering a media type, picks of that type stop showing.
 - Members can leave. The owner can change the club's details, remove members, and delete the club. Starting or joining a club needs a username, because members are shown by username.
 
 ### Imports
@@ -112,7 +113,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Social
 
-- **Club picks:** titles a club chooses together, limited to the media types it covers, with the club's own average rating.
 - **Club discussions** and invites by email.
 
 ### Recommendations

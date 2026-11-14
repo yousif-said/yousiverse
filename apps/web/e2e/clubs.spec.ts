@@ -132,3 +132,46 @@ test("asks for a username before starting a club", async ({ page }) => {
     "Choose a username on your account page first.",
   );
 });
+
+test("picks titles for a club from their pages, limited to what the club covers", async ({
+  page,
+}) => {
+  const stamp = Date.now().toString(36);
+  const clubName = `Pick Club ${stamp}`;
+  await signIn(page);
+  await chooseUsername(page, `picker_${stamp}`, "Club Picker");
+  await page.goto("/clubs");
+  const form = page.getByRole("region", { name: "Start a club" });
+  await form.getByLabel("Club name").fill(clubName);
+  await form.getByRole("checkbox", { name: "Movies" }).check();
+  await form.getByRole("button", { name: "Start club" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: clubName })).toBeVisible();
+  const clubUrl = page.url();
+  await expect(page.getByText(/No picks yet\. Open the page of any of the movies/)).toBeVisible();
+
+  // A game is not offered to a film club.
+  await page.goto("/games/113112");
+  await expect(page.getByText("Add to a list")).toBeVisible();
+  await expect(page.getByText("Pick for a club")).toHaveCount(0);
+
+  await page.goto("/movies/603");
+  let stored = page.waitForResponse(/ratings\.save/);
+  await page.getByRole("slider", { name: "Your rating" }).fill("34");
+  await stored;
+  await page.getByText("Pick for a club").click();
+  stored = page.waitForResponse(/clubs\.addPick/);
+  await page.getByRole("checkbox", { name: clubName }).check();
+  await stored;
+  await expect(page.getByText("(picked by 1 club)")).toBeVisible();
+
+  await page.goto(clubUrl);
+  const picks = page.getByRole("region", { name: "Picks" }).getByRole("listitem");
+  await expect(picks).toHaveCount(1);
+  await expect(picks).toContainText("The Matrix");
+  await expect(picks).toContainText("Club average 8.5 from 1 rating");
+
+  stored = page.waitForResponse(/clubs\.removePick/);
+  await page.getByRole("button", { name: "Remove The Matrix from this club's picks" }).click();
+  await stored;
+  await expect(picks).toHaveCount(0);
+});
