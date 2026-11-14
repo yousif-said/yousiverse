@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ProviderError } from "../src/errors";
-import { getBook, search } from "../src/open-library";
+import { findBook, getBook, search } from "../src/open-library";
 import { plainDescription, readableSubjects } from "../src/open-library/text";
 
 describe("openLibrary.search", () => {
@@ -103,5 +103,38 @@ describe("readableSubjects", () => {
         "f",
       ]),
     ).toEqual(["Fiction", "a", "b", "c", "d", "e"]);
+  });
+});
+
+describe("openLibrary.findBook", () => {
+  it("finds a book by its ISBN", async () => {
+    expect(await findBook({ isbn: "9781635575637", title: "Piranesi", author: null })).toEqual({
+      type: "book",
+      providerId: "OL20893680W",
+      title: "Piranesi",
+      releaseYear: 2020,
+      posterUrl: expect.stringMatching(/^https:\/\/covers\.openlibrary\.org\//),
+    });
+  });
+
+  it("falls back to an exact title with its author when there is no usable ISBN", async () => {
+    expect(await findBook({ isbn: null, title: "Dune", author: "Frank Herbert" })).toMatchObject({
+      providerId: "OL893414W",
+      title: "Dune",
+    });
+    expect(
+      await findBook({ isbn: "not-an-isbn", title: "Piranesi", author: "Susanna Clarke" }),
+    ).toMatchObject({ providerId: "OL20893680W" });
+  });
+
+  it("does not trust an ISBN that leads to a book with a different title", async () => {
+    // Open Library files this made-up ISBN under an unrelated book.
+    expect(
+      await findBook({ isbn: "9780000000002", title: "Zzzzqqqqxxxx", author: "Nobody" }),
+    ).toBeNull();
+  });
+
+  it("finds nothing rather than guess", async () => {
+    expect(await findBook({ isbn: null, title: "Zzzzqqqqxxxx", author: null })).toBeNull();
   });
 });

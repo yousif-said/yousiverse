@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parseCsv, readTable } from "../src/imports/csv";
 import { ImportFileError, toQuarterPoints } from "../src/imports/rows";
+import { parseGoodreads, parseStoryGraph } from "../src/imports/sources/books";
 import { parseImdb } from "../src/imports/sources/imdb";
 import { parseLetterboxd } from "../src/imports/sources/letterboxd";
 
@@ -140,5 +141,92 @@ describe("parseImdb", () => {
 
   it("refuses a file without the IMDb columns", () => {
     expect(() => parseImdb([{ name: "films.csv", text: WATCHED }])).toThrow(ImportFileError);
+  });
+});
+
+const GOODREADS = `Book Id,Title,Author,Author l-f,Additional Authors,ISBN,ISBN13,My Rating,Average Rating,Publisher,Binding,Number of Pages,Year Published,Original Publication Year,Date Read,Date Added,Bookshelves,Bookshelves with positions,Exclusive Shelf,My Review,Spoiler,Private Notes,Read Count,Owned Copies
+1,"Dune (Dune Chronicles, #1)",Frank Herbert,"Herbert, Frank",,"=""0441172717""","=""9780441172719""",5,4.2,Ace,Paperback,604,1990,1965,2023/05/01,2023/04/01,,,read,"Sand, worms.<br/>Loved it &amp; more.",,,1,0
+2,Piranesi,Susanna Clarke,"Clarke, Susanna",,"=""""","=""9781635575637""",0,4.2,Bloomsbury,Hardcover,272,2020,2020,,2024/01/01,,,to-read,,,,0,0
+3,Half Read,Some Author,"Author, Some",,"=""""","=""""",0,3.0,,,100,2001,,,2024/01/02,,,currently-reading,,,,0,0
+4,Gave Up,Some Author,"Author, Some",,"=""""","=""""",0,3.0,,,100,2001,,,2024/01/02,dnf,dnf (#1),dnf,,,,0,0
+5,On My Own Shelf,Some Author,"Author, Some",,"=""""","=""""",0,3.0,,,100,2001,,,2024/01/02,owned,owned (#1),owned,,,,0,0
+6,Rated On My Own Shelf,Some Author,"Author, Some",,"=""""","=""""",3,3.0,,,100,2001,,,2024/01/02,favorites,favorites (#1),favorites,,,,1,0
+`;
+
+describe("parseGoodreads", () => {
+  it("reads shelves as statuses, cleans titles and ISBNs, and turns review HTML into text", () => {
+    const { rows, skipped } = parseGoodreads([{ name: "goodreads.csv", text: GOODREADS }]);
+
+    expect(skipped).toBe(1);
+    expect(rows).toEqual([
+      {
+        type: "book",
+        title: "Dune",
+        year: 1965,
+        creator: "Frank Herbert",
+        externalId: "9780441172719",
+        externalKind: "isbn",
+        status: "finished",
+        rating: 40,
+        review: "Sand, worms.\nLoved it & more.",
+      },
+      expect.objectContaining({
+        title: "Piranesi",
+        externalId: "9781635575637",
+        status: "want",
+        rating: null,
+        review: null,
+      }),
+      expect.objectContaining({ title: "Half Read", status: "in_progress", externalId: null }),
+      expect.objectContaining({ title: "Gave Up", status: "dropped" }),
+      expect.objectContaining({ title: "Rated On My Own Shelf", status: "finished", rating: 24 }),
+    ]);
+  });
+
+  it("refuses a file without the Goodreads columns", () => {
+    expect(() => parseGoodreads([{ name: "watched.csv", text: WATCHED }])).toThrow(
+      /watched\.csv does not look like a Goodreads export/,
+    );
+  });
+});
+
+const STORYGRAPH = `Title,Authors,Contributors,ISBN/UID,Format,Read Status,Date Added,Last Date Read,Dates Read,Read Count,Moods,Pace,Character- or Plot-Driven?,Strong Character Development?,Loveable Characters?,Diverse Characters?,Flawed Characters?,Star Rating,Review,Content Warnings,Content Warning Description,Tags,Owned?
+Piranesi,Susanna Clarke,,9781635575637,hardcover,read,2024/01/01,2024/01/10,2024/01/10,1,mysterious,slow,Character,Yes,Yes,,,4.25,<div>The House is kind.</div>,,,,No
+Dune,"Frank Herbert, Someone Else",,B000ABC123,digital,did-not-finish,2024/01/02,,,0,,,,,,,,,,,,,No
+Later,Some Author,,,paperback,to-read,2024/01/03,,,0,,,,,,,,,,,,,No
+`;
+
+describe("parseStoryGraph", () => {
+  it("reads statuses, quarter-star ratings, and only real ISBNs", () => {
+    const { rows, skipped } = parseStoryGraph([{ name: "storygraph.csv", text: STORYGRAPH }]);
+
+    expect(skipped).toBe(0);
+    expect(rows).toEqual([
+      {
+        type: "book",
+        title: "Piranesi",
+        year: null,
+        creator: "Susanna Clarke",
+        externalId: "9781635575637",
+        externalKind: "isbn",
+        status: "finished",
+        rating: 34,
+        review: "The House is kind.",
+      },
+      expect.objectContaining({
+        title: "Dune",
+        creator: "Frank Herbert",
+        externalId: null,
+        externalKind: null,
+        status: "dropped",
+      }),
+      expect.objectContaining({ title: "Later", status: "want" }),
+    ]);
+  });
+
+  it("refuses a file without the StoryGraph columns", () => {
+    expect(() => parseStoryGraph([{ name: "goodreads.csv", text: GOODREADS }])).toThrow(
+      ImportFileError,
+    );
   });
 });

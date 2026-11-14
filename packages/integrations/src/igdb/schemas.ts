@@ -36,3 +36,19 @@ export const gamesResponse = z.array(
       .default([]),
   }),
 );
+
+export const steamGamesResponse = z.array(
+  z.object({
+    uid: z.string(),
+    // Missing when the listing points at a game IGDB has since removed.
+    game: z
+      .object({
+        id: z.number(),
+        name: z.string(),
+        first_release_date: z.number().optional(),
+        cover: image.optional(),
+        game_type: z.number().optional(),
+      })
+      .optional(),
+  }),
+);

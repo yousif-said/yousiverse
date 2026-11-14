@@ -7,11 +7,15 @@ import {
   imports,
   visibilities,
 } from "@yousiverse/db/schema";
+import { ProviderError } from "@yousiverse/integrations/errors";
+import { getOwnedGames, resolveSteamId } from "@yousiverse/integrations/steam";
+import { getTraktHistory, getTraktProfile, traktUsername } from "@yousiverse/integrations/trakt";
 import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { processNextBatch } from "../imports/process";
 import { ImportFileError, type ParsedImport } from "../imports/rows";
 import { fileParsers, fileSources } from "../imports/sources";
+import { traktRows } from "../imports/sources/trakt";
 import { protectedProcedure, router } from "../trpc";
 
 const MAX_TITLES = 5000;
@@ -20,6 +24,25 @@ const MAX_UNMATCHED_SHOWN = 200;
 const INSERT_CHUNK = 500;
 
 const importId = z.uuid();
+
+async function traktProfileOrNull(username: string) {
+  try {
+    return await getTraktProfile(username);
+  } catch (error) {
+    if (error instanceof ProviderError && error.kind === "not_found") return null;
+    throw error;
+  }
+}
+
+/** A Steam account's games, or null when the account does not exist or hides them. */
+async function ownedGamesOrNull(steamId: string) {
+  try {
+    return await getOwnedGames(steamId);
+  } catch (error) {
+    if (error instanceof ProviderError && error.kind === "not_found") return null;
+    throw error;
+  }
+}
 
 async function requireOwnImport(db: Database, userId: string, id: string) {
   const [job] = await db
@@ -110,6 +133,83 @@ export const importsRouter = router({
         ctx.db,
         { userId: ctx.session.user.id, source: input.source, visibility: input.visibility },
         parsed,
+      );
+    }),
+
+  /**
+   * Reads the games on a person's Steam account. Games never played go in as wanted, and
+   * played games as the status the person chooses, since Steam cannot tell finished from not.
+   */
+  createFromSteam: protectedProcedure
+    .input(
+      z.object({
+        profile: z.string().trim().min(2).max(200),
+        visibility: z.enum(visibilities),
+        playedStatus: z.enum(["in_progress", "finished", "dropped"]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const steamId = await resolveSteamId(input.profile);
+      const games = steamId ? await ownedGamesOrNull(steamId) : null;
+      if (!steamId || games === null) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: steamId
+            ? "Steam would not show that account's games. In Steam, open your profile's privacy settings and set Game details to Public, then try again."
+            : "No Steam profile matches that. Paste your profile's address or your 17-digit Steam ID.",
+        });
+      }
+
+      return createImport(
+        ctx.db,
+        { userId: ctx.session.user.id, source: "steam", visibility: input.visibility },
+        {
+          skipped: 0,
+          rows: games.map((game) => ({
+            type: "game",
+            title: game.name,
+            year: null,
+            creator: null,
+            externalId: game.appId,
+            externalKind: "steam",
+            status: game.playtimeMinutes > 0 ? input.playedStatus : "want",
+            rating: null,
+            review: null,
+          })),
+        },
+      );
+    }),
+
+  /**
+   * Reads a public Trakt profile: what the person watched, rated, and put on their watchlist.
+   * A show counts as finished once every aired episode has been played.
+   */
+  createFromTrakt: protectedProcedure
+    .input(
+      z.object({ profile: z.string().trim().min(1).max(200), visibility: z.enum(visibilities) }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const username = traktUsername(input.profile);
+      const profile = username ? await traktProfileOrNull(username) : null;
+      if (!username || !profile) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No Trakt profile matches that. Enter your Trakt username.",
+        });
+      }
+      if (profile.private) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "That Trakt profile is private. In Trakt's settings, turn off Private under Privacy, then try again. You can turn it back on afterwards.",
+        });
+      }
+
+      const history = await getTraktHistory(username);
+      return createImport(
+        ctx.db,
+        { userId: ctx.session.user.id, source: "trakt", visibility: input.visibility },
+        traktRows(history),
       );
     }),
 

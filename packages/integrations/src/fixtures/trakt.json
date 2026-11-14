@@ -1,0 +1,139 @@
+{
+  "GET api.trakt.tv/users/fixturewatcher": {
+    "status": 200,
+    "body": {
+      "username": "fixturewatcher",
+      "private": false,
+      "ids": {
+        "slug": "fixturewatcher"
+      }
+    }
+  },
+  "GET api.trakt.tv/users/privatewatcher": {
+    "status": 200,
+    "body": {
+      "username": "privatewatcher",
+      "private": true,
+      "ids": {
+        "slug": "privatewatcher"
+      }
+    }
+  },
+  "GET api.trakt.tv/users/nobody-has-this": {
+    "status": 404,
+    "body": ""
+  },
+  "GET api.trakt.tv/users/fixturewatcher/watched/movies?extended=noseasons&limit=250&page=1": {
+    "status": 200,
+    "body": [
+      {
+        "plays": 2,
+        "movie": {
+          "title": "The Matrix",
+          "year": 1999,
+          "ids": {
+            "trakt": 481,
+            "slug": "fixture-481",
+            "imdb": null,
+            "tmdb": 603
+          }
+        }
+      }
+    ]
+  },
+  "GET api.trakt.tv/users/fixturewatcher/watched/movies?extended=noseasons&limit=250&page=2": {
+    "status": 200,
+    "body": []
+  },
+  "GET api.trakt.tv/users/fixturewatcher/watched/shows?extended=noseasons&limit=250&page=1": {
+    "status": 200,
+    "body": [
+      {
+        "plays": 5,
+        "show": {
+          "title": "Severance",
+          "year": 2022,
+          "ids": {
+            "trakt": 154997,
+            "slug": "fixture-154997",
+            "imdb": null,
+            "tmdb": 95396
+          },
+          "aired_episodes": 19
+        }
+      }
+    ]
+  },
+  "GET api.trakt.tv/users/fixturewatcher/watched/shows?extended=noseasons&limit=250&page=2": {
+    "status": 200,
+    "body": []
+  },
+  "GET api.trakt.tv/users/fixturewatcher/ratings/movies?extended=noseasons&limit=250&page=1": {
+    "status": 200,
+    "body": [
+      {
+        "rating": 9,
+        "type": "movie",
+        "movie": {
+          "title": "The Matrix",
+          "year": 1999,
+          "ids": {
+            "trakt": 481,
+            "slug": "fixture-481",
+            "imdb": null,
+            "tmdb": 603
+          }
+        }
+      }
+    ]
+  },
+  "GET api.trakt.tv/users/fixturewatcher/ratings/movies?extended=noseasons&limit=250&page=2": {
+    "status": 200,
+    "body": []
+  },
+  "GET api.trakt.tv/users/fixturewatcher/ratings/shows?extended=noseasons&limit=250&page=1": {
+    "status": 200,
+    "body": []
+  },
+  "GET api.trakt.tv/users/fixturewatcher/watchlist/movies?extended=noseasons&limit=250&page=1": {
+    "status": 200,
+    "body": [
+      {
+        "rank": 1,
+        "type": "movie",
+        "movie": {
+          "title": "A Film Nobody Has",
+          "year": 2001,
+          "ids": {
+            "trakt": 900001,
+            "slug": "fixture-900001",
+            "imdb": null,
+            "tmdb": 999999999
+          }
+        }
+      },
+      {
+        "rank": 2,
+        "type": "movie",
+        "movie": {
+          "title": "Only On Trakt",
+          "year": 2002,
+          "ids": {
+            "trakt": 900002,
+            "slug": "fixture-900002",
+            "imdb": null,
+            "tmdb": null
+          }
+        }
+      }
+    ]
+  },
+  "GET api.trakt.tv/users/fixturewatcher/watchlist/movies?extended=noseasons&limit=250&page=2": {
+    "status": 200,
+    "body": []
+  },
+  "GET api.trakt.tv/users/fixturewatcher/watchlist/shows?extended=noseasons&limit=250&page=1": {
+    "status": 200,
+    "body": []
+  }
+}

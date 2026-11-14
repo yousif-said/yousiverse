@@ -1,4 +1,11 @@
-export type ProviderName = "tmdb" | "igdb" | "open_library" | "watchmode" | "itad";
+export type ProviderName =
+  | "tmdb"
+  | "igdb"
+  | "open_library"
+  | "watchmode"
+  | "itad"
+  | "steam"
+  | "trakt";
 
 export type ProviderErrorKind = "not_found" | "rate_limited" | "unavailable" | "invalid_response";
 

@@ -105,6 +105,126 @@ describe("imports", () => {
     ]);
   });
 
+  it("imports books by ISBN, then by exact title and author", async () => {
+    const { caller } = await signedInAs("Ada");
+    const goodreads = {
+      name: "goodreads_library_export.csv",
+      text: `Book Id,Title,Author,ISBN,ISBN13,My Rating,Original Publication Year,Exclusive Shelf,My Review
+1,Piranesi,Susanna Clarke,"=""""","=""9781635575637""",4,2020,read,The House is kind.
+2,"Dune (Dune Chronicles, #1)",Frank Herbert,"=""""","=""""",0,1965,to-read,
+3,Zzzzqqqqxxxx,Nobody,"=""""","=""9780000000002""",5,2001,read,
+`,
+    };
+
+    const { id } = await caller.imports.createFromFiles({
+      source: "goodreads",
+      visibility: "public",
+      files: [goodreads],
+    });
+
+    expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
+    const library = await caller.library.list();
+    expect(library.map((entry) => `${entry.title}: ${entry.status}`).sort()).toEqual([
+      "Dune: want",
+      "Piranesi: finished",
+    ]);
+    expect(library.every((entry) => entry.type === "book")).toBe(true);
+    expect(await caller.imports.get({ id })).toMatchObject({
+      unmatched: [{ title: "Zzzzqqqqxxxx", creator: "Nobody" }],
+    });
+    const stored = await db.select().from(media);
+    expect(stored.map((book) => book.providerId)).toContain("OL20893680W");
+  });
+
+  it("imports a Steam library, with played games at the chosen status", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    const { id } = await caller.imports.createFromSteam({
+      profile: "https://steamcommunity.com/id/fixtureplayer",
+      visibility: "public",
+      playedStatus: "finished",
+    });
+
+    expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
+    const library = await caller.library.list();
+    expect(library.map((entry) => `${entry.type} ${entry.title}: ${entry.status}`).sort()).toEqual([
+      "game Hades: finished",
+      "game Portal 2: want",
+    ]);
+    expect(await caller.imports.get({ id })).toMatchObject({
+      source: "steam",
+      unmatched: [{ title: "Some Tool" }],
+    });
+  });
+
+  it("explains when a Steam profile cannot be found or hides its games", async () => {
+    const { caller } = await signedInAs("Ada");
+    const options = { visibility: "public", playedStatus: "in_progress" } as const;
+
+    await expect(
+      caller.imports.createFromSteam({ profile: "nobody-has-this", ...options }),
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: expect.stringContaining("No Steam profile matches that."),
+    });
+    for (const profile of ["76561198000000002", "76561198000000003"]) {
+      await expect(caller.imports.createFromSteam({ profile, ...options })).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: expect.stringContaining("set Game details to Public"),
+      });
+    }
+    expect(await caller.imports.mine()).toEqual([]);
+  });
+
+  it("imports a public Trakt profile by TMDB id, with full details for each title", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    const { id } = await caller.imports.createFromTrakt({
+      profile: "https://trakt.tv/users/FixtureWatcher",
+      visibility: "public",
+    });
+
+    expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
+    expect(await caller.imports.get({ id })).toMatchObject({
+      source: "trakt",
+      skippedCount: 1,
+      unmatched: [{ title: "A Film Nobody Has" }],
+    });
+    const library = await caller.library.list();
+    expect(library.map((entry) => `${entry.type} ${entry.title}: ${entry.status}`).sort()).toEqual([
+      "movie The Matrix: finished",
+      // Five plays of a show with nineteen aired episodes.
+      "tv Severance: in_progress",
+    ]);
+    const matrix = library.find((entry) => entry.title === "The Matrix");
+    if (!matrix) throw new Error("The film was not imported.");
+    expect(await caller.ratings.summary({ target: { mediaId: matrix.mediaId } })).toMatchObject({
+      mine: 36,
+    });
+    // Imported in full, like a title someone opened: the poster is there.
+    expect(matrix.posterUrl).toEqual(expect.stringContaining("image.tmdb.org"));
+  });
+
+  it("explains when a Trakt profile cannot be found or is private", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    for (const profile of ["nobody-has-this", "not a username"]) {
+      await expect(
+        caller.imports.createFromTrakt({ profile, visibility: "public" }),
+      ).rejects.toMatchObject({
+        code: "BAD_REQUEST",
+        message: expect.stringContaining("No Trakt profile matches that."),
+      });
+    }
+    await expect(
+      caller.imports.createFromTrakt({ profile: "privatewatcher", visibility: "public" }),
+    ).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+      message: expect.stringContaining("That Trakt profile is private."),
+    });
+    expect(await caller.imports.mine()).toEqual([]);
+  });
+
   it("never changes what the person already has", async () => {
     const { caller } = await signedInAs("Ada");
     const first = await caller.imports.createFromFiles({

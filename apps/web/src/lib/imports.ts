@@ -21,6 +21,14 @@ export const FILE_SOURCES = [
     source: "imdb",
     help: "In IMDb, open Your ratings and choose Export from the menu, then do the same on Your watchlist. Pick the files IMDb gives you. Ratings of single episodes and of games are left out.",
   },
+  {
+    source: "goodreads",
+    help: "In Goodreads, open My Books, then Import and export under Tools, and choose Export Library. Pick the goodreads_library_export.csv file it makes.",
+  },
+  {
+    source: "storygraph",
+    help: "In StoryGraph, open Manage Account, then Export StoryGraph Library, and generate an export. Pick the file from the download link it gives you.",
+  },
 ] as const satisfies { source: ImportSource; help: string }[];
 
 export type FileSource = (typeof FILE_SOURCES)[number]["source"];

@@ -683,5 +683,38 @@
   "POST api.igdb.com/v4/games fields name,summary,first_release_date,cover.image_id,artworks.image_id,genres.name,platforms.name,involved_companies.developer,involved_companies.publisher,involved_companies.company.name,external_games.uid,external_games.external_game_source; where id = 999999999;": {
     "status": 200,
     "body": []
+  },
+  "POST api.igdb.com/v4/external_games fields uid,game.name,game.first_release_date,game.cover.image_id,game.game_type; where external_game_source = 1 & uid = (\"1145360\",\"620\",\"999999999\"); limit 500;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 15150,
+        "game": {
+          "id": 72,
+          "cover": {
+            "id": 82660,
+            "image_id": "co1rs4"
+          },
+          "first_release_date": 1303084800,
+          "name": "Portal 2",
+          "game_type": 0
+        },
+        "uid": "620"
+      },
+      {
+        "id": 1740294,
+        "game": {
+          "id": 113112,
+          "cover": {
+            "id": 525627,
+            "image_id": "cob9kr"
+          },
+          "first_release_date": 1600300800,
+          "name": "Hades",
+          "game_type": 0
+        },
+        "uid": "1145360"
+      }
+    ]
   }
 }

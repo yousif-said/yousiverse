@@ -2,11 +2,13 @@ import type { CatalogGame, CatalogSearchResult } from "../catalog";
 import { env } from "../env";
 import { ProviderError } from "../errors";
 import { requestJson } from "../http";
-import { gameQuery, searchQuery } from "./queries";
-import { gamesResponse, searchResponse, tokenResponse } from "./schemas";
+import { gameQuery, searchQuery, steamGamesQuery } from "./queries";
+import { gamesResponse, searchResponse, steamGamesResponse, tokenResponse } from "./schemas";
 
 const TOKEN_URL = "https://id.twitch.tv/oauth2/token";
 const GAMES_URL = "https://api.igdb.com/v4/games";
+const EXTERNAL_GAMES_URL = "https://api.igdb.com/v4/external_games";
+const MAIN_GAME = 0;
 const IMAGE_URL = "https://images.igdb.com/igdb/image/upload";
 const TOKEN_EXPIRY_MARGIN_MS = 60_000;
 const STEAM_SOURCE = 1;
@@ -50,8 +52,9 @@ async function accessToken(): Promise<string> {
 async function queryGames<Schema extends Parameters<typeof requestJson>[2]>(
   query: string,
   schema: Schema,
+  url = GAMES_URL,
 ) {
-  return requestJson("igdb", new URL(GAMES_URL), schema, {
+  return requestJson("igdb", new URL(url), schema, {
     method: "POST",
     body: query,
     headers: { "Client-ID": env.IGDB_CLIENT_ID, Authorization: `Bearer ${await accessToken()}` },
@@ -68,6 +71,35 @@ export async function search(query: string): Promise<CatalogSearchResult[]> {
     releaseYear: yearOf(isoDate(game.first_release_date)),
     posterUrl: imageUrl(game.cover, "cover_big"),
   }));
+}
+
+/**
+ * Finds the games with these Steam ids, in one request. A Steam id that IGDB lists under
+ * several entries (the game and a bundle holding it) is matched to the game itself.
+ */
+export async function findBySteamIds(
+  steamAppIds: string[],
+): Promise<Map<string, CatalogSearchResult>> {
+  const found = new Map<string, CatalogSearchResult>();
+  const ids = steamAppIds.filter((id) => /^\d+$/.test(id));
+  if (ids.length === 0) return found;
+
+  const listings = await queryGames(steamGamesQuery(ids), steamGamesResponse, EXTERNAL_GAMES_URL);
+  // Main games first, so they are the ones kept.
+  listings.sort(
+    (a, b) => Number(b.game?.game_type === MAIN_GAME) - Number(a.game?.game_type === MAIN_GAME),
+  );
+  for (const { uid, game } of listings) {
+    if (!game || found.has(uid)) continue;
+    found.set(uid, {
+      type: "game",
+      providerId: String(game.id),
+      title: game.name,
+      releaseYear: yearOf(isoDate(game.first_release_date)),
+      posterUrl: imageUrl(game.cover, "cover_big"),
+    });
+  }
+  return found;
 }
 
 export async function getGame(providerId: string): Promise<CatalogGame> {

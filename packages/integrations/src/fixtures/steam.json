@@ -1,0 +1,58 @@
+{
+  "GET api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?vanityurl=fixtureplayer": {
+    "status": 200,
+    "body": {
+      "response": {
+        "steamid": "76561198000000001",
+        "success": 1
+      }
+    }
+  },
+  "GET api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?vanityurl=nobody-has-this": {
+    "status": 200,
+    "body": {
+      "response": {
+        "success": 42,
+        "message": "No match"
+      }
+    }
+  },
+  "GET api.steampowered.com/IPlayerService/GetOwnedGames/v1/?include_appinfo=1&include_played_free_games=1&steamid=76561198000000001": {
+    "status": 200,
+    "body": {
+      "response": {
+        "game_count": 3,
+        "games": [
+          {
+            "appid": 1145360,
+            "name": "Hades",
+            "playtime_forever": 1234,
+            "img_icon_url": ""
+          },
+          {
+            "appid": 620,
+            "name": "Portal 2",
+            "playtime_forever": 0,
+            "img_icon_url": ""
+          },
+          {
+            "appid": 999999999,
+            "name": "Some Tool",
+            "playtime_forever": 5,
+            "img_icon_url": ""
+          }
+        ]
+      }
+    }
+  },
+  "GET api.steampowered.com/IPlayerService/GetOwnedGames/v1/?include_appinfo=1&include_played_free_games=1&steamid=76561198000000002": {
+    "status": 200,
+    "body": {
+      "response": {}
+    }
+  },
+  "GET api.steampowered.com/IPlayerService/GetOwnedGames/v1/?include_appinfo=1&include_played_free_games=1&steamid=76561198000000003": {
+    "status": 400,
+    "body": "Bad Request"
+  }
+}

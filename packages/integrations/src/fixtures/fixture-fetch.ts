@@ -1,16 +1,20 @@
 import igdb from "./igdb.json" with { type: "json" };
 import itad from "./itad.json" with { type: "json" };
 import openLibrary from "./open-library.json" with { type: "json" };
+import steam from "./steam.json" with { type: "json" };
 import tmdb from "./tmdb.json" with { type: "json" };
+import trakt from "./trakt.json" with { type: "json" };
 import watchmode from "./watchmode.json" with { type: "json" };
 
 type Fixture = { status: number; body: unknown };
 
 const fixtures: Record<string, Fixture> = {
-  ...tmdb,
   ...igdb,
   ...itad,
   ...openLibrary,
+  ...steam,
+  ...tmdb,
+  ...trakt,
   ...watchmode,
 };
 

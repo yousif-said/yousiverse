@@ -7,5 +7,7 @@ export const env = z
     IGDB_CLIENT_SECRET: z.string().min(1),
     WATCHMODE_API_KEY: z.string().min(1),
     ITAD_API_KEY: z.string().min(1),
+    STEAM_API_KEY: z.string().min(1),
+    TRAKT_CLIENT_ID: z.string().min(1),
   })
   .parse(process.env);

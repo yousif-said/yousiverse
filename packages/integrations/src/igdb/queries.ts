@@ -12,3 +12,11 @@ export function gameQuery(providerId: string): string {
   if (!/^\d+$/.test(providerId)) throw new Error(`Not an IGDB game id: ${providerId}`);
   return `fields name,summary,first_release_date,cover.image_id,artworks.image_id,genres.name,platforms.name,involved_companies.developer,involved_companies.publisher,involved_companies.company.name,external_games.uid,external_games.external_game_source; where id = ${providerId};`;
 }
+
+/** Looks games up by their Steam ids. Asked of IGDB's `external_games`, not `games`. */
+export function steamGamesQuery(steamAppIds: string[]): string {
+  const ids = steamAppIds.filter((id) => /^\d+$/.test(id));
+  if (ids.length === 0) throw new Error("No Steam ids to look up.");
+  const list = ids.map((id) => `"${id}"`).join(",");
+  return `fields uid,game.name,game.first_release_date,game.cover.image_id,game.game_type; where external_game_source = 1 & uid = (${list}); limit 500;`;
+}
