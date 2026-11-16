@@ -72,6 +72,12 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Club picks:** any member can pick a title for a club from the title's page, as long as it is a kind the club covers; the page only offers clubs that do. The club's page shows its picks with the average of its members' ratings. A member can remove their own picks and the owner any pick. If a club stops covering a media type, picks of that type stop showing.
 - Members can leave. The owner can change the club's details, remove members, and delete the club. Starting or joining a club needs a username, because members are shown by username.
 
+### Franchises
+
+- **Related titles:** a title's page lists the titles it is linked to, across all four media types: what it is based on, its adaptations, what it follows and what follows it, and the rest of its franchise. Two titles are linked at most once.
+- **Links are verified before they appear.** Suggestions come from Wikidata and stay hidden until a reviewer approves them; a rejected suggestion is not raised again. A reviewer can also link two titles by hand, and remove a link.
+- **Reviewing** happens on one page, open only to the people named in the app's settings. It looks titles up on Wikidata while the page is open, one at a time, newest first, and each title again a month later.
+
 ### Imports
 
 - **Import from Letterboxd, IMDb, Goodreads, and StoryGraph:** a person uploads the files those services export, and the films, shows, and books in them are matched to the catalog and added to their library with status, rating, and review. The person chooses who can see what is imported.
@@ -100,10 +106,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 - **Price drop and availability alerts.**
 - **Console game and book prices.** Both have thinner data than PC games; show clearly what isn't covered.
-
-### Franchises
-
-- **Cross-media franchise linking** (e.g. Harry Potter books to the movies to the games). Any media type can link to any other, but only when the connection is accurate. Links are verified before they appear; suggestions (e.g. from Wikidata) stay hidden until reviewed.
 
 ### Accounts and sign-in
 

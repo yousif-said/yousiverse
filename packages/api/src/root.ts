@@ -5,6 +5,7 @@ import { feedRouter } from "./routers/feed";
 import { followsRouter } from "./routers/follows";
 import { importsRouter } from "./routers/imports";
 import { libraryRouter } from "./routers/library";
+import { linksRouter } from "./routers/links";
 import { listsRouter } from "./routers/lists";
 import { mediaRouter } from "./routers/media";
 import { profilesRouter } from "./routers/profiles";
@@ -21,6 +22,7 @@ export const appRouter = router({
   follows: followsRouter,
   imports: importsRouter,
   library: libraryRouter,
+  links: linksRouter,
   lists: listsRouter,
   media: mediaRouter,
   profiles: profilesRouter,

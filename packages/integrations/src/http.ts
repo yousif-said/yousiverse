@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import { ProviderError, type ProviderName } from "./errors";
 
-const TIMEOUT_MS = 10_000;
+const DEFAULT_TIMEOUT_MS = 10_000;
 
 async function transport(): Promise<typeof fetch> {
   if (process.env.PROVIDER_FIXTURES !== "true") return fetch;
@@ -21,14 +21,21 @@ export async function requestJson<Schema extends z.ZodType>(
   url: URL,
   schema: Schema,
   init?: RequestInit,
-  /** Statuses besides 404 that this provider uses to say "no such thing". */
-  options: { notFoundStatuses?: number[] } = {},
+  options: {
+    /** Statuses besides 404 that this provider uses to say "no such thing". */
+    notFoundStatuses?: number[];
+    /** How long to wait for an answer, for a provider known to be slower than most. */
+    timeoutMs?: number;
+  } = {},
 ): Promise<z.output<Schema>> {
   const send = await transport();
 
   let response: Response;
   try {
-    response = await send(url, { ...init, signal: AbortSignal.timeout(TIMEOUT_MS) });
+    response = await send(url, {
+      ...init,
+      signal: AbortSignal.timeout(options.timeoutMs ?? DEFAULT_TIMEOUT_MS),
+    });
   } catch (cause) {
     throw new ProviderError(provider, "unavailable", `request to ${url.pathname} failed`, {
       cause,

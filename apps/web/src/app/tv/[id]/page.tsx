@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MediaHeader } from "@/components/media-header";
+import { RelatedTitles } from "@/components/related-titles";
 import { ReviewSection } from "@/components/review-section";
 import { WhereToWatch } from "@/components/where-to-watch";
 import { formatDate, pluralize } from "@/lib/format";
@@ -63,6 +64,7 @@ export default async function TvShowPage({ params }: PageProps<"/tv/[id]">) {
         </section>
       )}
 
+      <RelatedTitles mediaId={show.id} />
       <ReviewSection target={{ mediaId: show.id }} path={mediaPath("tv", id)} />
     </>
   );

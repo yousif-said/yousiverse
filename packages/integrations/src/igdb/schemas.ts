@@ -52,3 +52,15 @@ export const steamGamesResponse = z.array(
       .optional(),
   }),
 );
+
+export const slugResponse = z.array(z.object({ slug: z.string().optional() }));
+
+export const gamesBySlugResponse = z.array(
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    slug: z.string(),
+    first_release_date: z.number().optional(),
+    cover: image.optional(),
+  }),
+);

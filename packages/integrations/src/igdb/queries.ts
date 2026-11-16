@@ -20,3 +20,17 @@ export function steamGamesQuery(steamAppIds: string[]): string {
   const list = ids.map((id) => `"${id}"`).join(",");
   return `fields uid,game.name,game.first_release_date,game.cover.image_id,game.game_type; where external_game_source = 1 & uid = (${list}); limit 500;`;
 }
+
+/** Asks for the name IGDB uses for a game in its own addresses. */
+export function slugQuery(providerId: string): string {
+  if (!/^\d+$/.test(providerId)) throw new Error(`Not an IGDB game id: ${providerId}`);
+  return `fields slug; where id = ${providerId};`;
+}
+
+/** Looks games up by the names IGDB uses in its own addresses. */
+export function gamesBySlugQuery(slugs: string[]): string {
+  const valid = slugs.filter((slug) => /^[a-z0-9-]+$/.test(slug));
+  if (valid.length === 0) throw new Error("No IGDB slugs to look up.");
+  const list = valid.map((slug) => `"${slug}"`).join(",");
+  return `fields name,slug,first_release_date,cover.image_id; where slug = (${list}); limit 500;`;
+}

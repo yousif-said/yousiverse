@@ -3,26 +3,37 @@ import type { Page } from "@playwright/test";
 import { serverLogPath } from "./server-log";
 import { expect } from "./test";
 
-export async function findSignInLink(email: string): Promise<string | undefined> {
+/** Every sign-in link the dev server has printed for an email address, oldest first. */
+async function findSignInLinks(email: string): Promise<string[]> {
   const log = await readFile(serverLogPath, "utf8");
-  const [, afterMarker] = log.split(`Sign-in link for ${email}:`);
-  return afterMarker?.trim().split(/\s/)[0];
+  const [, ...afterMarkers] = log.split(`Sign-in link for ${email}:`);
+  return afterMarkers.flatMap((text) => text.trim().split(/\s/)[0] ?? []);
 }
 
-/** Signs in as a brand-new person through the development sign-in link. */
-export async function signIn(page: Page): Promise<void> {
-  const email = `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`;
+export async function findSignInLink(email: string): Promise<string | undefined> {
+  return (await findSignInLinks(email)).at(-1);
+}
+
+/**
+ * Signs in through the development sign-in link: as a brand-new person, or as the owner of
+ * `email` when one is given.
+ */
+export async function signIn(page: Page, email?: string): Promise<void> {
+  const address =
+    email ?? `e2e-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.com`;
+  // An address used before already has links in the log; only a new one will work.
+  const earlierLinks = (await findSignInLinks(address)).length;
   await page.goto("/sign-in");
-  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Email").fill(address);
   await page.getByRole("button", { name: "Send sign-in link" }).click();
 
-  let signInLink: string | undefined;
+  let links: string[] = [];
   await expect
     .poll(async () => {
-      signInLink = await findSignInLink(email);
-      return signInLink;
+      links = await findSignInLinks(address);
+      return links.length;
     })
-    .toContain("/api/auth/magic-link/verify");
-  await page.goto(signInLink as string);
+    .toBeGreaterThan(earlierLinks);
+  await page.goto(links.at(-1) as string);
   await expect(page).toHaveURL("/");
 }

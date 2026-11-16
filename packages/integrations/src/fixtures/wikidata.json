@@ -1,0 +1,503 @@
+{
+  "GET query.wikidata.org/sparql?format=json&query=SELECT+%3Frelation+%3Fother+%3FotherLabel+%3FtmdbMovie+%3FtmdbTv+%3Figdb+%3FigdbSlug+%3FopenLibrary+WHERE+%7B%0A%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP4947+%22603%22+.%0A%7B+%3Fitem+wdt%3AP144+%3Fother+.+BIND%28%22based_on%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP144+%3Fitem+.+BIND%28%22basis_for%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP155+%3Fother+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP156+%3Fitem+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP156+%3Fother+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP155+%3Fitem+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+100+%7D+UNION+%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP4947+%22603%22+.%0A%7B+%3Fitem+wdt%3AP179+%3Fgroup+.+%3Fother+wdt%3AP179+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP8345+%3Fgroup+.+%3Fother+wdt%3AP8345+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+300+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4947+%3FtmdbMovie+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4983+%3FtmdbTv+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP9043+%3Figdb+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP5794+%3FigdbSlug+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP648+%3FopenLibrary+%7D%0ASERVICE+wikibase%3Alabel+%7B+bd%3AserviceParam+wikibase%3Alanguage+%22en%2Cmul%22.+%7D%0A%7D": {
+    "status": 200,
+    "body": {
+      "head": {
+        "vars": [
+          "relation",
+          "other",
+          "otherLabel",
+          "tmdbMovie",
+          "tmdbTv",
+          "igdb",
+          "igdbSlug",
+          "openLibrary"
+        ]
+      },
+      "results": {
+        "bindings": [
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q189600"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "followed_by"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "604"
+            },
+            "otherLabel": {
+              "xml:lang": "mul",
+              "type": "literal",
+              "value": "The Matrix Reloaded"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q335340"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "basis_for"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "55931"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "The Animatrix"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q50809706"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "basis_for"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "509944"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "The Matwix"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q189600"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "604"
+            },
+            "otherLabel": {
+              "xml:lang": "mul",
+              "type": "literal",
+              "value": "The Matrix Reloaded"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q207536"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "605"
+            },
+            "otherLabel": {
+              "xml:lang": "mul",
+              "type": "literal",
+              "value": "The Matrix Revolutions"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q335340"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "55931"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "The Animatrix"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q736528"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "Enter the Matrix"
+            },
+            "igdbSlug": {
+              "type": "literal",
+              "value": "enter-the-matrix"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q959892"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "The Matrix Online"
+            },
+            "igdbSlug": {
+              "type": "literal",
+              "value": "the-matrix-online"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q1203242"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "otherLabel": {
+              "xml:lang": "mul",
+              "type": "literal",
+              "value": "The Matrix: Path of Neo"
+            },
+            "igdbSlug": {
+              "type": "literal",
+              "value": "the-matrix-path-of-neo"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q3284068"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24914"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "Kid's Story"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q3284548"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24959"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "Program"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q3284754"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24660"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "A Detective Story"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q3284775"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24675"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "Beyond"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q4284930"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "The Matrix Comics"
+            },
+            "openLibrary": {
+              "type": "literal",
+              "value": "OL8810670M"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q25416009"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24960"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "World Record"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q25416010"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24950"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "Matriculated"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q80322391"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "624860"
+            },
+            "otherLabel": {
+              "xml:lang": "mul",
+              "type": "literal",
+              "value": "The Matrix Resurrections"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q96603645"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24358"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "The Second Renaissance Part I"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q96603646"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "tmdbMovie": {
+              "type": "literal",
+              "value": "24362"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "The Second Renaissance Part II"
+            }
+          },
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q109965238"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "otherLabel": {
+              "xml:lang": "mul",
+              "type": "literal",
+              "value": "The Matrix Awakens"
+            },
+            "igdbSlug": {
+              "type": "literal",
+              "value": "the-matrix-awakens-an-unreal-engine-5-experience"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "GET query.wikidata.org/sparql?format=json&query=SELECT+%3Frelation+%3Fother+%3FotherLabel+%3FtmdbMovie+%3FtmdbTv+%3Figdb+%3FigdbSlug+%3FopenLibrary+WHERE+%7B%0A%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP4983+%2295396%22+.%0A%7B+%3Fitem+wdt%3AP144+%3Fother+.+BIND%28%22based_on%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP144+%3Fitem+.+BIND%28%22basis_for%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP155+%3Fother+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP156+%3Fitem+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP156+%3Fother+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP155+%3Fitem+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+100+%7D+UNION+%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP4983+%2295396%22+.%0A%7B+%3Fitem+wdt%3AP179+%3Fgroup+.+%3Fother+wdt%3AP179+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP8345+%3Fgroup+.+%3Fother+wdt%3AP8345+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+300+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4947+%3FtmdbMovie+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4983+%3FtmdbTv+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP9043+%3Figdb+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP5794+%3FigdbSlug+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP648+%3FopenLibrary+%7D%0ASERVICE+wikibase%3Alabel+%7B+bd%3AserviceParam+wikibase%3Alanguage+%22en%2Cmul%22.+%7D%0A%7D": {
+    "status": 200,
+    "body": {
+      "head": {
+        "vars": [
+          "relation",
+          "other",
+          "otherLabel",
+          "tmdbMovie",
+          "tmdbTv",
+          "igdb",
+          "igdbSlug",
+          "openLibrary"
+        ]
+      },
+      "results": {
+        "bindings": []
+      }
+    }
+  },
+  "GET query.wikidata.org/sparql?format=json&query=SELECT+%3Frelation+%3Fother+%3FotherLabel+%3FtmdbMovie+%3FtmdbTv+%3Figdb+%3FigdbSlug+%3FopenLibrary+WHERE+%7B%0A%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP648+%22OL20893680W%22+.%0A%7B+%3Fitem+wdt%3AP144+%3Fother+.+BIND%28%22based_on%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP144+%3Fitem+.+BIND%28%22basis_for%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP155+%3Fother+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP156+%3Fitem+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP156+%3Fother+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP155+%3Fitem+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+100+%7D+UNION+%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP648+%22OL20893680W%22+.%0A%7B+%3Fitem+wdt%3AP179+%3Fgroup+.+%3Fother+wdt%3AP179+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP8345+%3Fgroup+.+%3Fother+wdt%3AP8345+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+300+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4947+%3FtmdbMovie+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4983+%3FtmdbTv+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP9043+%3Figdb+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP5794+%3FigdbSlug+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP648+%3FopenLibrary+%7D%0ASERVICE+wikibase%3Alabel+%7B+bd%3AserviceParam+wikibase%3Alanguage+%22en%2Cmul%22.+%7D%0A%7D": {
+    "status": 200,
+    "body": {
+      "head": {
+        "vars": [
+          "relation",
+          "other",
+          "otherLabel",
+          "tmdbMovie",
+          "tmdbTv",
+          "igdb",
+          "igdbSlug",
+          "openLibrary"
+        ]
+      },
+      "results": {
+        "bindings": []
+      }
+    }
+  },
+  "GET query.wikidata.org/sparql?format=json&query=SELECT+%3Frelation+%3Fother+%3FotherLabel+%3FtmdbMovie+%3FtmdbTv+%3Figdb+%3FigdbSlug+%3FopenLibrary+WHERE+%7B%0A%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%7B+%3Fitem+wdt%3AP9043+%22113112%22+%7D+UNION+%7B+%3Fitem+wdt%3AP5794+%22hades--1%22+%7D%0A%7B+%3Fitem+wdt%3AP144+%3Fother+.+BIND%28%22based_on%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP144+%3Fitem+.+BIND%28%22basis_for%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP155+%3Fother+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP156+%3Fitem+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP156+%3Fother+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP155+%3Fitem+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+100+%7D+UNION+%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%7B+%3Fitem+wdt%3AP9043+%22113112%22+%7D+UNION+%7B+%3Fitem+wdt%3AP5794+%22hades--1%22+%7D%0A%7B+%3Fitem+wdt%3AP179+%3Fgroup+.+%3Fother+wdt%3AP179+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP8345+%3Fgroup+.+%3Fother+wdt%3AP8345+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+300+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4947+%3FtmdbMovie+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4983+%3FtmdbTv+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP9043+%3Figdb+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP5794+%3FigdbSlug+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP648+%3FopenLibrary+%7D%0ASERVICE+wikibase%3Alabel+%7B+bd%3AserviceParam+wikibase%3Alanguage+%22en%2Cmul%22.+%7D%0A%7D": {
+    "status": 200,
+    "body": {
+      "head": {
+        "vars": [
+          "relation",
+          "other",
+          "otherLabel",
+          "tmdbMovie",
+          "tmdbTv",
+          "igdb",
+          "igdbSlug",
+          "openLibrary"
+        ]
+      },
+      "results": {
+        "bindings": [
+          {
+            "other": {
+              "type": "uri",
+              "value": "http://www.wikidata.org/entity/Q115641620"
+            },
+            "relation": {
+              "type": "literal",
+              "value": "same_franchise"
+            },
+            "igdbSlug": {
+              "type": "literal",
+              "value": "hades-ii"
+            },
+            "otherLabel": {
+              "xml:lang": "en",
+              "type": "literal",
+              "value": "Hades II"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "GET query.wikidata.org/sparql?format=json&query=SELECT+%3Frelation+%3Fother+%3FotherLabel+%3FtmdbMovie+%3FtmdbTv+%3Figdb+%3FigdbSlug+%3FopenLibrary+WHERE+%7B%0A%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP4947+%22999999999%22+.%0A%7B+%3Fitem+wdt%3AP144+%3Fother+.+BIND%28%22based_on%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP144+%3Fitem+.+BIND%28%22basis_for%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP155+%3Fother+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP156+%3Fitem+.+BIND%28%22follows%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP156+%3Fother+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fother+wdt%3AP155+%3Fitem+.+BIND%28%22followed_by%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+100+%7D+UNION+%7B+SELECT+DISTINCT+%3Frelation+%3Fother+WHERE+%7B%0A%3Fitem+wdt%3AP4947+%22999999999%22+.%0A%7B+%3Fitem+wdt%3AP179+%3Fgroup+.+%3Fother+wdt%3AP179+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D+UNION+%7B+%3Fitem+wdt%3AP8345+%3Fgroup+.+%3Fother+wdt%3AP8345+%3Fgroup+.+BIND%28%22same_franchise%22+AS+%3Frelation%29+%7D%0AFILTER%28%3Fother+%21%3D+%3Fitem%29%0AFILTER+EXISTS+%7B+%3Fother+wdt%3AP4947%7Cwdt%3AP4983%7Cwdt%3AP9043%7Cwdt%3AP5794%7Cwdt%3AP648+%5B%5D+%7D%0A%7D+LIMIT+300+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4947+%3FtmdbMovie+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP4983+%3FtmdbTv+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP9043+%3Figdb+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP5794+%3FigdbSlug+%7D%0AOPTIONAL+%7B+%3Fother+wdt%3AP648+%3FopenLibrary+%7D%0ASERVICE+wikibase%3Alabel+%7B+bd%3AserviceParam+wikibase%3Alanguage+%22en%2Cmul%22.+%7D%0A%7D": {
+    "status": 200,
+    "body": {
+      "head": {
+        "vars": [
+          "relation",
+          "other",
+          "otherLabel",
+          "tmdbMovie",
+          "tmdbTv",
+          "igdb",
+          "igdbSlug",
+          "openLibrary"
+        ]
+      },
+      "results": {
+        "bindings": []
+      }
+    }
+  }
+}

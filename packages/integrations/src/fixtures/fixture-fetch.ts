@@ -5,6 +5,7 @@ import steam from "./steam.json" with { type: "json" };
 import tmdb from "./tmdb.json" with { type: "json" };
 import trakt from "./trakt.json" with { type: "json" };
 import watchmode from "./watchmode.json" with { type: "json" };
+import wikidata from "./wikidata.json" with { type: "json" };
 
 type Fixture = { status: number; body: unknown };
 
@@ -16,6 +17,7 @@ const fixtures: Record<string, Fixture> = {
   ...tmdb,
   ...trakt,
   ...watchmode,
+  ...wikidata,
 };
 
 const CREDENTIAL_PARAMS = ["api_key", "apiKey", "key"];
