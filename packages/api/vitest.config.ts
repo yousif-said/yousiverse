@@ -19,6 +19,7 @@ export default defineConfig({
       ITAD_API_KEY: "test-key",
       STEAM_API_KEY: "test-key",
       TRAKT_CLIENT_ID: "test-id",
+      ADMIN_EMAILS: "reviewer@example.com, Second.Reviewer@example.com",
     },
     globalSetup: "./test/global-setup.ts",
     fileParallelism: false,

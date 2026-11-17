@@ -5,7 +5,8 @@ export type ProviderName =
   | "watchmode"
   | "itad"
   | "steam"
-  | "trakt";
+  | "trakt"
+  | "wikidata";
 
 export type ProviderErrorKind = "not_found" | "rate_limited" | "unavailable" | "invalid_response";
 

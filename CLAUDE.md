@@ -75,7 +75,7 @@ packages/
   api/              tRPC routers and business logic
   db/               Drizzle schema, migrations, seed scripts
   auth/             Better Auth config
-  integrations/     External API clients (tmdb, igdb, books, watchmode, itad, wikidata)
+  integrations/     External API clients (tmdb, igdb, open-library, watchmode, itad, steam, trakt, wikidata)
   ui/               Shared UI components (shadcn/ui based)
   config/           Shared tsconfig
 ```
@@ -88,7 +88,8 @@ packages/
 - Database changes always go through Drizzle migrations; never edit the database by hand.
 - **Ratings:** 0 to 10 in 0.25 steps. Store as an integer 0 to 40 (quarter points); convert only for display (`formatRating`). A rating or review is about a whole title or one episode; `packages/api/src/targets.ts` defines that choice.
 - **Media model:** one shared `media` concept with a `type` (movie, tv, game, book) plus type-specific detail tables. TV has seasons and episodes as first-class records so episodes can be rated/reviewed.
-- **Franchise links are typed edges** (e.g. adaptation_of, same_franchise, sequel_of) between any two media items. A link is only visible in the app once it is verified. Suggested links from Wikidata or elsewhere stay hidden until reviewed.
+- **Franchise links are typed edges** (adaptation_of, sequel_of, same_franchise) between any two media items. A link is only visible in the app once it is verified: `media_links` holds verified links and nothing else, and suggestions from Wikidata wait in `link_suggestions` until a reviewer approves them. Never show a suggestion outside the review page.
+- **Reviewers** are the people whose sign-in emails are in `ADMIN_EMAILS`. Anything only they may do uses `adminProcedure`, and its pages answer "not found" to everyone else.
 - **Privacy:** reviews, lists, and libraries carry an explicit visibility: public (the default), friends, or private. Every query that returns user content must respect it, using the helpers in `packages/api/src/visibility.ts`. Add tests for visibility rules.
 - **Library statuses:** want, in_progress, finished, dropped.
 - **Names shown to others:** credit user content to the username in `profiles`, never to `users.name` or an email address. A person without a username is shown as "A Yousiverse member" (`MemberName`). Profiles live at `/u/<username>`.
@@ -124,6 +125,7 @@ packages/
 - **URLs** use the provider's id: `/movies/<id>`, `/tv/<id>`, `/games/<id>`, `/books/<id>`. Seasons and episodes go by number under their show: `/tv/<id>/seasons/<n>/episodes/<n>`.
 - **Tests never call a provider.** With `PROVIDER_FIXTURES=true` (set by the Vitest and Playwright configs), requests are answered from recorded responses in `packages/integrations/src/fixtures`. To cover a new request, add it to `packages/integrations/scripts/record.ts` and run the `record` script.
 - **Availability and prices** (Watchmode for movies and TV, IsThereAnyDeal for PC games) are fetched the first time a title's page asks for them and kept for 7 days, like catalog data. Watchmode allows 2,500 requests a month, so never fetch offers for titles nobody opened. Prices are stored in cents.
+- **Wikidata's query service is slow and fails now and then.** Ask it about one title per request, give it a longer timeout, and let the caller retry. Its data is public domain (CC0) and only ever feeds suggestions, so it needs no footer credit.
 - **Attribution:** every provider whose data is shown is credited in the site footer, in the wording its terms require.
 
 ## Source control

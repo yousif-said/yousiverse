@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { MediaHeader } from "@/components/media-header";
+import { RelatedTitles } from "@/components/related-titles";
 import { ReviewSection } from "@/components/review-section";
 import { WhereToBuy } from "@/components/where-to-buy";
 import { formatDate } from "@/lib/format";
@@ -38,6 +39,7 @@ export default async function GamePage({ params }: PageProps<"/games/[id]">) {
         ]}
       />
       <WhereToBuy mediaId={game.id} />
+      <RelatedTitles mediaId={game.id} />
       <ReviewSection target={{ mediaId: game.id }} path={mediaPath("game", id)} />
     </>
   );

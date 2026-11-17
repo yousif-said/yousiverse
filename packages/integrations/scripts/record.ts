@@ -7,8 +7,15 @@
  */
 import { readFile, writeFile } from "node:fs/promises";
 import { fixtureKey } from "../src/fixtures/fixture-fetch";
-import { gameQuery, searchQuery, steamGamesQuery } from "../src/igdb/queries";
+import {
+  gameQuery,
+  gamesBySlugQuery,
+  searchQuery,
+  slugQuery,
+  steamGamesQuery,
+} from "../src/igdb/queries";
 import { SEARCH_FIELDS, WORK_FIELDS } from "../src/open-library/fields";
+import { relatedTitlesUrl, type WikidataTitle } from "../src/wikidata";
 
 type Recording = { url: string; init?: RequestInit; headers?: Record<string, string> };
 
@@ -90,6 +97,16 @@ function itadPrices(gameId: string): Recording {
     url: url.href,
     init: { method: "POST", body: JSON.stringify([gameId]) },
     headers: { "Content-Type": "application/json" },
+  };
+}
+
+function wikidata(title: WikidataTitle): Recording {
+  return {
+    url: relatedTitlesUrl(title).href,
+    headers: {
+      Accept: "application/sparql-results+json",
+      "User-Agent": "Yousiverse/1.0 (https://yousiverse.com)",
+    },
   };
 }
 
@@ -176,6 +193,13 @@ const handWritten: Record<string, Record<string, { status: number; body: unknown
   },
 };
 
+const MATRIX_GAME_SLUGS = [
+  "enter-the-matrix",
+  "the-matrix-awakens-an-unreal-engine-5-experience",
+  "the-matrix-online",
+  "the-matrix-path-of-neo",
+];
+
 const recordings: Record<string, Recording[]> = {
   tmdb: [
     tmdb("/search/multi", { query: "severance", include_adult: "false" }),
@@ -184,6 +208,8 @@ const recordings: Record<string, Recording[]> = {
     tmdb("/search/multi", { query: "zzzzqqqqxxxx", include_adult: "false" }),
     tmdb("/movie/603"),
     tmdb("/movie/999999999"),
+    // The Matrix Reloaded: the sequel Wikidata suggests for The Matrix.
+    tmdb("/movie/604"),
     tmdb("/tv/95396"),
     tmdb("/tv/95396", { append_to_response: "season/0,season/1,season/2,season/3" }),
     tmdb("/search/movie", { query: "The Matrix", include_adult: "false", year: "1999" }),
@@ -202,6 +228,11 @@ const recordings: Record<string, Recording[]> = {
     igdb(gameQuery("999999999")),
     // Hades, Portal 2, and an id no game has: the Steam library used in tests.
     igdb(steamGamesQuery(["1145360", "620", "999999999"]), "external_games"),
+    igdb(slugQuery("113112")),
+    igdb(slugQuery("999999999")),
+    igdb(gamesBySlugQuery(["hades-ii"])),
+    // The games in The Matrix's franchise, as the recorded Wikidata answer lists them.
+    igdb(gamesBySlugQuery(MATRIX_GAME_SLUGS)),
   ],
   "open-library": [
     openLibrarySearch("piranesi"),
@@ -228,11 +259,19 @@ const recordings: Record<string, Recording[]> = {
     itadPrices("018d937f-33f0-7200-80fc-87f769196c84"),
     itadLookup("999999999"),
   ],
+  wikidata: [
+    wikidata({ type: "movie", providerId: "603" }),
+    wikidata({ type: "tv", providerId: "95396" }),
+    wikidata({ type: "book", providerId: "OL20893680W" }),
+    wikidata({ type: "game", providerId: "113112", igdbSlug: "hades--1" }),
+    wikidata({ type: "movie", providerId: "999999999" }),
+  ],
   watchmode: [
     watchmode("/title/movie-603/sources/", { regions: "US" }),
     watchmode("/title/tv-95396/sources/", { regions: "US" }),
     watchmode("/title/tv-1396/sources/", { regions: "US" }),
     watchmode("/title/movie-999999999/sources/", { regions: "US" }),
+    watchmode("/title/movie-604/sources/", { regions: "US" }),
     watchmode("/sources/", { regions: "US" }),
   ],
 };

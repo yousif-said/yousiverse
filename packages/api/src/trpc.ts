@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { auth, type Session } from "@yousiverse/auth";
 import { type Database, db } from "@yousiverse/db";
 import { ProviderError, type ProviderErrorKind } from "@yousiverse/integrations/errors";
+import { adminEmails } from "./env";
 
 export type Context = { db: Database; session: Session | null };
 
@@ -34,4 +35,15 @@ export const publicProcedure = t.procedure.use(providerErrors);
 export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (!ctx.session) throw new TRPCError({ code: "UNAUTHORIZED" });
   return next({ ctx: { ...ctx, session: ctx.session } });
+});
+
+/** Whether this is one of the people named in ADMIN_EMAILS, signed in with a confirmed email. */
+export function isAdmin(session: Session | null): boolean {
+  if (!session?.user.emailVerified) return false;
+  return adminEmails.has(session.user.email.toLowerCase());
+}
+
+export const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (!isAdmin(ctx.session)) throw new TRPCError({ code: "FORBIDDEN" });
+  return next();
 });

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { MediaHeader } from "@/components/media-header";
+import { RelatedTitles } from "@/components/related-titles";
 import { ReviewSection } from "@/components/review-section";
 import { pluralize } from "@/lib/format";
 import { mediaPath } from "@/lib/media";
@@ -42,6 +43,7 @@ export default async function BookPage({ params }: PageProps<"/books/[id]">) {
           { label: "Subjects", value: book.genres.join(", ") },
         ]}
       />
+      <RelatedTitles mediaId={book.id} />
       <ReviewSection target={{ mediaId: book.id }} path={mediaPath("book", id)} />
     </>
   );

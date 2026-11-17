@@ -14,9 +14,10 @@ const joinedDateFormat = new Intl.DateTimeFormat("en-US", { dateStyle: "long" })
 export default async function AccountPage() {
   const { user } = await requireSession("/account");
   const queryClient = getQueryClient();
-  const [profile, services] = await Promise.all([
+  const [profile, services, canReviewLinks] = await Promise.all([
     queryClient.fetchQuery(trpc.profiles.me.queryOptions()),
     queryClient.fetchQuery(trpc.subscriptions.services.queryOptions()),
+    queryClient.fetchQuery(trpc.links.canReview.queryOptions()),
   ]);
 
   const details = [
@@ -65,6 +66,20 @@ export default async function AccountPage() {
       </dl>
       <p className="mt-3 text-sm text-muted-foreground">Your email is never shown to others.</p>
       <SignOutButton className="mt-6" />
+
+      {canReviewLinks && (
+        <>
+          <h2 className="mt-10 font-display text-2xl font-bold tracking-tight">Reviewing</h2>
+          <p className="mt-2 text-sm">
+            <Link
+              href="/admin/links"
+              className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            >
+              Review franchise links
+            </Link>
+          </p>
+        </>
+      )}
     </section>
   );
 }

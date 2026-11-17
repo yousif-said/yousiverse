@@ -2,8 +2,15 @@ import type { CatalogGame, CatalogSearchResult } from "../catalog";
 import { env } from "../env";
 import { ProviderError } from "../errors";
 import { requestJson } from "../http";
-import { gameQuery, searchQuery, steamGamesQuery } from "./queries";
-import { gamesResponse, searchResponse, steamGamesResponse, tokenResponse } from "./schemas";
+import { gameQuery, gamesBySlugQuery, searchQuery, slugQuery, steamGamesQuery } from "./queries";
+import {
+  gamesBySlugResponse,
+  gamesResponse,
+  searchResponse,
+  slugResponse,
+  steamGamesResponse,
+  tokenResponse,
+} from "./schemas";
 
 const TOKEN_URL = "https://id.twitch.tv/oauth2/token";
 const GAMES_URL = "https://api.igdb.com/v4/games";
@@ -92,6 +99,30 @@ export async function findBySteamIds(
   for (const { uid, game } of listings) {
     if (!game || found.has(uid)) continue;
     found.set(uid, {
+      type: "game",
+      providerId: String(game.id),
+      title: game.name,
+      releaseYear: yearOf(isoDate(game.first_release_date)),
+      posterUrl: imageUrl(game.cover, "cover_big"),
+    });
+  }
+  return found;
+}
+
+/** The name IGDB uses for a game in its own addresses. Null when there is no such game. */
+export async function getSlug(providerId: string): Promise<string | null> {
+  const [game] = await queryGames(slugQuery(providerId), slugResponse);
+  return game?.slug ?? null;
+}
+
+/** Finds the games with these IGDB slugs, in one request. */
+export async function findBySlugs(slugs: string[]): Promise<Map<string, CatalogSearchResult>> {
+  const found = new Map<string, CatalogSearchResult>();
+  const valid = slugs.filter((slug) => /^[a-z0-9-]+$/.test(slug));
+  if (valid.length === 0) return found;
+
+  for (const game of await queryGames(gamesBySlugQuery(valid), gamesBySlugResponse)) {
+    found.set(game.slug, {
       type: "game",
       providerId: String(game.id),
       title: game.name,

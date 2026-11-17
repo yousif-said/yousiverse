@@ -716,5 +716,78 @@
         "uid": "1145360"
       }
     ]
+  },
+  "POST api.igdb.com/v4/games fields slug; where id = 113112;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 113112,
+        "slug": "hades--1"
+      }
+    ]
+  },
+  "POST api.igdb.com/v4/games fields slug; where id = 999999999;": {
+    "status": 200,
+    "body": []
+  },
+  "POST api.igdb.com/v4/games fields name,slug,first_release_date,cover.image_id; where slug = (\"hades-ii\"); limit 500;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 228525,
+        "cover": {
+          "id": 493341,
+          "image_id": "coaknx"
+        },
+        "first_release_date": 1758758400,
+        "name": "Hades II",
+        "slug": "hades-ii"
+      }
+    ]
+  },
+  "POST api.igdb.com/v4/games fields name,slug,first_release_date,cover.image_id; where slug = (\"enter-the-matrix\",\"the-matrix-awakens-an-unreal-engine-5-experience\",\"the-matrix-online\",\"the-matrix-path-of-neo\"); limit 500;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 1005,
+        "cover": {
+          "id": 385501,
+          "image_id": "co89gd"
+        },
+        "first_release_date": 1111708800,
+        "name": "The Matrix Online",
+        "slug": "the-matrix-online"
+      },
+      {
+        "id": 1003,
+        "cover": {
+          "id": 78862,
+          "image_id": "co1oum"
+        },
+        "first_release_date": 1052870400,
+        "name": "Enter the Matrix",
+        "slug": "enter-the-matrix"
+      },
+      {
+        "id": 185251,
+        "cover": {
+          "id": 200008,
+          "image_id": "co4abs"
+        },
+        "first_release_date": 1638748800,
+        "name": "The Matrix: Awakens - An Unreal Engine 5 Experience",
+        "slug": "the-matrix-awakens-an-unreal-engine-5-experience"
+      },
+      {
+        "id": 1004,
+        "cover": {
+          "id": 79155,
+          "image_id": "co1p2r"
+        },
+        "first_release_date": 1128384000,
+        "name": "The Matrix: Path of Neo",
+        "slug": "the-matrix-path-of-neo"
+      }
+    ]
   }
 }
