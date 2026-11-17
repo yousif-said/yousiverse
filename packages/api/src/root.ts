@@ -1,6 +1,7 @@
 import { availabilityRouter } from "./routers/availability";
 import { catalogRouter } from "./routers/catalog";
 import { clubsRouter } from "./routers/clubs";
+import { discussionsRouter } from "./routers/discussions";
 import { feedRouter } from "./routers/feed";
 import { followsRouter } from "./routers/follows";
 import { importsRouter } from "./routers/imports";
@@ -19,6 +20,7 @@ export const appRouter = router({
   availability: availabilityRouter,
   catalog: catalogRouter,
   clubs: clubsRouter,
+  discussions: discussionsRouter,
   feed: feedRouter,
   follows: followsRouter,
   imports: importsRouter,

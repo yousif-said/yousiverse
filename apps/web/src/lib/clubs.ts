@@ -25,3 +25,7 @@ export function coveredTypes(types: MediaType[]): string {
 export function clubPath(id: string, invite?: string | null): string {
   return invite ? `/clubs/${id}?invite=${encodeURIComponent(invite)}` : `/clubs/${id}`;
 }
+
+export function discussionPath(clubId: string, threadId: string): string {
+  return `/clubs/${clubId}/discussions/${threadId}`;
+}

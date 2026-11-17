@@ -134,6 +134,13 @@
       "when": 1794873421222,
       "tag": "0018_low_vindicator",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1794873748433,
+      "tag": "0019_mighty_black_widow",
+      "breakpoints": true
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { db } from "@yousiverse/db";
-import { episodes, libraryEntries, media, seasons, users } from "@yousiverse/db/schema";
+import { episodes, libraryEntries, lists, media, seasons, users } from "@yousiverse/db/schema";
 import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { anonymous, signedInAs } from "./helpers";
@@ -45,7 +45,11 @@ describe("feed.following", () => {
     const grace = await signedInAs("Grace");
     await grace.caller.library.save({ mediaId: ids.matrix, status: "finished" });
 
-    expect(await ada.caller.feed.following()).toEqual({ followedCount: 0, items: [] });
+    expect(await ada.caller.feed.following()).toEqual({
+      followedCount: 0,
+      items: [],
+      olderThan: null,
+    });
   });
 
   it("shows what followed people added, reviewed, and listed, newest first", async () => {
@@ -79,6 +83,47 @@ describe("feed.following", () => {
         providerId: "603",
       },
     ]);
+  });
+
+  it("shows 40 items at a time and pages back through older activity without gaps", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await ada.caller.follows.follow({ username: "grace" });
+    const start = Date.parse("2026-03-01T12:00:00Z");
+    await db.insert(lists).values(
+      Array.from({ length: 45 }, (_, index) => ({
+        userId: grace.user.id,
+        name: `List ${index + 1}`,
+        createdAt: new Date(start + index * 60_000),
+      })),
+    );
+    await grace.caller.library.save({ mediaId: ids.matrix, status: "want" });
+
+    const first = await ada.caller.feed.following();
+    expect(first.items).toHaveLength(40);
+    expect(first.items[0]).toMatchObject({ kind: "library", title: "The Matrix" });
+    expect(first.items[1]).toMatchObject({ kind: "list", name: "List 45" });
+    expect(first.items.at(-1)).toMatchObject({ name: "List 7" });
+    expect(first.olderThan).toBe(new Date(start + 6 * 60_000).toISOString());
+
+    const second = await ada.caller.feed.following({ before: first.olderThan ?? undefined });
+    expect(second.items.map((item) => (item.kind === "list" ? item.name : item.kind))).toEqual([
+      "List 6",
+      "List 5",
+      "List 4",
+      "List 3",
+      "List 2",
+      "List 1",
+    ]);
+    expect(second.olderThan).toBeNull();
+  });
+
+  it("refuses a page marker that is not a moment in time", async () => {
+    const ada = await signedInAs("Ada");
+
+    await expect(ada.caller.feed.following({ before: "yesterday" })).rejects.toMatchObject({
+      code: "BAD_REQUEST",
+    });
   });
 
   it("leaves out people the viewer does not follow, and the viewer's own activity", async () => {
