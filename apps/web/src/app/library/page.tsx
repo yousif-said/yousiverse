@@ -43,6 +43,9 @@ export default async function LibraryPage({ searchParams }: PageProps<"/library"
         <Link href="/feed" className={textLink}>
           Your feed
         </Link>
+        <Link href="/calendar" className={textLink}>
+          Release calendar
+        </Link>
         <Link href="/alerts" className={textLink}>
           Your alerts
         </Link>

@@ -1,7 +1,8 @@
 import { db } from "@yousiverse/db";
 import { alerts, media, sentEmails, streamingServices, users } from "@yousiverse/db/schema";
 import { beforeEach, describe, expect, it } from "vitest";
-import { runAlertCheck, type StepRunner } from "../src/alerts/check";
+import { runAlertCheck } from "../src/alerts/check";
+import type { StepRunner } from "../src/step-runner";
 import { signedInAs } from "./helpers";
 
 /** Runs each step at once, as the job runner does the first time, and notes the step names. */

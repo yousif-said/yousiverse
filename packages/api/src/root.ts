@@ -1,5 +1,6 @@
 import { alertsRouter } from "./routers/alerts";
 import { availabilityRouter } from "./routers/availability";
+import { calendarRouter } from "./routers/calendar";
 import { catalogRouter } from "./routers/catalog";
 import { clubsRouter } from "./routers/clubs";
 import { discussionsRouter } from "./routers/discussions";
@@ -20,6 +21,7 @@ import { router } from "./trpc";
 export const appRouter = router({
   alerts: alertsRouter,
   availability: availabilityRouter,
+  calendar: calendarRouter,
   catalog: catalogRouter,
   clubs: clubsRouter,
   discussions: discussionsRouter,
