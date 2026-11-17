@@ -1,3 +1,4 @@
+import { alertsRouter } from "./routers/alerts";
 import { availabilityRouter } from "./routers/availability";
 import { catalogRouter } from "./routers/catalog";
 import { clubsRouter } from "./routers/clubs";
@@ -17,6 +18,7 @@ import { subscriptionsRouter } from "./routers/subscriptions";
 import { router } from "./trpc";
 
 export const appRouter = router({
+  alerts: alertsRouter,
   availability: availabilityRouter,
   catalog: catalogRouter,
   clubs: clubsRouter,

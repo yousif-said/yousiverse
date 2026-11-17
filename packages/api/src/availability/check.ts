@@ -46,9 +46,11 @@ export async function ensureChecked(
   db: Database,
   mediaId: string,
   refresh: () => Promise<void>,
+  /** How old the stored answer may be. Alerts ask for fresher data than pages do. */
+  maxAgeMs = RECHECK_AFTER_MS,
 ): Promise<AvailabilityCheck | null> {
   const [stored] = await readCheck(db, mediaId);
-  if (stored && Date.now() - stored.checkedAt.getTime() < RECHECK_AFTER_MS) {
+  if (stored && Date.now() - stored.checkedAt.getTime() < maxAgeMs) {
     return { ...stored, outOfDate: false };
   }
 

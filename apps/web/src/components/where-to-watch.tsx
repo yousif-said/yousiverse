@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { formatDay, formatPrice } from "@/lib/format";
 import { getQueryClient, trpc } from "@/trpc/server";
+import { TitleAlerts } from "./title-alerts";
 
 type Offer = NonNullable<RouterOutputs["availability"]["streaming"]["offers"]>[number];
 
@@ -112,6 +113,7 @@ export function WhereToWatch(props: Props) {
       </h2>
       <Suspense fallback={<p className="mt-4 text-muted-foreground">Checking where to watch…</p>}>
         <Offers {...props} />
+        <TitleAlerts mediaId={props.mediaId} />
       </Suspense>
     </section>
   );

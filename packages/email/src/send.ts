@@ -72,7 +72,12 @@ export async function sendEmail(
   }
   if ((await remainingToday(db, email.kind)) === 0) throw new EmailLimitError("daily");
 
-  await sendThroughResend({ to: recipient, ...email.content });
+  if (process.env.NODE_ENV === "development") {
+    // Nothing is emailed from a developer's machine; the message is shown in the terminal.
+    console.info(`\nEmail to ${recipient}: ${email.content.subject}\n${email.content.text}\n`);
+  } else {
+    await sendThroughResend({ to: recipient, ...email.content });
+  }
   await db.insert(sentEmails).values({ recipient, kind: email.kind });
   await db.delete(sentEmails).where(lt(sentEmails.sentAt, new Date(Date.now() - KEEP_LOG_MS)));
 }

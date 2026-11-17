@@ -65,6 +65,15 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Your subscriptions:** on the account page a person ticks the streaming services they pay for. Movie and show pages then list those first, under "Your subscriptions". A person's subscriptions are never shown to anyone else.
 - Book prices are not covered.
 
+### Alerts
+
+- **Availability alerts:** from a movie's or show's page a person asks to be told when it reaches one of the services they subscribe to, or when it can be streamed at all (on a subscription or a free service).
+- **Price alerts:** from a game's page a person names a price and is told when a PC store sells the game for that or less.
+- An alert that would have nothing to wait for is refused with the reason: the title is already there, or already that cheap. A person can hold up to 100 alerts.
+- **Checked once a day.** Every morning the app refreshes availability and prices for the titles people are waiting on and emails each person once about everything of theirs that came through. An alert fires once, then stays on record until it is removed or set again.
+- **Alerts page** listing what came through and what is still waiting, with a switch for alert emails. Every alert email has a link that stops them without signing in. With emails off, alerts still show on the page.
+- The availability source allows 2,500 requests a month, so at most 60 movies and shows are refreshed a day for alerts, the longest unchecked first. With more than that waiting, each is checked less often than daily. At most 60 alert emails go out a day; the rest wait for the next morning.
+
 ### Clubs
 
 - **Clubs** are groups around some kinds of titles. Whoever starts a club names it, describes it, and picks which media types it covers (a book club covers only books).
@@ -112,7 +121,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Where to watch, play, or read
 
-- **Price drop and availability alerts.**
+- **More kinds of alert:** a title leaving a service, a new season, a game reaching its lowest price ever.
 - **Console game and book prices.** Both have thinner data than PC games; show clearly what isn't covered.
 
 ### Accounts and sign-in

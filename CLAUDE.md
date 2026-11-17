@@ -28,6 +28,7 @@ Do not swap out or add to the core stack without asking first.
 | ORM                       | Drizzle ORM + drizzle-kit migrations                                                  |
 | Auth                      | Better Auth (Google, emailed sign-in link; Apple later) stored in our own Postgres    |
 | Email                     | Resend, called over HTTP from `packages/integrations/resend`; plain HTML emails       |
+| Background jobs           | Inngest, defined in `packages/api/src/jobs.ts` and served at `/api/inngest`           |
 | Lint / format             | Biome                                                                                 |
 | Tests                     | Vitest (unit/integration), Playwright (end-to-end)                                    |
 | CI                        | GitHub Actions: typecheck, lint, test on every PR                                     |
@@ -35,14 +36,13 @@ Do not swap out or add to the core stack without asking first.
 
 ### Planned additions (add only when the first feature that needs them is built)
 
-| Tool               | Add when                                                                                |
-| ------------------ | --------------------------------------------------------------------------------------- |
-| Inngest            | Background jobs: imports, price/availability checks, alerts, release calendar ingestion |
-| React Email        | Only if emails outgrow the plain layout in `packages/email`                             |
-| Upstash Redis      | Rate limiting, or caching external API calls beyond what Next.js caching handles        |
-| Sentry, PostHog    | Shortly before launching to real users                                                  |
-| Expo (Expo Router) | Mobile app, added as `apps/mobile`, reusing `packages/api` and shared validation        |
-| Hono               | Only if the API ever needs to run outside Next.js                                       |
+| Tool               | Add when                                                                         |
+| ------------------ | -------------------------------------------------------------------------------- |
+| React Email        | Only if emails outgrow the plain layout in `packages/email`                      |
+| Upstash Redis      | Rate limiting, or caching external API calls beyond what Next.js caching handles |
+| Sentry, PostHog    | Shortly before launching to real users                                           |
+| Expo (Expo Router) | Mobile app, added as `apps/mobile`, reusing `packages/api` and shared validation |
+| Hono               | Only if the API ever needs to run outside Next.js                                |
 
 ### External data sources
 
@@ -99,6 +99,8 @@ packages/
 - **Imports** never overwrite: an existing library entry, rating, or review is kept. A row is added only when it matches one title with confidence; otherwise it is reported as not found. Rows are matched a few per request, driven by the open import page, so no request runs long.
 - **Clubs:** each club has an allowlist of media types; club views and queries must filter to it. An invite-only club answers "not found" to anyone who is not a member and does not hold its invite code. Everything inside a club (picks, discussions) goes through `requireVisibleClub` to read and `requireMembership` to write.
 - **Email** always goes through `sendEmail` in `packages/email`, which records each one and enforces the limits (three sign-in links to an address in 15 minutes; 95 emails a day, of which alerts may use 60). Build the message with `renderEmail`, which escapes everything it is given. Outside production nothing is emailed: sign-in links are printed to the terminal.
+- **Background jobs** are plain functions in `packages/api` that take a step runner (see `alerts/check.ts`), wrapped by a thin Inngest function in `jobs.ts`, so they can be tested without Inngest. Keep each step short, give it a name that is the same on every replay, and return only counts and catalog ids from it: Inngest stores what steps return, so nothing about a person may go there.
+- **Alerts** fire once. The daily job is the only thing that spends provider requests on titles nobody opened, and it keeps to a daily budget (`STREAMING_REFRESHES_PER_RUN`); never add another path that refreshes availability in bulk.
 - UI should feel fast, clean, and modern. Use the frontend-design plugin for new screens. Support light and dark mode and keyboard navigation from the start.
 - Write or update tests with every feature. Use Playwright for critical user flows (sign-in, adding to library, rating, reviewing).
 
