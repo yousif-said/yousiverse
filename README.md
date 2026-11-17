@@ -40,9 +40,9 @@ Environment variables on Vercel:
 
 - `DATABASE_URL` and `DATABASE_URL_UNPOOLED`: set by Neon's Vercel integration (one database branch per preview).
 - `BETTER_AUTH_SECRET`: all environments.
-- `TMDB_API_TOKEN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`, `WATCHMODE_API_KEY`, `ITAD_API_KEY`, `STEAM_API_KEY`, `TRAKT_CLIENT_ID`: all environments.
+- `TMDB_API_TOKEN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`, `WATCHMODE_API_KEY`, `ITAD_API_KEY`, `STEAM_API_KEY`, `TRAKT_CLIENT_ID`, `RESEND_API_KEY`, `EMAIL_FROM`: all environments.
 - `BETTER_AUTH_URL`: production only, set to the public origin. Previews fall back to their own deploy URL.
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: optional.
 - `ADMIN_EMAILS`: optional. The sign-in emails, separated by commas, of the people who review franchise links at `/admin/links`.
 
-Email sign-in is development-only until an email provider is added, so a deploy needs Google configured for anyone to sign in.
+Sign-in links are emailed through Resend in production and previews. Everywhere else they are printed in the server terminal and no email is sent.

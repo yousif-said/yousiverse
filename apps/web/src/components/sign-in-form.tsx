@@ -36,13 +36,12 @@ export function SignInForm({ methods, redirectTo }: Props) {
     setEmailStatus("sent");
   }
 
-  if (!methods.google && !methods.devEmail) {
-    return (
-      <p className="mt-8 rounded-lg border bg-card p-4 text-sm">
-        Sign-in isn&apos;t set up yet. Add Google credentials to the environment.
-      </p>
-    );
-  }
+  const beforeNote = methods.linkIsPrinted
+    ? "Development only: the link prints in the terminal instead of being emailed."
+    : "We will email you a link that signs you in. No password needed, and it works for new accounts too.";
+  const sentNote = methods.linkIsPrinted
+    ? "Sign-in link sent. Open it from the terminal running the dev server."
+    : `Sign-in link sent. Check your inbox; the link works for ${methods.linkMinutes} minutes.`;
 
   return (
     <div className="mt-8 space-y-6">
@@ -53,30 +52,34 @@ export function SignInForm({ methods, redirectTo }: Props) {
         </Button>
       )}
 
-      {methods.devEmail && (
-        <form onSubmit={sendSignInLink} className="space-y-3">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              required
-              className="h-10 bg-card"
-            />
-          </div>
-          <Button type="submit" size="lg" className="w-full" disabled={emailStatus === "sending"}>
-            Send sign-in link
-          </Button>
-          <p className="text-sm text-muted-foreground" role="status">
-            {emailStatus === "sent"
-              ? "Sign-in link sent. Open it from the terminal running the dev server."
-              : "Development only: the link prints in the terminal instead of being emailed."}
-          </p>
-        </form>
+      {methods.google && (
+        <p className="flex items-center gap-4 text-sm text-muted-foreground">
+          <span className="h-px flex-1 bg-border" />
+          or use your email
+          <span className="h-px flex-1 bg-border" />
+        </p>
       )}
+
+      <form onSubmit={sendSignInLink} className="space-y-3">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            required
+            className="h-10 bg-card"
+          />
+        </div>
+        <Button type="submit" size="lg" className="w-full" disabled={emailStatus === "sending"}>
+          Send sign-in link
+        </Button>
+        <p className="text-sm text-muted-foreground" role="status">
+          {emailStatus === "sent" ? sentNote : beforeNote}
+        </p>
+      </form>
 
       {errorMessage && (
         <p className="text-sm text-destructive" role="alert">

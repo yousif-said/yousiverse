@@ -3,22 +3,28 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { magicLink } from "better-auth/plugins";
 import { env } from "./env";
+import { SIGN_IN_LINK_MINUTES, sendSignInEmail } from "./sign-in-email";
 
 const google =
   env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
     ? { clientId: env.GOOGLE_CLIENT_ID, clientSecret: env.GOOGLE_CLIENT_SECRET }
     : undefined;
 
+const isProduction = env.NODE_ENV === "production";
+
 export const signInMethods = {
   google: Boolean(google),
-  // Email sign-in has no mail provider yet, so it only exists outside production,
-  // where the link is printed to the server terminal.
-  devEmail: env.NODE_ENV !== "production",
+  // Outside production a sign-in link is printed to the server terminal instead of emailed, so
+  // development and tests need no inbox and send nothing.
+  linkIsPrinted: !isProduction,
+  linkMinutes: SIGN_IN_LINK_MINUTES,
 };
 export type SignInMethods = typeof signInMethods;
 
-const devMagicLink = magicLink({
+const emailSignIn = magicLink({
+  expiresIn: SIGN_IN_LINK_MINUTES * 60,
   sendMagicLink: async ({ email, url }) => {
+    if (isProduction) return sendSignInEmail(email, url);
     console.info(`\nSign-in link for ${email}:\n${url}\n`);
   },
 });
@@ -28,7 +34,7 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, { provider: "pg", usePlural: true }),
   socialProviders: { ...(google && { google }) },
-  plugins: signInMethods.devEmail ? [devMagicLink] : [],
+  plugins: [emailSignIn],
 });
 
 export type Session = typeof auth.$Infer.Session;

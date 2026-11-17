@@ -7,9 +7,10 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 ### Foundation
 
 - **App shell:** header, navigation, and a home page with a search box and a shelf of the titles most recently added to the catalog. The shelf can be filtered by type and each title links to its page. Light and dark mode, keyboard navigable.
-- **Sign-in:** Google. A protected account page shows email and join date, with sign out.
+- **Sign-in:** with Google, or with a link sent by email. Entering an email address sends a link that signs the person in, creating their account the first time; there is no password. The link works once and for 10 minutes. A protected account page shows email and join date, with sign out.
+- **Limits on sign-in emails:** one address is sent at most three links in 15 minutes, and the app sends at most 95 emails a day in all, which is what its email service allows. The sign-in page says so when a limit is reached.
 - **Usernames:** on the account page a person chooses a username and a display name. Public reviews and lists are credited to the username; until one is chosen they show no name. Email addresses and Google account names are never shown to others.
-- **Development sign-in:** email sign-in link printed to the server terminal. Not available in production.
+- **Development sign-in:** outside production the sign-in link is printed to the server terminal instead of emailed, and no email is sent.
 
 ### Profiles
 
@@ -116,7 +117,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Accounts and sign-in
 
-- **Emailed sign-in links** for sign-up and sign-in, alongside the Google sign-in already in the app.
 - **Apple sign-in**, added later; it needs a paid Apple Developer membership. Apple requires it (or an equivalent) in any iOS app that offers Google sign-in, so it must be in place before an iOS app ships.
 - Passkeys are not planned.
 

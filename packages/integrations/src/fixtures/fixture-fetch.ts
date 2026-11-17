@@ -1,6 +1,7 @@
 import igdb from "./igdb.json" with { type: "json" };
 import itad from "./itad.json" with { type: "json" };
 import openLibrary from "./open-library.json" with { type: "json" };
+import resend from "./resend.json" with { type: "json" };
 import steam from "./steam.json" with { type: "json" };
 import tmdb from "./tmdb.json" with { type: "json" };
 import trakt from "./trakt.json" with { type: "json" };
@@ -13,6 +14,7 @@ const fixtures: Record<string, Fixture> = {
   ...igdb,
   ...itad,
   ...openLibrary,
+  ...resend,
   ...steam,
   ...tmdb,
   ...trakt,
@@ -21,6 +23,8 @@ const fixtures: Record<string, Fixture> = {
 };
 
 const CREDENTIAL_PARAMS = ["api_key", "apiKey", "key"];
+// Hosts answered the same whatever is sent: every email gets the one recorded "sent" response.
+const BODY_IGNORED_HOSTS = new Set(["api.resend.com"]);
 
 /** Identifies a request by method, host, path, and sorted query, leaving credentials out. */
 export function fixtureKey(url: URL, init?: RequestInit): string {
@@ -28,7 +32,8 @@ export function fixtureKey(url: URL, init?: RequestInit): string {
   for (const name of CREDENTIAL_PARAMS) params.delete(name);
   params.sort();
   const query = params.size > 0 ? `?${params}` : "";
-  const body = typeof init?.body === "string" ? ` ${init.body}` : "";
+  const hasBody = typeof init?.body === "string" && !BODY_IGNORED_HOSTS.has(url.host);
+  const body = hasBody ? ` ${init?.body}` : "";
   return `${init?.method ?? "GET"} ${url.host}${url.pathname}${query}${body}`;
 }
 

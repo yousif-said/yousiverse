@@ -12,6 +12,8 @@ export default defineConfig({
       ITAD_API_KEY: "test-key",
       STEAM_API_KEY: "test-key",
       TRAKT_CLIENT_ID: "test-id",
+      RESEND_API_KEY: "test-key",
+      EMAIL_FROM: "Yousiverse <test@yousiverse.test>",
     },
   },
 });

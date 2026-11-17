@@ -1,0 +1,8 @@
+{
+  "POST api.resend.com/emails": {
+    "status": 200,
+    "body": {
+      "id": "fixture-email"
+    }
+  }
+}
