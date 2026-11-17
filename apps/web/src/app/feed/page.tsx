@@ -60,9 +60,17 @@ function Headline({ item }: { item: Item }) {
   );
 }
 
-export default async function FeedPage() {
-  await requireSession("/feed");
-  const feed = await getQueryClient().fetchQuery(trpc.feed.following.queryOptions());
+/** A page marker from the address bar, if it is one the feed can use. */
+function pageMarker(value: string | string[] | undefined): string | undefined {
+  return typeof value === "string" && !Number.isNaN(Date.parse(value))
+    ? new Date(value).toISOString()
+    : undefined;
+}
+
+export default async function FeedPage({ searchParams }: PageProps<"/feed">) {
+  const before = pageMarker((await searchParams).before);
+  await requireSession(before ? `/feed?before=${encodeURIComponent(before)}` : "/feed");
+  const feed = await getQueryClient().fetchQuery(trpc.feed.following.queryOptions({ before }));
 
   return (
     <section className="max-w-3xl pt-10 sm:pt-16">
@@ -71,9 +79,20 @@ export default async function FeedPage() {
         What the people you follow have added, reviewed, and listed lately.
       </p>
 
+      {before && (
+        <p className="mt-6 text-sm">
+          Showing older activity.{" "}
+          <Link href="/feed" className={textLink}>
+            Back to the newest
+          </Link>
+        </p>
+      )}
+
       {feed.items.length === 0 ? (
         <p className="mt-10 text-muted-foreground">
-          {feed.followedCount === 0 ? (
+          {before ? (
+            "Nothing older than this."
+          ) : feed.followedCount === 0 ? (
             <>
               You are not following anyone yet.{" "}
               <Link href="/search" className={textLink}>
@@ -110,6 +129,13 @@ export default async function FeedPage() {
             </li>
           ))}
         </ul>
+      )}
+      {feed.olderThan && (
+        <p className="mt-6">
+          <Link href={`/feed?before=${encodeURIComponent(feed.olderThan)}`} className={textLink}>
+            Older activity
+          </Link>
+        </p>
       )}
     </section>
   );

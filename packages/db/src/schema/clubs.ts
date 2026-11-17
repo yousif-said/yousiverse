@@ -63,3 +63,37 @@ export const clubPicks = pgTable(
   },
   (table) => [unique().on(table.clubId, table.mediaId)],
 );
+
+/** A discussion in a club: an opening post that members reply to. */
+export const clubThreads = pgTable(
+  "club_threads",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    clubId: uuid()
+      .notNull()
+      .references(() => clubs.id, { onDelete: "cascade" }),
+    // The member who started it. The discussion stays if they leave or delete their account.
+    authorId: text().references(() => users.id, { onDelete: "set null" }),
+    title: text().notNull(),
+    body: text().notNull(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    // When it was started or last replied to. A club lists its discussions by this.
+    activeAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index().on(table.clubId, table.activeAt)],
+);
+
+/** A reply in a club discussion. */
+export const clubReplies = pgTable(
+  "club_replies",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    threadId: uuid()
+      .notNull()
+      .references(() => clubThreads.id, { onDelete: "cascade" }),
+    authorId: text().references(() => users.id, { onDelete: "set null" }),
+    body: text().notNull(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index().on(table.threadId, table.createdAt)],
+);

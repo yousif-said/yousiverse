@@ -3,13 +3,14 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { ClubMembership } from "@/components/club-membership";
 import { ClubSettings } from "@/components/club-settings";
+import { DiscussionForm } from "@/components/discussion-form";
 import { MemberName } from "@/components/member-name";
 import { PeopleList } from "@/components/people-list";
 import { RemovePickButton } from "@/components/remove-pick-button";
 import { SignInPrompt } from "@/components/sign-in-prompt";
 import { TitleCard, titleGridClasses } from "@/components/title-card";
-import { ACCESS_LABELS, clubPath, coveredTypes } from "@/lib/clubs";
-import { formatAverageRating, pluralize } from "@/lib/format";
+import { ACCESS_LABELS, clubPath, coveredTypes, discussionPath } from "@/lib/clubs";
+import { formatAverageRating, formatDay, pluralize } from "@/lib/format";
 import { getSession } from "@/lib/session";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
 
@@ -43,10 +44,13 @@ async function siteOrigin(): Promise<string> {
 export default async function ClubPage(props: Props) {
   const [{ club, invite }, session] = await Promise.all([getClub(props), getSession()]);
   const inside = club.isMember || club.access === "public";
-  // Someone only holding an invite is not shown the club's picks.
-  const picks = inside
-    ? await getQueryClient().fetchQuery(trpc.clubs.picks.queryOptions({ id: club.id }))
-    : [];
+  // Someone only holding an invite is not shown the club's picks or discussions.
+  const [picks, discussions] = inside
+    ? await Promise.all([
+        getQueryClient().fetchQuery(trpc.clubs.picks.queryOptions({ id: club.id })),
+        getQueryClient().fetchQuery(trpc.discussions.list.queryOptions({ clubId: club.id })),
+      ])
+    : [[], []];
 
   return (
     <div className="pt-10 sm:pt-16">
@@ -116,6 +120,47 @@ export default async function ClubPage(props: Props) {
                 </li>
               ))}
             </ul>
+          )}
+        </section>
+      )}
+
+      {inside && (
+        <section aria-labelledby="discussions-heading" className="mt-14 max-w-3xl">
+          <h2 id="discussions-heading" className={sectionHeading}>
+            Discussions
+          </h2>
+          {discussions.length === 0 ? (
+            <p className="mt-4 text-muted-foreground">
+              No discussions yet.{club.isMember && " Start the first one below."}
+            </p>
+          ) : (
+            <ul className="mt-4 divide-y border-y">
+              {discussions.map((discussion) => (
+                <li key={discussion.id} className="py-4">
+                  <Link
+                    href={discussionPath(club.id, discussion.id)}
+                    className="rounded-sm font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                  >
+                    {discussion.title}
+                  </Link>
+                  <p className="text-sm text-muted-foreground">
+                    Started by {discussion.author ?? "a former member"},{" "}
+                    {pluralize(discussion.replyCount, "reply", "replies")}, last active{" "}
+                    {formatDay(new Date(discussion.activeAt))}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+          {club.isMember && (
+            <details className="mt-6">
+              <summary className="w-fit cursor-pointer rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50">
+                Start a discussion
+              </summary>
+              <div className="mt-4">
+                <DiscussionForm clubId={club.id} />
+              </div>
+            </details>
           )}
         </section>
       )}

@@ -21,7 +21,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Follow anyone with a profile**, with no approval needed, and unfollow again. Two people who follow each other are friends.
 - Profiles show how many followers a person has and how many people they follow, each opening a page that lists them. Followers who have not chosen a username are counted but not named.
 - **Friends-only privacy:** a library entry, review, or list can be shown to everyone, to friends only, or to its owner alone. Friends-only content appears to friends on the owner's profile, on title pages, and at a list's link; everyone else sees nothing.
-- **Feed:** a page listing what the people a person follows have lately added to their libraries (with their rating), reviewed, and made lists of, newest first. It only includes what the viewer is allowed to see.
+- **Feed:** a page listing what the people a person follows have lately added to their libraries (with their rating), reviewed, and made lists of, newest first, 40 at a time with a link to older activity. It only includes what the viewer is allowed to see.
 - **Finding people:** searching also matches usernames and display names, and lists the people found above the titles.
 
 ### Catalog
@@ -70,6 +70,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - A club is **public**, so anyone can find and join it, or **invite only**, so it can be seen and joined only through its invite link. The owner can make a new link, which stops the old one working.
 - The clubs page lists a person's clubs and the public clubs they could join. A club's page shows what it covers, who runs it, and its members.
 - **Club picks:** any member can pick a title for a club from the title's page, as long as it is a kind the club covers; the page only offers clubs that do. The club's page shows its picks with the average of its members' ratings. A member can remove their own picks and the owner any pick. If a club stops covering a media type, picks of that type stop showing.
+- **Club discussions:** any member can start a discussion with a title and an opening post, and members reply underneath. A club lists its discussions with the most recently active first. Anyone can read a public club's discussions; an invite-only club's are for its members. A post can be deleted by whoever wrote it or by the club's owner, and it stays, without a name, if its author's account is deleted. Posts cannot be edited.
 - Members can leave. The owner can change the club's details, remove members, and delete the club. Starting or joining a club needs a username, because members are shown by username.
 
 ### Franchises
@@ -121,7 +122,7 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Social
 
-- **Club discussions** and invites by email.
+- **Club invites by email**, and editing a discussion post after it is sent.
 
 ### Recommendations
 
