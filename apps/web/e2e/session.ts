@@ -3,11 +3,16 @@ import type { Page } from "@playwright/test";
 import { serverLogPath } from "./server-log";
 import { expect } from "./test";
 
-/** Every sign-in link the dev server has printed for an email address, oldest first. */
+/**
+ * Every sign-in link the dev server has printed for an email address, oldest first. A link
+ * counts only once the line after it has started, so one still being written is never used.
+ */
 async function findSignInLinks(email: string): Promise<string[]> {
   const log = await readFile(serverLogPath, "utf8");
   const [, ...afterMarkers] = log.split(`Sign-in link for ${email}:`);
-  return afterMarkers.flatMap((text) => text.trim().split(/\s/)[0] ?? []);
+  return afterMarkers.flatMap(
+    (text) => /^\s*(\S+\/api\/auth\/magic-link\/verify\S+)\s/.exec(text)?.[1] ?? [],
+  );
 }
 
 export async function findSignInLink(email: string): Promise<string | undefined> {
