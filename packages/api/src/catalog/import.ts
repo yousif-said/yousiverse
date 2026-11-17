@@ -178,9 +178,13 @@ export async function ensureListed(db: Database, found: CatalogSearchResult): Pr
 
 /**
  * Returns the media id for a provider item, importing it on first use and refreshing it once
- * the stored copy is older than a week.
+ * the stored copy is older than a week, or than `maxAgeMs`.
  */
-export async function ensureImported(db: Database, ref: CatalogRef): Promise<string> {
+export async function ensureImported(
+  db: Database,
+  ref: CatalogRef,
+  maxAgeMs = REFRESH_AFTER_MS,
+): Promise<string> {
   const [stored] = await db
     .select({ id: media.id, syncedAt: media.syncedAt })
     .from(media)
@@ -191,7 +195,7 @@ export async function ensureImported(db: Database, ref: CatalogRef): Promise<str
         eq(media.providerId, ref.providerId),
       ),
     );
-  if (stored?.syncedAt && Date.now() - stored.syncedAt.getTime() < REFRESH_AFTER_MS) {
+  if (stored?.syncedAt && Date.now() - stored.syncedAt.getTime() < maxAgeMs) {
     return stored.id;
   }
 

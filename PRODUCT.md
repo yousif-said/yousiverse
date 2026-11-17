@@ -65,6 +65,13 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Your subscriptions:** on the account page a person ticks the streaming services they pay for. Movie and show pages then list those first, under "Your subscriptions". A person's subscriptions are never shown to anyone else.
 - Book prices are not covered.
 
+### Release calendar
+
+- **A calendar of the next 90 days**, by month and day: movies and games on their release dates, and shows by episode, with a show's episodes on one day listed together. Each entry links to its title. Dates are US calendar days.
+- A signed-in person sees the titles in their library that they have not dropped, and can switch to the whole catalog. Signed-out visitors see the whole catalog. Both can be filtered by movies, TV, or games.
+- Every morning the app fetches fresh details for up to 150 library titles whose dates could still change: shows that have not ended, and movies and games not yet out, just out, or undated. That is how new seasons and moved dates reach the calendar.
+- Books are not on the calendar: their source gives no release dates.
+
 ### Alerts
 
 - **Availability alerts:** from a movie's or show's page a person asks to be told when it reaches one of the services they subscribe to, or when it can be streamed at all (on a subscription or a free service).
@@ -112,7 +119,6 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Google Books** as a second source for books, if Open Library's data proves thin.
 - **Cast and crew** on movie and TV pages.
 - **Reordering the titles on a list** by hand.
-- **Release calendar** of upcoming releases, filterable by media type and by items in the user's library.
 - **Time budget filter:** find things that fit the time you have. Uses movie/episode runtime, book page count or audiobook length, and game time-to-beat where reliable data exists.
 
 ### Ratings and reviews
