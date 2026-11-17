@@ -7,6 +7,11 @@ export default defineConfig({
   testDir: "./e2e",
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
+  // CI machines are several times slower than a laptop, and a test that signs in two or three
+  // people needs more than the default 30 seconds there. The limits stay short locally, where
+  // a slow test is a signal.
+  timeout: process.env.CI ? 120_000 : 30_000,
+  expect: { timeout: process.env.CI ? 20_000 : 5_000 },
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL,
