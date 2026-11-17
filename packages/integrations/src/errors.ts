@@ -6,7 +6,8 @@ export type ProviderName =
   | "itad"
   | "steam"
   | "trakt"
-  | "wikidata";
+  | "wikidata"
+  | "resend";
 
 export type ProviderErrorKind = "not_found" | "rate_limited" | "unavailable" | "invalid_response";
 

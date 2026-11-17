@@ -188,6 +188,10 @@ const handWritten: Record<string, Record<string, { status: number; body: unknown
     // An account id that does not exist.
     [ownedGames("76561198000000003")]: { status: 400, body: "Bad Request" },
   },
+  // Tests must never send a real email.
+  resend: {
+    "POST api.resend.com/emails": { status: 200, body: { id: "fixture-email" } },
+  },
   igdb: {
     "POST id.twitch.tv/oauth2/token": {
       status: 200,
@@ -263,6 +267,7 @@ const recordings: Record<string, Recording[]> = {
   ],
   steam: [],
   trakt: [],
+  resend: [],
   itad: [
     // Hades, by its Steam id, then by the id IsThereAnyDeal answers with.
     itadLookup("1145360"),

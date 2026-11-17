@@ -5,13 +5,16 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./env": "./src/env.ts"
+    "./env": "./src/env.ts",
+    "./sign-in-email": "./src/sign-in-email.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@yousiverse/db": "workspace:*",
+    "@yousiverse/email": "workspace:*",
+    "@yousiverse/integrations": "workspace:*",
     "better-auth": "^1.7.19",
     "zod": "^4.6.7"
   },

@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     "@yousiverse/api",
     "@yousiverse/auth",
     "@yousiverse/db",
+    "@yousiverse/email",
     "@yousiverse/integrations",
     "@yousiverse/ui",
   ],

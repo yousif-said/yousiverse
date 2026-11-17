@@ -33,6 +33,8 @@ export default defineConfig({
       ITAD_API_KEY: "e2e-key",
       STEAM_API_KEY: "e2e-key",
       TRAKT_CLIENT_ID: "e2e-id",
+      RESEND_API_KEY: "e2e-key",
+      EMAIL_FROM: "Yousiverse <e2e@yousiverse.test>",
       // The one account that may review franchise links in tests.
       ADMIN_EMAILS: "e2e-reviewer@example.com",
     },

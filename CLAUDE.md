@@ -26,7 +26,8 @@ Do not swap out or add to the core stack without asking first.
 | Validation                | Zod (API inputs, forms, env vars, external API responses)                             |
 | Database                  | Postgres: Docker locally, Neon for preview and production                             |
 | ORM                       | Drizzle ORM + drizzle-kit migrations                                                  |
-| Auth                      | Better Auth (Google, email magic link; Apple later) stored in our own Postgres        |
+| Auth                      | Better Auth (Google, emailed sign-in link; Apple later) stored in our own Postgres    |
+| Email                     | Resend, called over HTTP from `packages/integrations/resend`; plain HTML emails       |
 | Lint / format             | Biome                                                                                 |
 | Tests                     | Vitest (unit/integration), Playwright (end-to-end)                                    |
 | CI                        | GitHub Actions: typecheck, lint, test on every PR                                     |
@@ -34,14 +35,14 @@ Do not swap out or add to the core stack without asking first.
 
 ### Planned additions (add only when the first feature that needs them is built)
 
-| Tool                 | Add when                                                                                |
-| -------------------- | --------------------------------------------------------------------------------------- |
-| Inngest              | Background jobs: imports, price/availability checks, alerts, release calendar ingestion |
-| Resend + React Email | First feature that sends email (alerts, club invites)                                   |
-| Upstash Redis        | Rate limiting, or caching external API calls beyond what Next.js caching handles        |
-| Sentry, PostHog      | Shortly before launching to real users                                                  |
-| Expo (Expo Router)   | Mobile app, added as `apps/mobile`, reusing `packages/api` and shared validation        |
-| Hono                 | Only if the API ever needs to run outside Next.js                                       |
+| Tool               | Add when                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------- |
+| Inngest            | Background jobs: imports, price/availability checks, alerts, release calendar ingestion |
+| React Email        | Only if emails outgrow the plain layout in `packages/email`                             |
+| Upstash Redis      | Rate limiting, or caching external API calls beyond what Next.js caching handles        |
+| Sentry, PostHog    | Shortly before launching to real users                                                  |
+| Expo (Expo Router) | Mobile app, added as `apps/mobile`, reusing `packages/api` and shared validation        |
+| Hono               | Only if the API ever needs to run outside Next.js                                       |
 
 ### External data sources
 
@@ -75,7 +76,8 @@ packages/
   api/              tRPC routers and business logic
   db/               Drizzle schema, migrations, seed scripts
   auth/             Better Auth config
-  integrations/     External API clients (tmdb, igdb, open-library, watchmode, itad, steam, trakt, wikidata)
+  email/            Email layout, sending, and the limits on how many go out
+  integrations/     External API clients (tmdb, igdb, open-library, watchmode, itad, steam, trakt, wikidata, resend)
   ui/               Shared UI components (shadcn/ui based)
   config/           Shared tsconfig
 ```
@@ -96,6 +98,7 @@ packages/
 - **Following:** anyone can follow anyone who has a username, with no approval. Two people who follow each other are friends. Who follows whom is public.
 - **Imports** never overwrite: an existing library entry, rating, or review is kept. A row is added only when it matches one title with confidence; otherwise it is reported as not found. Rows are matched a few per request, driven by the open import page, so no request runs long.
 - **Clubs:** each club has an allowlist of media types; club views and queries must filter to it. An invite-only club answers "not found" to anyone who is not a member and does not hold its invite code. Everything inside a club (picks, discussions) goes through `requireVisibleClub` to read and `requireMembership` to write.
+- **Email** always goes through `sendEmail` in `packages/email`, which records each one and enforces the limits (three sign-in links to an address in 15 minutes; 95 emails a day, of which alerts may use 60). Build the message with `renderEmail`, which escapes everything it is given. Outside production nothing is emailed: sign-in links are printed to the terminal.
 - UI should feel fast, clean, and modern. Use the frontend-design plugin for new screens. Support light and dark mode and keyboard navigation from the start.
 - Write or update tests with every feature. Use Playwright for critical user flows (sign-in, adding to library, rating, reviewing).
 

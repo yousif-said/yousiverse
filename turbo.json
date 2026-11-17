@@ -16,6 +16,8 @@
     "STEAM_API_KEY",
     "TRAKT_CLIENT_ID",
     "ADMIN_EMAILS",
+    "RESEND_API_KEY",
+    "EMAIL_FROM",
     "PROVIDER_FIXTURES",
     "VERCEL_URL",
     "CI"
