@@ -21,6 +21,12 @@ export function steamGamesQuery(steamAppIds: string[]): string {
   return `fields uid,game.name,game.first_release_date,game.cover.image_id,game.game_type; where external_game_source = 1 & uid = (${list}); limit 500;`;
 }
 
+/** Asks for the games IGDB lists as similar to one game. */
+export function similarGamesQuery(providerId: string): string {
+  if (!/^\d+$/.test(providerId)) throw new Error(`Not an IGDB game id: ${providerId}`);
+  return `fields similar_games.name,similar_games.first_release_date,similar_games.cover.image_id; where id = ${providerId};`;
+}
+
 /** Asks for the name IGDB uses for a game in its own addresses. */
 export function slugQuery(providerId: string): string {
   if (!/^\d+$/.test(providerId)) throw new Error(`Not an IGDB game id: ${providerId}`);

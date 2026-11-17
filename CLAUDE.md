@@ -125,6 +125,7 @@ packages/
 - **URLs** use the provider's id: `/movies/<id>`, `/tv/<id>`, `/games/<id>`, `/books/<id>`. Seasons and episodes go by number under their show: `/tv/<id>/seasons/<n>/episodes/<n>`.
 - **Tests never call a provider.** With `PROVIDER_FIXTURES=true` (set by the Vitest and Playwright configs), requests are answered from recorded responses in `packages/integrations/src/fixtures`. To cover a new request, add it to `packages/integrations/scripts/record.ts` and run the `record` script.
 - **Availability and prices** (Watchmode for movies and TV, IsThereAnyDeal for PC games) are fetched the first time a title's page asks for them and kept for 7 days, like catalog data. Watchmode allows 2,500 requests a month, so never fetch offers for titles nobody opened. Prices are stored in cents.
+- **Similar titles** (TMDB recommendations, IGDB similar games, an author's other books from Open Library) are fetched for a title the first time a recommendation needs them and kept for 30 days in `similar_titles`. They are stored as the provider described them, not as `media` rows, so suggesting a title does not add it to the catalog.
 - **Wikidata's query service is slow and fails now and then.** Ask it about one title per request, give it a longer timeout, and let the caller retry. Its data is public domain (CC0) and only ever feeds suggestions, so it needs no footer credit.
 - **Attribution:** every provider whose data is shown is credited in the site footer, in the wording its terms require.
 

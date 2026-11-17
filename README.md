@@ -30,6 +30,8 @@ Tests never call TMDB, IGDB, Open Library, Watchmode, IsThereAnyDeal, Steam, or 
 
 The first time, install the Playwright browser: `cd apps/web && bunx playwright install chromium`.
 
+A test that passes here can still fail on CI, whose machines are slower. To see how the browser tests behave there, slow the test browser down: `E2E_CPU_SLOWDOWN=8 bun run e2e`.
+
 ## Deploying
 
 Vercel project settings: set the root directory to `apps/web`. The build command in `apps/web/vercel.json` applies database migrations and then builds, so a failed migration stops the deploy before it serves traffic.

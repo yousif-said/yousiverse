@@ -1079,5 +1079,169 @@
       "offset": null,
       "docs": []
     }
+  },
+  "GET openlibrary.org/search.json?author=Susanna+Clarke&fields=key%2Ctitle%2Cauthor_name%2Cfirst_publish_year%2Ccover_i%2Clanguage&limit=20&sort=editions": {
+    "status": 200,
+    "body": {
+      "numFound": 10,
+      "start": 0,
+      "numFoundExact": true,
+      "num_found": 10,
+      "documentation_url": "https://openlibrary.org/dev/docs/api/search",
+      "q": "",
+      "offset": null,
+      "docs": [
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 525391,
+          "first_publish_year": 2001,
+          "key": "/works/OL5703422W",
+          "language": [
+            "fre",
+            "swe",
+            "spa",
+            "eng",
+            "chi"
+          ],
+          "title": "Jonathan Strange and Mr. Norrell"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 10226290,
+          "first_publish_year": 2020,
+          "key": "/works/OL20893680W",
+          "language": [
+            "ita",
+            "spa",
+            "eng"
+          ],
+          "title": "Piranesi"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 488659,
+          "first_publish_year": 2006,
+          "key": "/works/OL5703425W",
+          "language": [
+            "eng"
+          ],
+          "title": "The Ladies of Grace Adieu and Other Stories"
+        },
+        {
+          "author_name": [
+            "Author Reviewer Series Editor Cristina Bacchilega",
+            "Author Jennifer Orme",
+            "Prof. Cristina Bacchilega",
+            "Book Review Editor Jennifer Orme",
+            "Su Blackwell",
+            "Shary Boyle",
+            "Susanna Clarke",
+            "Emma Donoghue",
+            "Rosario Ferré",
+            "Associate Professor Nalo Hopkinson",
+            "Anne Kamiya",
+            "David Kaplan",
+            "Maya Kern",
+            "Bryan Kamaoli Kuwada",
+            "Kelly Link",
+            "Dan Taulapapa McMullin",
+            "Rosalind Hyatt Orme",
+            "Diriye Osman",
+            "Joellyn Rock",
+            "Sofia Samatar",
+            "Veronica Schanoes",
+            "Nisi Shawl",
+            "Shaun Tan",
+            "Danielle Wood",
+            "Miwa Yanagi"
+          ],
+          "cover_i": 11199965,
+          "first_publish_year": 2021,
+          "key": "/works/OL24554841W",
+          "language": [
+            "eng"
+          ],
+          "title": "Inviting Interruptions"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 15126833,
+          "first_publish_year": 2024,
+          "key": "/works/OL37888263W",
+          "language": [
+            "eng"
+          ],
+          "title": "Wood at Midwinter"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 12114855,
+          "first_publish_year": 2005,
+          "key": "/works/OL26156425W",
+          "title": "Jonathan Strange ve Bay Norrell 1 - Ciltli Özel Kutulu"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 12114856,
+          "first_publish_year": 2005,
+          "key": "/works/OL26156426W",
+          "title": "Jonathan Strange ve Bay Norrell 3 - Ciltli Özel Kutulu"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 12207615,
+          "first_publish_year": 2005,
+          "key": "/works/OL26210597W",
+          "title": "Jonathan Strange ve Bay Norrell 2 - Ciltli Özel Kutulu"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "first_publish_year": 2007,
+          "key": "/works/OL41914816W",
+          "language": [
+            "heb"
+          ],
+          "title": "ג׳ונתן סטריינג׳ & מר נורל"
+        },
+        {
+          "author_name": [
+            "Susanna Clarke"
+          ],
+          "cover_i": 14826030,
+          "first_publish_year": 2024,
+          "key": "/works/OL41943040W",
+          "title": "The Wood at Midwinter"
+        }
+      ]
+    }
+  },
+  "GET openlibrary.org/search.json?author=Zzzzqqqqxxxx+Nobody&fields=key%2Ctitle%2Cauthor_name%2Cfirst_publish_year%2Ccover_i%2Clanguage&limit=20&sort=editions": {
+    "status": 200,
+    "body": {
+      "numFound": 0,
+      "start": 0,
+      "numFoundExact": true,
+      "num_found": 0,
+      "documentation_url": "https://openlibrary.org/dev/docs/api/search",
+      "q": "",
+      "offset": null,
+      "docs": []
+    }
   }
 }

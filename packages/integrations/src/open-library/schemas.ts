@@ -9,6 +9,8 @@ export const searchResponse = z.object({
       first_publish_year: z.number().optional(),
       cover_i: z.number().optional(),
       number_of_pages_median: z.number().optional(),
+      // The languages the work has editions in, as three-letter codes.
+      language: z.array(z.string()).default([]),
     }),
   ),
 });

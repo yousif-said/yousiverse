@@ -78,6 +78,12 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 - **Links are verified before they appear.** Suggestions come from Wikidata and stay hidden until a reviewer approves them; a rejected suggestion is not raised again. A reviewer can also link two titles by hand, and remove a link.
 - **Reviewing** happens on one page, open only to the people named in the app's settings. It looks titles up on Wikidata while the page is open, one at a time, newest first, and each title again a month later.
 
+### Recommendations
+
+- **For you:** a page of titles like the ones a person rated 7 or higher, in one row per liked title ("Because you rated Hades 8"), drawn from up to eight of their highest ratings. It leaves out anything already in their library or rated by them, and shows each suggestion once.
+- Movie and show suggestions are TMDB's recommendations and game suggestions are IGDB's similar games. Open Library has no similar books, so a liked book suggests its author's other books that have an English edition.
+- A title's suggestions are fetched the first time they are needed and kept for a month. If a source is down, the page shows the rest and says some are missing.
+
 ### Imports
 
 - **Import from Letterboxd, IMDb, Goodreads, and StoryGraph:** a person uploads the files those services export, and the films, shows, and books in them are matched to the catalog and added to their library with status, rating, and review. The person chooses who can see what is imported.
@@ -119,8 +125,8 @@ Yousiverse catalogs movies, TV shows, video games, and books in one place. It ta
 
 ### Recommendations
 
-- **Taste-based recommendations** for each user.
 - **Recommendations for two friends together** (things both would enjoy).
+- **Similar books** beyond the same author, if a source for them turns up.
 
 ### Imports and connected accounts
 

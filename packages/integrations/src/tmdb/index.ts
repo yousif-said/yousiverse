@@ -7,6 +7,7 @@ import {
   movieResponse,
   movieSearchResponse,
   searchResponse,
+  tvListResponse,
   tvShowResponse,
 } from "./schemas";
 
@@ -129,6 +130,32 @@ export async function findByImdbId(imdbId: string): Promise<CatalogSearchResult 
     };
   }
   return null;
+}
+
+/** The movies or shows TMDB recommends to people who liked this one, best match first. */
+export async function getSimilar(
+  type: "movie" | "tv",
+  providerId: string,
+): Promise<CatalogSearchResult[]> {
+  const path = `/${type}/${encodeURIComponent(providerId)}/recommendations`;
+  if (type === "movie") {
+    const { results } = await request(path, movieSearchResponse);
+    return results.map((movie) => ({
+      type,
+      providerId: String(movie.id),
+      title: movie.title,
+      releaseYear: yearOf(movie.release_date),
+      posterUrl: imageUrl(movie.poster_path, "w342"),
+    }));
+  }
+  const { results } = await request(path, tvListResponse);
+  return results.map((show) => ({
+    type,
+    providerId: String(show.id),
+    title: show.name,
+    releaseYear: yearOf(show.first_air_date),
+    posterUrl: imageUrl(show.poster_path, "w342"),
+  }));
 }
 
 export async function getMovie(providerId: string): Promise<CatalogMovie> {

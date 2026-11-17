@@ -53,6 +53,22 @@ export const steamGamesResponse = z.array(
   }),
 );
 
+export const similarGamesResponse = z.array(
+  z.object({
+    similar_games: z
+      .array(
+        z.object({
+          id: z.number(),
+          // Missing when the similar game has since been removed from IGDB.
+          name: z.string().optional(),
+          first_release_date: z.number().optional(),
+          cover: image.optional(),
+        }),
+      )
+      .default([]),
+  }),
+);
+
 export const slugResponse = z.array(z.object({ slug: z.string().optional() }));
 
 export const gamesBySlugResponse = z.array(

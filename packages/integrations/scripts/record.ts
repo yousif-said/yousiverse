@@ -11,10 +11,11 @@ import {
   gameQuery,
   gamesBySlugQuery,
   searchQuery,
+  similarGamesQuery,
   slugQuery,
   steamGamesQuery,
 } from "../src/igdb/queries";
-import { SEARCH_FIELDS, WORK_FIELDS } from "../src/open-library/fields";
+import { AUTHOR_FIELDS, SEARCH_FIELDS, WORK_FIELDS } from "../src/open-library/fields";
 import { relatedTitlesUrl, type WikidataTitle } from "../src/wikidata";
 
 type Recording = { url: string; init?: RequestInit; headers?: Record<string, string> };
@@ -68,6 +69,8 @@ const openLibraryTitle = (title: string, author?: string) =>
     fields: SEARCH_FIELDS,
     limit: "5",
   });
+const openLibraryAuthor = (author: string) =>
+  openLibrary("/search.json", { author, fields: AUTHOR_FIELDS, sort: "editions", limit: "20" });
 const openLibraryWork = (workId: string) => [
   openLibrary(`/works/${workId}.json`),
   openLibrary("/search.json", { q: `key:/works/${workId}`, fields: WORK_FIELDS, limit: "1" }),
@@ -208,6 +211,9 @@ const recordings: Record<string, Recording[]> = {
     tmdb("/search/multi", { query: "zzzzqqqqxxxx", include_adult: "false" }),
     tmdb("/movie/603"),
     tmdb("/movie/999999999"),
+    tmdb("/movie/603/recommendations"),
+    tmdb("/tv/95396/recommendations"),
+    tmdb("/movie/999999999/recommendations"),
     // The Matrix Reloaded: the sequel Wikidata suggests for The Matrix.
     tmdb("/movie/604"),
     tmdb("/tv/95396"),
@@ -228,6 +234,8 @@ const recordings: Record<string, Recording[]> = {
     igdb(gameQuery("999999999")),
     // Hades, Portal 2, and an id no game has: the Steam library used in tests.
     igdb(steamGamesQuery(["1145360", "620", "999999999"]), "external_games"),
+    igdb(similarGamesQuery("113112")),
+    igdb(similarGamesQuery("999999999")),
     igdb(slugQuery("113112")),
     igdb(slugQuery("999999999")),
     igdb(gamesBySlugQuery(["hades-ii"])),
@@ -244,6 +252,8 @@ const recordings: Record<string, Recording[]> = {
     ...openLibraryWork("OL893415W"),
     ...openLibraryWork("OL893414W"),
     ...openLibraryWork("OL99999999999W"),
+    openLibraryAuthor("Susanna Clarke"),
+    openLibraryAuthor("Zzzzqqqqxxxx Nobody"),
     openLibraryIsbn("9781635575637"),
     openLibraryIsbn("9780000000002"),
     openLibraryTitle("Piranesi", "Susanna Clarke"),

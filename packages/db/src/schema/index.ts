@@ -9,4 +9,5 @@ export * from "./lists";
 export * from "./media";
 export * from "./profiles";
 export * from "./ratings";
+export * from "./recommendations";
 export * from "./reviews";

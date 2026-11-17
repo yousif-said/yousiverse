@@ -10,6 +10,7 @@ import { listsRouter } from "./routers/lists";
 import { mediaRouter } from "./routers/media";
 import { profilesRouter } from "./routers/profiles";
 import { ratingsRouter } from "./routers/ratings";
+import { recommendationsRouter } from "./routers/recommendations";
 import { reviewsRouter } from "./routers/reviews";
 import { subscriptionsRouter } from "./routers/subscriptions";
 import { router } from "./trpc";
@@ -27,6 +28,7 @@ export const appRouter = router({
   media: mediaRouter,
   profiles: profilesRouter,
   ratings: ratingsRouter,
+  recommendations: recommendationsRouter,
   reviews: reviewsRouter,
   subscriptions: subscriptionsRouter,
 });
