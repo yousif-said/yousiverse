@@ -1,7 +1,7 @@
 import type { CatalogBook, CatalogSearchResult } from "../catalog";
 import { ProviderError } from "../errors";
 import { requestJson } from "../http";
-import { SEARCH_FIELDS, WORK_FIELDS } from "./fields";
+import { AUTHOR_FIELDS, SEARCH_FIELDS, WORK_FIELDS } from "./fields";
 import { searchResponse, workResponse } from "./schemas";
 import { plainDescription, readableSubjects } from "./text";
 
@@ -44,6 +44,40 @@ export async function search(query: string): Promise<CatalogSearchResult[]> {
     releaseYear: doc.first_publish_year ?? null,
     posterUrl: coverUrl(doc.cover_i, "M"),
   }));
+}
+
+// A book with more credited authors than this is an anthology, not the author's own work.
+const MAX_AUTHORS_FOR_OWN_WORK = 3;
+
+/**
+ * An author's books that have an English edition, the most widely published first. Open Library
+ * has no "similar books", so this is what stands in for it. Works whose language is not recorded
+ * are left out: most are single foreign editions listed apart from the book they translate.
+ */
+export async function getByAuthor(author: string): Promise<CatalogSearchResult[]> {
+  const name = author.trim();
+  if (!name) return [];
+  const { docs } = await request("/search.json", searchResponse, {
+    author: name,
+    fields: AUTHOR_FIELDS,
+    sort: "editions",
+    limit: "20",
+  });
+
+  return docs
+    .filter(
+      (doc) =>
+        doc.language.includes("eng") &&
+        doc.author_name.length <= MAX_AUTHORS_FOR_OWN_WORK &&
+        doc.author_name.some((credited) => comparable(credited) === comparable(name)),
+    )
+    .map((doc) => ({
+      type: "book" as const,
+      providerId: workIdOf(doc.key),
+      title: doc.title,
+      releaseYear: doc.first_publish_year ?? null,
+      posterUrl: coverUrl(doc.cover_i, "M"),
+    }));
 }
 
 /** Lowercase letters and digits only, so punctuation and capitals do not stop titles matching. */

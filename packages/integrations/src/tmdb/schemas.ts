@@ -92,6 +92,7 @@ const tvSummary = z.object({
 });
 
 export const movieSearchResponse = z.object({ results: z.array(movieSummary) });
+export const tvListResponse = z.object({ results: z.array(tvSummary) });
 
 export const findResponse = z.object({
   movie_results: z.array(movieSummary).default([]),

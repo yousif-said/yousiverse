@@ -789,5 +789,109 @@
         "slug": "the-matrix-path-of-neo"
       }
     ]
+  },
+  "POST api.igdb.com/v4/games fields similar_games.name,similar_games.first_release_date,similar_games.cover.image_id; where id = 113112;": {
+    "status": 200,
+    "body": [
+      {
+        "id": 113112,
+        "similar_games": [
+          {
+            "id": 228525,
+            "cover": {
+              "id": 493341,
+              "image_id": "coaknx"
+            },
+            "first_release_date": 1758758400,
+            "name": "Hades II"
+          },
+          {
+            "id": 208417,
+            "cover": {
+              "id": 596315,
+              "image_id": "cocs4b"
+            },
+            "first_release_date": 1727308800,
+            "name": "Ravenswatch"
+          },
+          {
+            "id": 125373,
+            "cover": {
+              "id": 93139,
+              "image_id": "co1zv7"
+            },
+            "first_release_date": 1614038400,
+            "name": "Curse of the Dead Gods"
+          },
+          {
+            "id": 274368,
+            "cover": {
+              "id": 557724,
+              "image_id": "cobycc"
+            },
+            "first_release_date": 1779753600,
+            "name": "Realm of Ink"
+          },
+          {
+            "id": 136879,
+            "cover": {
+              "id": 395422,
+              "image_id": "co8h3y"
+            },
+            "first_release_date": 1724112000,
+            "name": "Black Myth: Wukong"
+          },
+          {
+            "id": 141490,
+            "cover": {
+              "id": 326366,
+              "image_id": "co6ztq"
+            },
+            "first_release_date": 1728950400,
+            "name": "Drova: Forsaken Kin"
+          },
+          {
+            "id": 145099,
+            "cover": {
+              "id": 194304,
+              "image_id": "co45xc"
+            },
+            "first_release_date": 1626739200,
+            "name": "Death's Door"
+          },
+          {
+            "id": 145089,
+            "cover": {
+              "id": 135251,
+              "image_id": "co2wcz"
+            },
+            "first_release_date": 1642464000,
+            "name": "Nobody Saves the World"
+          },
+          {
+            "id": 76253,
+            "cover": {
+              "id": 82048,
+              "image_id": "co1rb4"
+            },
+            "first_release_date": 1552003200,
+            "name": "Devil May Cry 5"
+          },
+          {
+            "id": 110474,
+            "cover": {
+              "id": 97335,
+              "image_id": "co233r"
+            },
+            "first_release_date": 1590451200,
+            "name": "Minecraft Dungeons"
+          }
+        ]
+      }
+    ]
+  },
+  "POST api.igdb.com/v4/games fields similar_games.name,similar_games.first_release_date,similar_games.cover.image_id; where id = 999999999;": {
+    "status": 200,
+    "body": []
   }
 }

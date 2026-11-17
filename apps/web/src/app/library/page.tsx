@@ -34,6 +34,9 @@ export default async function LibraryPage({ searchParams }: PageProps<"/library"
       <h1 className="font-display text-4xl font-extrabold tracking-tight">Library</h1>
       <p className="mt-3 text-muted-foreground">Everything you have added, by status.</p>
       <nav aria-label="More of yours" className="mt-3 flex flex-wrap gap-x-5 gap-y-1">
+        <Link href="/recommendations" className={textLink}>
+          For you
+        </Link>
         <Link href="/lists" className={textLink}>
           Your lists
         </Link>

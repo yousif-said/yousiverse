@@ -127,6 +127,13 @@
       "when": 1794872396143,
       "tag": "0017_tiny_wilson_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1794873421222,
+      "tag": "0018_low_vindicator",
+      "breakpoints": true
     }
   ]
 }

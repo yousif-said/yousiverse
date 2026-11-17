@@ -2,11 +2,19 @@ import type { CatalogGame, CatalogSearchResult } from "../catalog";
 import { env } from "../env";
 import { ProviderError } from "../errors";
 import { requestJson } from "../http";
-import { gameQuery, gamesBySlugQuery, searchQuery, slugQuery, steamGamesQuery } from "./queries";
+import {
+  gameQuery,
+  gamesBySlugQuery,
+  searchQuery,
+  similarGamesQuery,
+  slugQuery,
+  steamGamesQuery,
+} from "./queries";
 import {
   gamesBySlugResponse,
   gamesResponse,
   searchResponse,
+  similarGamesResponse,
   slugResponse,
   steamGamesResponse,
   tokenResponse,
@@ -107,6 +115,22 @@ export async function findBySteamIds(
     });
   }
   return found;
+}
+
+/** The games IGDB lists as similar to this one. Empty for a game IGDB does not know. */
+export async function getSimilar(providerId: string): Promise<CatalogSearchResult[]> {
+  const [game] = await queryGames(similarGamesQuery(providerId), similarGamesResponse);
+  return (game?.similar_games ?? []).flatMap((similar) =>
+    similar.name
+      ? {
+          type: "game" as const,
+          providerId: String(similar.id),
+          title: similar.name,
+          releaseYear: yearOf(isoDate(similar.first_release_date)),
+          posterUrl: imageUrl(similar.cover, "cover_big"),
+        }
+      : [],
+  );
 }
 
 /** The name IGDB uses for a game in its own addresses. Null when there is no such game. */

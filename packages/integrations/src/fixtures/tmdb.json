@@ -2787,5 +2787,946 @@
       "vote_average": 7.086,
       "vote_count": 12550
     }
+  },
+  "GET api.themoviedb.org/3/movie/603/recommendations?language=en-US": {
+    "status": 200,
+    "body": {
+      "page": 1,
+      "results": [
+        {
+          "adult": false,
+          "backdrop_path": "/ihOJcrorpDQtHTzIOrobbOhpJsj.jpg",
+          "genre_ids": [
+            28,
+            53,
+            878
+          ],
+          "id": 604,
+          "title": "The Matrix Reloaded",
+          "original_language": "en",
+          "original_title": "The Matrix Reloaded",
+          "overview": "The Resistance builds in numbers as humans are freed from the Matrix and brought to the city of Zion. Neo discovers his superpowers, including the ability to see the code inside the Matrix. With machine sentinels digging to Zion in 72 hours, Neo, Morpheus and Trinity must find the Keymaker to ultimately reach the Source.",
+          "popularity": 14.4781,
+          "poster_path": "/8xEVAe84zlL9rkfYT6dZXero4KK.jpg",
+          "release_date": "2003-05-15",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.086,
+          "vote_count": 12552,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/wvlIoof1FnKPLv9jAYanuP31V0C.jpg",
+          "genre_ids": [
+            878,
+            28,
+            53
+          ],
+          "id": 87101,
+          "title": "Terminator Genisys",
+          "original_language": "en",
+          "original_title": "Terminator Genisys",
+          "overview": "The year is 2029. John Connor, leader of the resistance continues the war against the machines. At the Los Angeles offensive, John's fears of the unknown future begin to emerge when TECOM spies reveal a new plot by SkyNet that will attack him from both fronts; past and future, and will ultimately change warfare forever.",
+          "popularity": 13.6508,
+          "poster_path": "/oZRVDpNtmHk8M1VYy1aeOWUXgbC.jpg",
+          "release_date": "2015-06-23",
+          "softcore": false,
+          "video": false,
+          "vote_average": 5.965,
+          "vote_count": 9305,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/2n7lYEeIbucsEQCswRcVB6ZYmMP.jpg",
+          "genre_ids": [
+            28,
+            12,
+            878
+          ],
+          "id": 777443,
+          "title": "The Electric State",
+          "original_language": "en",
+          "original_title": "The Electric State",
+          "overview": "An orphaned teen hits the road with a mysterious robot to find her long-lost brother, teaming up with a smuggler and his wisecracking sidekick.",
+          "popularity": 6.0074,
+          "poster_path": "/sI2NiMU8o65hmIMY0JI9CjJ0p7f.jpg",
+          "release_date": "2025-02-24",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.465,
+          "vote_count": 1886,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/kIBK5SKwgqIIuRKhhWrJn3XkbPq.jpg",
+          "genre_ids": [
+            28,
+            12,
+            878
+          ],
+          "id": 99861,
+          "title": "Avengers: Age of Ultron",
+          "original_language": "en",
+          "original_title": "Avengers: Age of Ultron",
+          "overview": "When Tony Stark tries to jumpstart a dormant peacekeeping program, things go awry and Earth’s Mightiest Heroes are put to the ultimate test as the fate of the planet hangs in the balance. As the villainous Ultron emerges, it is up to The Avengers to stop him from enacting his terrible plans, and soon uneasy alliances and unexpected action pave the way for an epic and unique global adventure.",
+          "popularity": 34.7114,
+          "poster_path": "/4ssDuvEDkSArWEdyBl2X5EHvYKU.jpg",
+          "release_date": "2015-04-22",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.278,
+          "vote_count": 25364,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/u6QKT8EqpPHoPUng7aE90mWXigX.jpg",
+          "genre_ids": [
+            28,
+            878,
+            53
+          ],
+          "id": 274855,
+          "title": "Geostorm",
+          "original_language": "en",
+          "original_title": "Geostorm",
+          "overview": "After an unprecedented series of natural disasters threatened the planet, the world's leaders came together to create an intricate network of satellites to control the global climate and keep everyone safe. But now, something has gone wrong: the system built to protect Earth is attacking it, and it becomes a race against the clock to uncover the real threat before a worldwide geostorm wipes out everything and everyone along with it.",
+          "popularity": 5.7915,
+          "poster_path": "/nrsx0jEaBgXq4PWo7SooSnYJTv.jpg",
+          "release_date": "2017-10-12",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.128,
+          "vote_count": 5426,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/kjQBrc00fB2RjHZB3PGR4w9ibpz.jpg",
+          "genre_ids": [
+            878,
+            28,
+            12
+          ],
+          "id": 670292,
+          "title": "The Creator",
+          "original_language": "en",
+          "original_title": "The Creator",
+          "overview": "Amid a future war between the human race and the forces of artificial intelligence, a hardened ex-special forces agent grieving the disappearance of his wife, is recruited to hunt down and kill the Creator, the elusive architect of advanced AI who has developed a mysterious weapon with the power to end the war—and mankind itself.",
+          "popularity": 8.2481,
+          "poster_path": "/3dSivDtOuyxLDxPH4v2tcNG1fP7.jpg",
+          "release_date": "2023-09-27",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.016,
+          "vote_count": 4296,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/qtamfYGFfDLfGRcucx1zNwohRts.jpg",
+          "genre_ids": [
+            18,
+            878,
+            53
+          ],
+          "id": 860,
+          "title": "WarGames",
+          "original_language": "en",
+          "original_title": "WarGames",
+          "overview": "High school student David Lightman has a talent for hacking. But while trying to hack into a computer system to play unreleased video games, he unwittingly taps into the Department of Defense's war computer and initiates a confrontation of global proportions. Together with his friend and a wizardly computer genius, David must race against time to outwit his opponent and prevent a nuclear Armageddon.",
+          "popularity": 6.7574,
+          "poster_path": "/zZ1rN4LoPxKNfAp67Xl300WxVeD.jpg",
+          "release_date": "1983-06-03",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.067,
+          "vote_count": 2304,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/kVChi7qHX9UMcpAh7J6fGBCCH2c.jpg",
+          "genre_ids": [
+            53,
+            878
+          ],
+          "id": 262543,
+          "title": "Automata",
+          "original_language": "en",
+          "original_title": "Autómata",
+          "overview": "Jacq Vaucan, an insurance agent of ROC robotics corporation, routinely investigates the case of manipulating a robot. What he discovers will have profound consequences for the future of humanity.",
+          "popularity": 3.5502,
+          "poster_path": "/h7SEtIWOfLsuCWhQgflev7ppRPq.jpg",
+          "release_date": "2014-10-09",
+          "softcore": false,
+          "video": false,
+          "vote_average": 5.908,
+          "vote_count": 1896,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/qVgZu5BTx6pu4owCvVOm4zjTfOi.jpg",
+          "genre_ids": [
+            878,
+            12
+          ],
+          "id": 438631,
+          "title": "Dune",
+          "original_language": "en",
+          "original_title": "Dune",
+          "overview": "Paul Atreides, a brilliant and gifted young man born into a great destiny beyond his understanding, must travel to the most dangerous planet in the universe to ensure the future of his family and his people. As malevolent forces explode into conflict over the planet's exclusive supply of the most precious resource in existence - a commodity capable of unlocking humanity's greatest potential - only those who can conquer their fear will survive.",
+          "popularity": 41.6155,
+          "poster_path": "/v1tRXZ4JtD2Iv6fjkPvT4GiwslV.jpg",
+          "release_date": "2021-09-15",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.786,
+          "vote_count": 15981,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/c6H7Z4u73ir3cIoCteuhJh7UCAR.jpg",
+          "genre_ids": [
+            878,
+            28,
+            12
+          ],
+          "id": 524434,
+          "title": "Eternals",
+          "original_language": "en",
+          "original_title": "Eternals",
+          "overview": "The Eternals are a team of ancient aliens who have been living on Earth in secret for thousands of years. When an unexpected tragedy forces them out of the shadows, they are forced to reunite against mankind’s most ancient enemy, the Deviants.",
+          "popularity": 13.2243,
+          "poster_path": "/lFByFSLV5WDJEv3KabbdAF959F2.jpg",
+          "release_date": "2021-11-03",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.737,
+          "vote_count": 9577,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/uUa6jgSr5BQpcBhhaz1PV1JhSa4.jpg",
+          "genre_ids": [
+            12,
+            28,
+            878
+          ],
+          "id": 20526,
+          "title": "TRON: Legacy",
+          "original_language": "en",
+          "original_title": "TRON: Legacy",
+          "overview": "Sam Flynn, the tech-savvy and daring son of Kevin Flynn, investigates his father's disappearance and is pulled into The Grid. With the help of a mysterious program named Quorra, Sam quests to stop evil dictator Clu from crossing into the real world.",
+          "popularity": 9.0705,
+          "poster_path": "/xcO8Uun0mfmE3N9CaiCy0tvjpiu.jpg",
+          "release_date": "2010-12-14",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.552,
+          "vote_count": 8291,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/bgkFOoXEQMRjKkCvgoj7smdGbuh.jpg",
+          "genre_ids": [
+            28,
+            12,
+            878
+          ],
+          "id": 157350,
+          "title": "Divergent",
+          "original_language": "en",
+          "original_title": "Divergent",
+          "overview": "In a world divided into factions based on personality types, Tris learns that she's been classified as Divergent and won't fit in. When she discovers a plot to destroy Divergents, Tris and the mysterious Four must find out what makes Divergents dangerous before it's too late.",
+          "popularity": 11.0639,
+          "poster_path": "/aNh4Q3iuPKDMPi2SL7GgOpiLukX.jpg",
+          "release_date": "2014-03-14",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.898,
+          "vote_count": 13882,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/pUNfHmVqfwRdILhCkU8TdysVOXo.jpg",
+          "genre_ids": [
+            878,
+            12,
+            28
+          ],
+          "id": 533533,
+          "title": "TRON: Ares",
+          "original_language": "en",
+          "original_title": "TRON: Ares",
+          "overview": "A highly sophisticated Program called Ares is sent from the digital world into the real world on a dangerous mission, marking humankind's first encounter with A.I. beings.",
+          "popularity": 10.1438,
+          "poster_path": "/chpWmskl3aKm1aTZqUHRCtviwPy.jpg",
+          "release_date": "2025-10-08",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.427,
+          "vote_count": 1731,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/nJ0jz1J3zNja31UEMeklhgFeMw5.jpg",
+          "genre_ids": [
+            53,
+            878,
+            9648
+          ],
+          "id": 1090,
+          "title": "The Thirteenth Floor",
+          "original_language": "en",
+          "original_title": "The Thirteenth Floor",
+          "overview": "In Los Angeles, a wealthy man, known as Mr. Fuller, discovers a shocking secret about the world he lives in. Fearing for his life, he leaves a desperate message for a friend of his in the most unexpected place.",
+          "popularity": 4.3287,
+          "poster_path": "/7oaie3ZBc9UuWZLF24crro1pone.jpg",
+          "release_date": "1999-04-16",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.086,
+          "vote_count": 1662,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/rdlXnumaarKFHQ4rB8YBWINEeuE.jpg",
+          "genre_ids": [
+            28,
+            878,
+            53
+          ],
+          "id": 9620,
+          "title": "Paycheck",
+          "original_language": "en",
+          "original_title": "Paycheck",
+          "overview": "Michael Jennings is a genius who's hired – and paid handsomely – by high-tech firms to work on highly sensitive projects, after which his short-term memory is erased so he's incapable of breaching security. But at the end of a three-year job, he's told he isn't getting a paycheck and instead receives a mysterious envelope. In it are clues he must piece together to find out why he wasn't paid – and why he's now in hot water.",
+          "popularity": 7.3594,
+          "poster_path": "/h0BWaPnWYXwbCXF69DxS0YWcVy2.jpg",
+          "release_date": "2003-12-25",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.233,
+          "vote_count": 2178,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/i0eOILDW8HipIkOUSKhB1dvZzNJ.jpg",
+          "genre_ids": [
+            878,
+            12,
+            28
+          ],
+          "id": 2135,
+          "title": "The Time Machine",
+          "original_language": "en",
+          "original_title": "The Time Machine",
+          "overview": "Hoping to alter the events of the past, a 19th-century inventor instead travels 800,000 years into the future, where he finds mankind divided into two warring races.",
+          "popularity": 5.0134,
+          "poster_path": "/iYayQahkghlbAsfOQX8b5eBzGVy.jpg",
+          "release_date": "2002-03-04",
+          "softcore": false,
+          "video": false,
+          "vote_average": 6.375,
+          "vote_count": 2725,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/pVVobDO8cezhVPvwD6EBUN0g3mt.jpg",
+          "genre_ids": [
+            14,
+            28,
+            878
+          ],
+          "id": 353491,
+          "title": "The Dark Tower",
+          "original_language": "en",
+          "original_title": "The Dark Tower",
+          "overview": "A boy haunted by visions of a parallel world aids its disillusioned guardian in preventing the destruction of the nexus of universes known as the Dark Tower.",
+          "popularity": 5.8793,
+          "poster_path": "/i9GUSgddIqrroubiLsvvMRYyRy0.jpg",
+          "release_date": "2017-08-03",
+          "softcore": false,
+          "video": false,
+          "vote_average": 5.818,
+          "vote_count": 5759,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/okRY6YHbakM9cQz08EfcaLfzDoX.jpg",
+          "genre_ids": [
+            16,
+            878,
+            14
+          ],
+          "id": 30061,
+          "title": "Justice League: Crisis on Two Earths",
+          "original_language": "en",
+          "original_title": "Justice League: Crisis on Two Earths",
+          "overview": "A heroic version of Lex Luthor from an alternate universe appears to recruit the Justice League to help save his Earth from the Crime Syndicate, an evil version of the League. What ensues is the ultimate battle of good versus evil in a war that threatens both planets and, through a devious plan launched by Batman's counterpart Owlman, puts the balance of all existence in peril.",
+          "popularity": 2.3884,
+          "poster_path": "/tN2lodc5g7Fkkus6I6Ch2tNTgb5.jpg",
+          "release_date": "2010-02-23",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.288,
+          "vote_count": 809,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/eVYChqJavS1DCXFeJE2lzVUMLKp.jpg",
+          "genre_ids": [
+            878,
+            12,
+            28,
+            53
+          ],
+          "id": 70160,
+          "title": "The Hunger Games",
+          "original_language": "en",
+          "original_title": "The Hunger Games",
+          "overview": "In a dystopian society where the Capitol forces each district to send two young tributes to fight to the death in a televised spectacle, a girl volunteers to take her sister’s place, setting the stage for a struggle of survival and defiance.",
+          "popularity": 29.5565,
+          "poster_path": "/apa5G43Hha7kH7wJG0gkkHT7FA9.jpg",
+          "release_date": "2012-03-12",
+          "softcore": false,
+          "video": false,
+          "vote_average": 7.227,
+          "vote_count": 24033,
+          "media_type": "movie"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/2EUOCvS8VcvP45JuSfdY6zFOJ9J.jpg",
+          "genre_ids": [
+            28,
+            12,
+            878
+          ],
+          "id": 15785,
+          "title": "Cherry 2000",
+          "original_language": "en",
+          "original_title": "Cherry 2000",
+          "overview": "When successful businessman Sam Treadwell finds that his android wife, Cherry model 2000 has blown a fuse, he hires sexy renegade tracker E. Johnson to find her exact duplicate. But as their journey to replace his perfect mate leads them into the treacherous and lawless region of 'The Zone', Treadwell learns the hard way that the perfect woman is made not of computer chips and diodes.",
+          "popularity": 2.1458,
+          "poster_path": "/t3uds00MHLsibhKLCL0BbCEGxXb.jpg",
+          "release_date": "1987-11-10",
+          "softcore": false,
+          "video": false,
+          "vote_average": 5.947,
+          "vote_count": 294,
+          "media_type": "movie"
+        }
+      ],
+      "total_pages": 28,
+      "total_results": 554
+    }
+  },
+  "GET api.themoviedb.org/3/tv/95396/recommendations?language=en-US": {
+    "status": 200,
+    "body": {
+      "page": 1,
+      "results": [
+        {
+          "adult": false,
+          "backdrop_path": "/6X36iMqzu18dbsmXGGBxj7UU8wW.jpg",
+          "genre_ids": [
+            18,
+            9648,
+            10765
+          ],
+          "id": 91962,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Emergence",
+          "overview": "A police chief takes in a young child she finds near the site of a mysterious accident who has no memory of what has happened. The investigation draws her into a conspiracy larger than she ever imagined, and the child’s identity is at the center of it all.",
+          "popularity": 5.7575,
+          "poster_path": "/xqquBr7LURe9CWTbCkMnvXtsilu.jpg",
+          "first_air_date": "2019-09-24",
+          "softcore": false,
+          "name": "Emergence",
+          "vote_average": 6.939,
+          "vote_count": 206,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/wWleS7DxsoGCkOPisNf8OZ2udiD.jpg",
+          "genre_ids": [
+            9648,
+            10765
+          ],
+          "id": 253372,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "The Institute",
+          "overview": "When 14 year old genius Luke Ellis is kidnapped, he awakens at The Institute, a facility full of children who all got there the same way he did, and who are all possessed of unusual abilities. In a nearby town, haunted former police officer Tim Jamieson has come looking to start a new life, but the peace and quiet won’t last, as his story and Luke’s are destined to collide.",
+          "popularity": 40.1784,
+          "poster_path": "/4MwXkOAMd9ObxdacasPFM32n9dZ.jpg",
+          "first_air_date": "2025-07-13",
+          "softcore": false,
+          "name": "The Institute",
+          "vote_average": 7.482,
+          "vote_count": 225,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/diYVGzRSAJpOCE5Avd5ZKBFUepi.jpg",
+          "genre_ids": [
+            9648,
+            10765,
+            18
+          ],
+          "id": 70485,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Mr. Mercedes",
+          "overview": "A demented serial killer taunts a retired police detective with a series of lurid letters and emails, forcing the ex-cop to undertake a private, and potentially felonious, crusade to bring the killer to justice before he can strike again.",
+          "popularity": 15.1601,
+          "poster_path": "/zZm3LidCf6Edv6yX3WMKo6KwICg.jpg",
+          "first_air_date": "2017-08-09",
+          "softcore": false,
+          "name": "Mr. Mercedes",
+          "vote_average": 7.171,
+          "vote_count": 436,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/5bQ4eGwQy0jTeMzk7XE1ES0xSb6.jpg",
+          "genre_ids": [
+            80,
+            18,
+            9648
+          ],
+          "id": 93166,
+          "origin_country": [
+            "GB"
+          ],
+          "original_language": "en",
+          "original_name": "The Capture",
+          "overview": "When soldier Shaun Emery's conviction for a murder in Afghanistan is overturned due to flawed video evidence, he returns to life as a free man with his young daughter. But when damning CCTV footage from a night out in London comes to light, Shaun's life takes a shocking turn and he must soon fight for his freedom once again.",
+          "popularity": 15.2024,
+          "poster_path": "/6keUrgntgKt299a39UJCDYldb8b.jpg",
+          "first_air_date": "2019-09-03",
+          "softcore": false,
+          "name": "The Capture",
+          "vote_average": 7.609,
+          "vote_count": 366,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/lbltsq8oLaDWNcZ8d2yItnXaKEd.jpg",
+          "genre_ids": [
+            18,
+            9648
+          ],
+          "id": 156819,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Rabbit Hole",
+          "overview": "Nothing is what it seems when John Weir, a master of deception in the world of corporate espionage, is framed for murder by powerful forces with the ability to influence and control populations.",
+          "popularity": 7.7599,
+          "poster_path": "/zb5MArsrMxK4mSSLzUmbfcXAc60.jpg",
+          "first_air_date": "2023-03-26",
+          "softcore": false,
+          "name": "Rabbit Hole",
+          "vote_average": 7.1,
+          "vote_count": 264,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/5XGftDCYAaAeZJtiacNF5ORV4VD.jpg",
+          "genre_ids": [
+            10759,
+            18,
+            9648,
+            10768
+          ],
+          "id": 34639,
+          "origin_country": [
+            "FR",
+            "CA"
+          ],
+          "original_language": "en",
+          "original_name": "XIII: The Series",
+          "overview": "After a plot to kill the president of the USA an agent with lost memories tries to recover his life and memories. Others use him to cover up some dirty business involving high ranking officials from the CIA and the White House.",
+          "popularity": 6.1781,
+          "poster_path": "/jGr9iZFXCl8XOnHOAj17AYz85fr.jpg",
+          "first_air_date": "2011-04-18",
+          "softcore": false,
+          "name": "XIII: The Series",
+          "vote_average": 6.259,
+          "vote_count": 58,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/lnVWmFvLv2pTZGsuAJytiqKu541.jpg",
+          "genre_ids": [
+            18,
+            9648
+          ],
+          "id": 253376,
+          "origin_country": [
+            "US",
+            "GB"
+          ],
+          "original_language": "en",
+          "original_name": "The Girlfriend",
+          "overview": "Laura has it all: a glittering career, a loving husband, and her precious son, Daniel. But her perfect life unravels when Daniel brings home Cherry, a girlfriend who changes everything. After a tense introduction, Laura becomes convinced Cherry is hiding something. Is she a manipulative social climber, or is Laura just paranoid? The truth is a matter of perspective.",
+          "popularity": 789.1002,
+          "poster_path": "/ktrp3tdZ5IQpFux4nLy8z70bt3n.jpg",
+          "first_air_date": "2025-09-10",
+          "softcore": false,
+          "name": "The Girlfriend",
+          "vote_average": 7.147,
+          "vote_count": 170,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/fRwC1fjN1rp1Cw5iE4ObPEpoZWh.jpg",
+          "genre_ids": [
+            18,
+            10765
+          ],
+          "id": 125116,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Fantasy Island",
+          "overview": "This contemporary version of the classic drama series delves into the “what if” questions that keep us awake at night. Each episode tells emotional, provocative stories about people who walk in with a desire, but end up reborn to themselves through the magical realism of Fantasy Island.",
+          "popularity": 9.648,
+          "poster_path": "/bl6qV6nO0Cd4N9boVJo08pJUoB2.jpg",
+          "first_air_date": "2021-08-10",
+          "softcore": false,
+          "name": "Fantasy Island",
+          "vote_average": 5.9,
+          "vote_count": 88,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/hhtZbACq4IgWWdVZ8B9p2WnQTjS.jpg",
+          "genre_ids": [
+            9648,
+            10765,
+            18
+          ],
+          "id": 72752,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Ghost Wars",
+          "overview": "Set in a remote Alaskan town that has been overrun by paranormal forces, the series focuses on local outcast Roman Mercer who must overcome the town’s prejudices and his own personal demons if he’s to harness his repressed psychic powers and save everyone from the mass haunting that’s threatening to destroy them all.",
+          "popularity": 4.8283,
+          "poster_path": "/hdOWk4uAKXXPBdyLd54ejmbzpVP.jpg",
+          "first_air_date": "2017-10-05",
+          "softcore": false,
+          "name": "Ghost Wars",
+          "vote_average": 6.025,
+          "vote_count": 122,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/x0lANLygpQ4imAkSEihmcAkJ3qK.jpg",
+          "genre_ids": [
+            18,
+            10765
+          ],
+          "id": 71693,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Blood Drive",
+          "overview": "Set in a near-dystopian future, a former cop is forced to take part in a death race where the cars run on human blood. You lose a leg and you lose your head.",
+          "popularity": 4.5132,
+          "poster_path": "/qB9PBQMyKrp8diKGxVpfayKZbgd.jpg",
+          "first_air_date": "2017-06-14",
+          "softcore": false,
+          "name": "Blood Drive",
+          "vote_average": 6.359,
+          "vote_count": 181,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/lFwLOskebzqOI8qLNVuco5pVCVX.jpg",
+          "genre_ids": [
+            9648,
+            10765
+          ],
+          "id": 62196,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Stitchers",
+          "overview": "A young woman is recruited into a secret government agency to be “stitched” into the minds of the recently deceased, using their memories to investigate murders.",
+          "popularity": 8.8351,
+          "poster_path": "/wriOiQ3rdPhoMe1NofcLJRx9fns.jpg",
+          "first_air_date": "2015-06-02",
+          "softcore": false,
+          "name": "Stitchers",
+          "vote_average": 6.8,
+          "vote_count": 240,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/mGbJ2qmfmlWU9vSTbOExJC14WRW.jpg",
+          "genre_ids": [
+            9648,
+            10765,
+            18
+          ],
+          "id": 97173,
+          "origin_country": [
+            "GB"
+          ],
+          "original_language": "en",
+          "original_name": "Behind Her Eyes",
+          "overview": "A single mother enters a world of twisted mind games when she begins an affair with her psychiatrist boss while secretly befriending his mysterious wife.",
+          "popularity": 5.6663,
+          "poster_path": "/sfd90NIf778KoBFmpdBTow4xTm7.jpg",
+          "first_air_date": "2021-02-17",
+          "softcore": false,
+          "name": "Behind Her Eyes",
+          "vote_average": 7.352,
+          "vote_count": 779,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/iw1knpC8Jg5davMn2MPxNVxBF8N.jpg",
+          "genre_ids": [
+            18,
+            10765
+          ],
+          "id": 323411,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "The Vampire Lestat",
+          "overview": "The Vampire Lestat goes on tour while being haunted by \"muses\" from his past. As the band's popularity grows, so does Lestat's influence over vampires & humans alike, leaving others to contend with Lestat's power in the face of the Great Conversion.",
+          "popularity": 7.5883,
+          "poster_path": "/gZcmNUcDDR1nR7lmroOJTCrhrhK.jpg",
+          "first_air_date": "2026-06-07",
+          "softcore": false,
+          "name": "The Vampire Lestat",
+          "vote_average": 6.722,
+          "vote_count": 72,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/7yKtaRij2giAj0s09F6gmB8XIje.jpg",
+          "genre_ids": [
+            18,
+            9648,
+            10765
+          ],
+          "id": 63639,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "The Expanse",
+          "overview": "A thriller set two hundred years in the future following the case of a missing young woman who brings a hardened detective and a rogue ship's captain together in a race across the solar system to expose the greatest conspiracy in human history.",
+          "popularity": 54.2591,
+          "poster_path": "/5vQlVWkIMPhZ88OWchJsgwGEK9.jpg",
+          "first_air_date": "2015-12-14",
+          "softcore": false,
+          "name": "The Expanse",
+          "vote_average": 8.072,
+          "vote_count": 3012,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/qhaPuyznsxb13wSQbpqSDqtNuX8.jpg",
+          "genre_ids": [
+            10765,
+            18,
+            10759
+          ],
+          "id": 128839,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "La Brea",
+          "overview": "An epic adventure begins when a massive sinkhole opens in the middle of Los Angeles, pulling hundreds of people and buildings into its depths. Those who fell in find themselves in a mysterious and dangerous primeval land, where they have no choice but to band together to survive. Meanwhile, the rest of the world desperately seeks to understand what happened. In the search for answers, one family torn apart by this disaster will have to unlock the secrets of this inexplicable event to find a way back to each other.",
+          "popularity": 18.7293,
+          "poster_path": "/wEo5pzSZ3MF4EzNvY2R1OZNX266.jpg",
+          "first_air_date": "2021-09-28",
+          "softcore": false,
+          "name": "La Brea",
+          "vote_average": 7.412,
+          "vote_count": 1638,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/gklrevVndG98GHGDwfm8y8kxESo.jpg",
+          "genre_ids": [
+            10759,
+            18,
+            9648
+          ],
+          "id": 129552,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "The Night Agent",
+          "overview": "Brought together by a midnight phone call, an FBI agent and a cybersecurity expert must unravel an ever-growing web of political conspiracies.",
+          "popularity": 32.9606,
+          "poster_path": "/4c5yUNcaff4W4aPrkXE6zr7papX.jpg",
+          "first_air_date": "2023-03-23",
+          "softcore": false,
+          "name": "The Night Agent",
+          "vote_average": 7.683,
+          "vote_count": 1323,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/16aXE8Zg30qQo4qfio6qbeUoR8v.jpg",
+          "genre_ids": [
+            18,
+            9648
+          ],
+          "id": 130464,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Tell Me Lies",
+          "overview": "When Lucy Albright and Stephen DeMarco meet at college, they are at that formative age when seemingly mundane choices lead the way to irrevocable consequences. They quickly fall into an addictive entanglement that will permanently alter not only their lives, but the lives of everyone around them.",
+          "popularity": 13.3129,
+          "poster_path": "/tc5c5X1ZbJx5guaQUo1Xqt24S8z.jpg",
+          "first_air_date": "2022-09-07",
+          "softcore": false,
+          "name": "Tell Me Lies",
+          "vote_average": 7.502,
+          "vote_count": 256,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/wl0DQUT90o3e9gXHEeB5iyK05jb.jpg",
+          "genre_ids": [
+            9648,
+            18,
+            10765
+          ],
+          "id": 95839,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Lisey's Story",
+          "overview": "This terrifying thriller follows widow Lisey Landon as a series of disturbing events revives memories of her marriage to author Scott Landon and the darkness that plagued him.",
+          "popularity": 6.3533,
+          "poster_path": "/nBh4EuCmk3ZWfs16KKuhYHUqWdM.jpg",
+          "first_air_date": "2021-06-04",
+          "softcore": false,
+          "name": "Lisey's Story",
+          "vote_average": 6,
+          "vote_count": 140,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/bFyVNXkUPFgyb2G5ErjDTF4brKE.jpg",
+          "genre_ids": [
+            18,
+            10765
+          ],
+          "id": 48860,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "The Tomorrow People",
+          "overview": "The story of several young people from around the world who represent the next stage in human evolution, possessing special powers, including the ability to teleport and communicate with each other telepathically. Together they work to defeat the forces of evil.",
+          "popularity": 9.7118,
+          "poster_path": "/3EavFY6TuhDm4ERbDGrZ1oEqB57.jpg",
+          "first_air_date": "2013-10-09",
+          "softcore": false,
+          "name": "The Tomorrow People",
+          "vote_average": 6.907,
+          "vote_count": 386,
+          "media_type": "tv"
+        },
+        {
+          "adult": false,
+          "backdrop_path": "/rbDFI2I1nMyJtX4Y3jJ4H1QRdRX.jpg",
+          "genre_ids": [
+            18,
+            80,
+            10765
+          ],
+          "id": 60708,
+          "origin_country": [
+            "US"
+          ],
+          "original_language": "en",
+          "original_name": "Gotham",
+          "overview": "Everyone knows the name Commissioner Gordon. He is one of the crime world's greatest foes, a man whose reputation is synonymous with law and order. But what is known of Gordon's story and his rise from rookie detective to Police Commissioner? What did it take to navigate the multiple layers of corruption that secretly ruled Gotham City, the spawning ground of the world's most iconic villains? And what circumstances created them – the larger-than-life personas who would become Catwoman, The Penguin, The Riddler, Two-Face and The Joker?",
+          "popularity": 60.6692,
+          "poster_path": "/zLpSNnVoL2bjQdc1PcaHUPUzttP.jpg",
+          "first_air_date": "2014-09-22",
+          "softcore": false,
+          "name": "Gotham",
+          "vote_average": 7.6,
+          "vote_count": 3843,
+          "media_type": "tv"
+        }
+      ],
+      "total_pages": 28,
+      "total_results": 553
+    }
+  },
+  "GET api.themoviedb.org/3/movie/999999999/recommendations?language=en-US": {
+    "status": 404,
+    "body": {
+      "success": false,
+      "status_code": 34,
+      "status_message": "The resource you requested could not be found."
+    }
   }
 }
