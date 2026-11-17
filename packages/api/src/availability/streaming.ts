@@ -5,7 +5,7 @@ import { getStreamingOffers, type StreamingOffer } from "@yousiverse/integration
 import { eq, inArray } from "drizzle-orm";
 import { ensureChecked, recordCheck } from "./check";
 
-type StreamableTitle = { id: string; type: "movie" | "tv"; providerId: string };
+export type StreamableTitle = { id: string; type: "movie" | "tv"; providerId: string };
 
 async function saveOffers(db: Database, mediaId: string, offers: StreamingOffer[]) {
   await db.transaction(async (tx) => {
@@ -46,10 +46,13 @@ async function fetchOffers(title: StreamableTitle): Promise<StreamingOffer[]> {
   }
 }
 
-/** Makes sure a movie's or show's stored offers are at most a week old. */
-export function ensureStreamingOffers(db: Database, title: StreamableTitle) {
-  return ensureChecked(db, title.id, async () =>
-    saveOffers(db, title.id, await fetchOffers(title)),
+/** Makes sure a movie's or show's stored offers are at most a week old, or `maxAgeMs` old. */
+export function ensureStreamingOffers(db: Database, title: StreamableTitle, maxAgeMs?: number) {
+  return ensureChecked(
+    db,
+    title.id,
+    async () => saveOffers(db, title.id, await fetchOffers(title)),
+    maxAgeMs,
   );
 }
 

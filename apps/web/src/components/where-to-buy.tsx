@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { formatDay, formatPrice } from "@/lib/format";
 import { getQueryClient, trpc } from "@/trpc/server";
+import { TitleAlerts } from "./title-alerts";
 
 type Props = { mediaId: string };
 
@@ -72,6 +73,7 @@ export function WhereToBuy(props: Props) {
       </h2>
       <Suspense fallback={<p className="mt-4 text-muted-foreground">Checking prices…</p>}>
         <Deals {...props} />
+        <TitleAlerts mediaId={props.mediaId} />
       </Suspense>
     </section>
   );

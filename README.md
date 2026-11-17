@@ -44,5 +44,12 @@ Environment variables on Vercel:
 - `BETTER_AUTH_URL`: production only, set to the public origin. Previews fall back to their own deploy URL.
 - `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: optional.
 - `ADMIN_EMAILS`: optional. The sign-in emails, separated by commas, of the people who review franchise links at `/admin/links`.
+- `INNGEST_SIGNING_KEY`, `INNGEST_EVENT_KEY`: set by Inngest's Vercel integration. Without the signing key the job address `/api/inngest` refuses every request, so no background job runs.
 
 Sign-in links are emailed through Resend in production and previews. Everywhere else they are printed in the server terminal and no email is sent.
+
+## Background jobs
+
+Jobs run on [Inngest](https://www.inngest.com), which calls the app at `/api/inngest`. The one job so far checks alerts every morning at 9, US Eastern time. In production Inngest finds the app through its Vercel integration.
+
+To run a job locally, start `bun dev`, start the Inngest dev server (`inngest-cli dev -u http://localhost:3000/api/inngest`, see Inngest's docs for installing it), and invoke the function from its page at http://localhost:8288. Emails a job would send are printed in the `bun dev` terminal instead.
