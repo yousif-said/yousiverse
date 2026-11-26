@@ -4,14 +4,25 @@ import type { SignInMethods } from "@yousiverse/auth";
 import { Button } from "@yousiverse/ui/components/button";
 import { Input } from "@yousiverse/ui/components/input";
 import { Label } from "@yousiverse/ui/components/label";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
 type Props = { methods: SignInMethods; redirectTo: string };
 
+/** How long "Send again" stays off after a link goes out, so one slow email is not asked for twice. */
+const SEND_AGAIN_WAIT_SECONDS = 30;
+
 export function SignInForm({ methods, redirectTo }: Props) {
-  const [emailStatus, setEmailStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [sentTo, setSentTo] = useState<string>();
+  const [isSending, setIsSending] = useState(false);
+  const [secondsUntilSendAgain, setSecondsUntilSendAgain] = useState(0);
   const [errorMessage, setErrorMessage] = useState<string>();
+
+  useEffect(() => {
+    if (secondsUntilSendAgain === 0) return;
+    const timer = setTimeout(() => setSecondsUntilSendAgain((seconds) => seconds - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [secondsUntilSendAgain]);
 
   async function signInWithGoogle() {
     setErrorMessage(undefined);
@@ -22,26 +33,76 @@ export function SignInForm({ methods, redirectTo }: Props) {
     if (error) setErrorMessage(error.message ?? "Could not reach Google. Try again.");
   }
 
-  async function sendSignInLink(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const email = String(new FormData(event.currentTarget).get("email"));
+  async function sendSignInLink(email: string) {
     setErrorMessage(undefined);
-    setEmailStatus("sending");
+    setIsSending(true);
     const { error } = await authClient.signIn.magicLink({ email, callbackURL: redirectTo });
+    setIsSending(false);
     if (error) {
       setErrorMessage(error.message ?? "Could not send the sign-in link. Try again.");
-      setEmailStatus("idle");
       return;
     }
-    setEmailStatus("sent");
+    setSentTo(email);
+    setSecondsUntilSendAgain(SEND_AGAIN_WAIT_SECONDS);
   }
 
-  const beforeNote = methods.linkIsPrinted
-    ? "Development only: the link prints in the terminal instead of being emailed."
-    : "We will email you a link that signs you in. No password needed, and it works for new accounts too.";
-  const sentNote = methods.linkIsPrinted
-    ? "Sign-in link sent. Open it from the terminal running the dev server."
-    : `Sign-in link sent. Check your inbox; the link works for ${methods.linkMinutes} minutes.`;
+  function submitEmail(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void sendSignInLink(String(new FormData(event.currentTarget).get("email")));
+  }
+
+  function changeEmail() {
+    setErrorMessage(undefined);
+    setSentTo(undefined);
+  }
+
+  const error = errorMessage && (
+    <p className="text-sm text-destructive" role="alert">
+      {errorMessage}
+    </p>
+  );
+
+  if (sentTo) {
+    return (
+      <div className="mt-8 space-y-6">
+        <div className="space-y-2" role="status">
+          <h2 className="text-lg font-semibold">Check your email</h2>
+          <p className="text-muted-foreground">
+            We sent a sign-in link to{" "}
+            <span className="break-words font-medium text-foreground">{sentTo}</span>. It works
+            once, for {methods.linkMinutes} minutes.
+          </p>
+          {methods.linkIsPrinted && (
+            <p className="text-sm text-muted-foreground">
+              Development only: nothing was emailed. Open the link from the terminal running the dev
+              server.
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full"
+            disabled={isSending || secondsUntilSendAgain > 0}
+            onClick={() => sendSignInLink(sentTo)}
+          >
+            {isSending
+              ? "Sending…"
+              : secondsUntilSendAgain > 0
+                ? `Send again in ${secondsUntilSendAgain}s`
+                : "Send again"}
+          </Button>
+          <Button variant="ghost" size="lg" className="w-full" onClick={changeEmail}>
+            Use a different email
+          </Button>
+        </div>
+
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="mt-8 space-y-6">
@@ -60,7 +121,7 @@ export function SignInForm({ methods, redirectTo }: Props) {
         </p>
       )}
 
-      <form onSubmit={sendSignInLink} className="space-y-3">
+      <form onSubmit={submitEmail} className="space-y-3">
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input
@@ -73,19 +134,17 @@ export function SignInForm({ methods, redirectTo }: Props) {
             className="h-10 bg-card"
           />
         </div>
-        <Button type="submit" size="lg" className="w-full" disabled={emailStatus === "sending"}>
-          Send sign-in link
+        <Button type="submit" size="lg" className="w-full" disabled={isSending}>
+          {isSending ? "Sending…" : "Send sign-in link"}
         </Button>
-        <p className="text-sm text-muted-foreground" role="status">
-          {emailStatus === "sent" ? sentNote : beforeNote}
+        <p className="text-sm text-muted-foreground">
+          {methods.linkIsPrinted
+            ? "Development only: the link prints in the terminal instead of being emailed."
+            : "We will email you a link that signs you in. No password needed, and it works for new accounts too."}
         </p>
       </form>
 
-      {errorMessage && (
-        <p className="text-sm text-destructive" role="alert">
-          {errorMessage}
-        </p>
-      )}
+      {error}
     </div>
   );
 }

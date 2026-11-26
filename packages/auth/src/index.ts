@@ -23,6 +23,8 @@ export type SignInMethods = typeof signInMethods;
 
 const emailSignIn = magicLink({
   expiresIn: SIGN_IN_LINK_MINUTES * 60,
+  // Only a hash of each link's token is kept, so reading the database does not yield a link.
+  storeToken: "hashed",
   sendMagicLink: async ({ email, url }) => {
     if (isProduction) return sendSignInEmail(email, url);
     console.info(`\nSign-in link for ${email}:\n${url}\n`);
