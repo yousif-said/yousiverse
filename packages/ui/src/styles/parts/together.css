@@ -1,0 +1,13 @@
+/* Styles that only the feed, clubs, discussions, and lists need, beyond design.css. Keep to the tokens in globals.css. */
+
+@layer components {
+  /* A new list's fan of artwork can be wider than the post it sits in: five shows side by
+     side. It gives way to the count beside it and is cut at its own edge. The padding, taken
+     back by the margin, leaves room inside the cut for the artwork's shadow. */
+  .post__media .fan {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0 0 14px 8px;
+    margin: 0 0 -14px -8px;
+  }
+}

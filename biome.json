@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/drizzle/meta", "!**/fixtures/*.json"]
+    "includes": ["**", "!**/drizzle/meta", "!**/fixtures/*.json", "!redesign/mockup"]
   },
   "formatter": {
     "indentStyle": "space",
@@ -16,5 +16,20 @@
     "parser": {
       "tailwindDirectives": true
     }
-  }
+  },
+  "overrides": [
+    {
+      "includes": ["packages/ui/src/styles/design.css"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDescendingSpecificity": "off"
+          },
+          "complexity": {
+            "noImportantStyles": "off"
+          }
+        }
+      }
+    }
+  ]
 }

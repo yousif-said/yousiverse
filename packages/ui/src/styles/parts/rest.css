@@ -1,0 +1,183 @@
+/* Styles that only import, link review, and the empty, loading, error, and not-found states need, beyond design.css. Keep to the tokens in globals.css. */
+
+@layer components {
+  /* ---------- import ---------- */
+  .drop {
+    position: relative;
+    cursor: pointer;
+  }
+  .drop[data-over] {
+    border-color: var(--fg);
+    background: var(--surface);
+  }
+  /* While files are dragged over it, the zone is one target: its text must not end the drag. */
+  .drop[data-over] > * {
+    pointer-events: none;
+  }
+  /* The file input is hidden inside the zone, so the zone shows where the keyboard is. */
+  .drop:has(input:focus-visible) {
+    outline: 2px solid var(--fg);
+    outline-offset: 3px;
+  }
+  .files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .files .chip {
+    height: 28px;
+    max-width: 100%;
+    padding-right: 3px;
+    color: var(--fg);
+  }
+  .files .chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .files .chip button {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    color: var(--fg-3);
+  }
+  .files .chip button:hover {
+    background: var(--surface-3);
+    color: var(--fg);
+  }
+  /* The row under a form's steps: the button that sends it, and what it says back. */
+  .startbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .startbar .error {
+    flex: 1;
+    min-width: min(100%, 24ch);
+  }
+  /* A whole line of a list as one link: its name at one end, a measurement at the other. */
+  .kv__link {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    min-width: 0;
+    border-radius: 6px;
+  }
+  .kv__link:hover b {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* ---------- link review ---------- */
+  /* What a suggestion says back when settling it fails, under its two titles. */
+  .pair__note {
+    grid-column: 1 / -1;
+  }
+  /* A few named choices, one of which is picked: native radios in the interface's ink. */
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .choices legend {
+    margin-bottom: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-2);
+  }
+  .choices label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14.5px;
+    cursor: pointer;
+  }
+  .choices input {
+    width: 17px;
+    height: 17px;
+    flex: none;
+    accent-color: var(--fg);
+  }
+
+  /* ---------- nothing to show ---------- */
+  .notice__actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  /* ---------- loading ---------- */
+  /* Sizes for `.skel` blocks, named after what they stand in for. */
+  .skel--d1 {
+    width: 560px;
+    max-width: 100%;
+    height: clamp(40px, 5.4vw, 84px);
+    border-radius: 14px;
+  }
+  .skel--d2 {
+    width: 300px;
+    max-width: 100%;
+    height: clamp(34px, 3.5vw, 52px);
+    border-radius: 12px;
+  }
+  .skel--d3 {
+    width: 220px;
+    max-width: 100%;
+    height: 30px;
+    border-radius: 8px;
+  }
+  .skel--lede {
+    width: 520px;
+    max-width: 100%;
+    height: 18px;
+    border-radius: 6px;
+  }
+  .skel--text {
+    max-width: 100%;
+    height: 14px;
+    border-radius: 6px;
+  }
+  .skel--seg {
+    max-width: 100%;
+    height: 38px;
+    border-radius: 13px;
+  }
+  .skel--thumb {
+    flex: none;
+    height: var(--art-h, 54px);
+    width: calc(var(--art-h, 54px) * var(--ratio, 0.667));
+    border-radius: 4px;
+  }
+  /* A tab is as tall as its text and padding: the placeholder keeps the row from moving. */
+  .tabs .skel {
+    flex: none;
+    margin: 17px 0;
+  }
+  .rel .skel--thumb {
+    --art-h: 68px;
+    justify-self: center;
+  }
+  .wait .skel--thumb {
+    --art-h: 64px;
+  }
+  /* The hero is dark before its artwork arrives, as it will be once it has. */
+  .hero--loading .hero__bg {
+    background: var(--bg-raised);
+  }
+  /* A placeholder is there at once. Only the page that takes its place rises in. */
+  .main > .page[aria-busy="true"] {
+    animation: none;
+  }
+}

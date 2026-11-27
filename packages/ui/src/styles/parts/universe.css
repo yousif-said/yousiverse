@@ -1,0 +1,44 @@
+/* Styles that only Youniverses: the index, the map, and the strip on title pages need, beyond design.css. Keep to the tokens in globals.css. */
+
+@layer components {
+  /* Two titles of one medium and one year share a cell of the map, one above the other. */
+  .map__cell {
+    row-gap: 22px;
+  }
+
+  /* A link that says only that two titles share a franchise: neither follows the other. */
+  .map__edges path.same {
+    stroke-dasharray: 9 6;
+  }
+  .legend i.same {
+    border-top-style: dashed;
+  }
+
+  /* What a title is to the titles it is linked to, under its name in a universe's list. */
+  .rank__rels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  .rank__rel {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    min-width: 0;
+  }
+  .rank__rel > span:not(.label) {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  /* When "Want the other N" fails, the reason takes a line of its own under the progress. */
+  .match:has(> .error) {
+    flex-wrap: wrap;
+  }
+  .match > .error {
+    flex-basis: 100%;
+  }
+}
