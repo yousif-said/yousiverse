@@ -11,6 +11,8 @@ describe("openLibrary.search", () => {
       title: "Piranesi",
       releaseYear: 2020,
       posterUrl: expect.stringMatching(/^https:\/\/covers\.openlibrary\.org\/b\/id\/\d+-M\.jpg$/),
+      backdropUrl: null,
+      authors: ["Susanna Clarke"],
     });
   });
 
@@ -114,6 +116,7 @@ describe("openLibrary.findBook", () => {
       title: "Piranesi",
       releaseYear: 2020,
       posterUrl: expect.stringMatching(/^https:\/\/covers\.openlibrary\.org\//),
+      backdropUrl: null,
     });
   });
 

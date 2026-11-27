@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ProviderError } from "../src/errors";
-import { getStreamingOffers } from "../src/watchmode";
+import { getStreamingOffers, getStreamingServices } from "../src/watchmode";
 
 describe("watchmode.getStreamingOffers", () => {
   it("lists each service once per kind, at its lowest price", async () => {
@@ -31,5 +31,21 @@ describe("watchmode.getStreamingOffers", () => {
 
     expect(error).toBeInstanceOf(ProviderError);
     expect(error).toMatchObject({ provider: "watchmode", kind: "not_found" });
+  });
+});
+
+describe("watchmode.getStreamingServices", () => {
+  it("lists services with their logos and whether they are subscriptions", async () => {
+    const services = await getStreamingServices();
+
+    expect(services).toContainEqual({
+      id: 203,
+      name: "Netflix",
+      logoUrl: expect.stringMatching(/^https:\/\/cdn\.watchmode\.com\/.+\.png$/),
+      subscription: true,
+    });
+    expect(services.find((service) => service.name === "Pluto TV")).toMatchObject({
+      subscription: false,
+    });
   });
 });

@@ -43,6 +43,8 @@ export async function search(query: string): Promise<CatalogSearchResult[]> {
     title: doc.title,
     releaseYear: doc.first_publish_year ?? null,
     posterUrl: coverUrl(doc.cover_i, "M"),
+    backdropUrl: null,
+    authors: doc.author_name,
   }));
 }
 
@@ -77,6 +79,7 @@ export async function getByAuthor(author: string): Promise<CatalogSearchResult[]
       title: doc.title,
       releaseYear: doc.first_publish_year ?? null,
       posterUrl: coverUrl(doc.cover_i, "M"),
+      backdropUrl: null,
     }));
 }
 
@@ -109,6 +112,7 @@ export async function findBook(book: {
       title: doc.title,
       releaseYear: doc.first_publish_year ?? null,
       posterUrl: coverUrl(doc.cover_i, "M"),
+      backdropUrl: null,
     }) satisfies CatalogSearchResult;
 
   if (book.isbn && ISBN.test(book.isbn)) {

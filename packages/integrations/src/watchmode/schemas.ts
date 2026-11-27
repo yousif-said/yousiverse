@@ -16,5 +16,11 @@ export const titleSourcesResponse = z.array(
 );
 
 export const sourcesResponse = z.array(
-  z.object({ id: z.number(), name: z.string(), type: z.string() }),
+  z.object({
+    id: z.number(),
+    name: z.string(),
+    type: z.string(),
+    /** A 100px square logo on Watchmode's CDN. */
+    logo_100px: z.string().nullish(),
+  }),
 );

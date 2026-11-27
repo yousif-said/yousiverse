@@ -476,1237 +476,1484 @@
       {
         "id": 203,
         "name": "Netflix",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/netflix_100px.png"
       },
       {
         "id": 157,
         "name": "Hulu",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/hulu_100px.png"
       },
       {
         "id": 387,
         "name": "HBO Max",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/max_100px.png"
       },
       {
         "id": 26,
         "name": "Prime Video",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/prime_video_100px.png"
       },
       {
         "id": 372,
         "name": "Disney+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/disneyPlus_100px.png"
       },
       {
         "id": 371,
         "name": "AppleTV+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/appleTvPlus_100px.png"
       },
       {
         "id": 444,
         "name": "Paramount+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/paramountPlus_100px.png"
       },
       {
         "id": 455,
         "name": "Paramount+ with Showtime",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/paramountPlusShowtime_100px.png"
       },
       {
         "id": 388,
         "name": "Peacock",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/peacock_100px.png"
       },
       {
         "id": 389,
         "name": "Peacock Premium",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/peacockPremium_100px.png"
       },
       {
         "id": 365,
         "name": "Amazon Freevee",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/freevee_100px.png"
       },
       {
         "id": 440,
         "name": "Netflix Free",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/netflixFree_100px.png"
       },
       {
         "id": 232,
         "name": "STARZ",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/starz_100px.png"
       },
       {
         "id": 108,
         "name": "MGM+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/mgmplus_100px.png"
       },
       {
         "id": 296,
         "name": "Tubi TV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/tubi_100px.png"
       },
       {
         "id": 10,
         "name": "ABC",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/abc_100px.png"
       },
       {
         "id": 13,
         "name": "AMC",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/amc_100px.png"
       },
       {
         "id": 467,
         "name": "Arrow Video Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/467_generic_v4.png"
       },
       {
         "id": 462,
         "name": "Fawesome",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/462_generic_v4.png"
       },
       {
         "id": 122,
         "name": "FX",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fx_100px.png"
       },
       {
         "id": 367,
         "name": "Kanopy",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/kanopy_100px.png"
       },
       {
         "id": 192,
         "name": "NBC",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/nbc_100px.png"
       },
       {
         "id": 299,
         "name": "USA",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/usa_100px.png"
       },
       {
         "id": 369,
         "name": "Youtube Premium",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/youtubePremium_100px.png"
       },
       {
         "id": 368,
         "name": "Youtube Premium",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/youtubePremium_100px.png"
       },
       {
         "id": 80,
         "name": "Crunchyroll Premium",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/crunchyroll_100px.png"
       },
       {
         "id": 439,
         "name": "Plex",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/439_generic_v4.png"
       },
       {
         "id": 451,
         "name": "Topic",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/451_generic_v4.png"
       },
       {
         "id": 366,
         "name": "The Criterion Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/criterion_100px.png"
       },
       {
         "id": 125,
         "name": "Fandor",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fandor_100px.png"
       },
       {
         "id": 252,
         "name": "Shudder",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/shudder_100px.png"
       },
       {
         "id": 318,
         "name": "WWE Network",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/wwe_100px.png"
       },
       {
         "id": 349,
         "name": "AppleTV",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/apple_100px.png"
       },
       {
         "id": 215,
         "name": "PBS",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/pbs_100px.png"
       },
       {
         "id": 140,
         "name": "Google Play",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/googlePlay_100px.png"
       },
       {
         "id": 24,
         "name": "Amazon",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/amazon_100px.png"
       },
       {
         "id": 307,
         "name": "Fandango at Home",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fandangoAtHome_100px.png"
       },
       {
         "id": 344,
         "name": "YouTube",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/youtube_100px.png"
       },
       {
         "id": 452,
         "name": "The Roku Channel",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/452_generic_v4.png"
       },
       {
         "id": 270,
         "name": "Syfy",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/syfy_100px.png"
       },
       {
         "id": 271,
         "name": "Syfy",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/syfy_100px.png"
       },
       {
         "id": 18,
         "name": "Acorn TV (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/acorn_tv_prime_100px.png"
       },
       {
         "id": 647,
         "name": "Acorn TV Apple TV Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/647_generic_v4.png"
       },
       {
         "id": 625,
         "name": "AMC Plus Apple TV Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/625_generic_v4.png"
       },
       {
         "id": 613,
         "name": "AMC+ Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/613_generic_v4.png"
       },
       {
         "id": 736,
         "name": "AMC+ Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/736_generic_v4.png"
       },
       {
         "id": 612,
         "name": "AppleTV+ Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/612_generic_v4.png"
       },
       {
         "id": 737,
         "name": "BET+ Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/737_generic_v4.png"
       },
       {
         "id": 735,
         "name": "BritBox Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/735_generic_v4.png"
       },
       {
         "id": 68,
         "name": "Cinemax (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/cinemax_prime_100px.png"
       },
       {
         "id": 683,
         "name": "Crunchyroll Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/683_generic_v4.png"
       },
       {
         "id": 81,
         "name": "Curiosity Stream (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/curiosity_stream_100px.png"
       },
       {
         "id": 734,
         "name": "Discovery+ Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/734_generic_v4.png"
       },
       {
         "id": 126,
         "name": "Fandor (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/126_generic_v4.png"
       },
       {
         "id": 777,
         "name": "France Channel Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/777_generic_v4.png"
       },
       {
         "id": 358,
         "name": "Hallmark Movies Now (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/358_generic_v4.png"
       },
       {
         "id": 725,
         "name": "HIDIVE Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/725_generic_v4.png"
       },
       {
         "id": 148,
         "name": "HISTORY Vault (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/history_vault_100px.png"
       },
       {
         "id": 648,
         "name": "HISTORY Vault Apple TV Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/648_generic_v4.png"
       },
       {
         "id": 803,
         "name": "Howdy Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/803_generic_v4.png"
       },
       {
         "id": 634,
         "name": "Hulu on Disney+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/634_generic_v4.png"
       },
       {
         "id": 664,
         "name": "Kocowa Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/664_generic_v4.png"
       },
       {
         "id": 490,
         "name": "HBO Max (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/490_generic_v4.png"
       },
       {
         "id": 733,
         "name": "Max Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/733_generic_v4.png"
       },
       {
         "id": 728,
         "name": "MGM+ Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/728_generic_v4.png"
       },
       {
         "id": 732,
         "name": "Paramount+ Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/732_generic_v4.png"
       },
       {
         "id": 729,
         "name": "PBS Living Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/729_generic_v4.png"
       },
       {
         "id": 776,
         "name": "REELZ+ Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/776_generic_v4.png"
       },
       {
         "id": 247,
         "name": "Shout! Factory TV (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/247_generic_v4.png"
       },
       {
         "id": 253,
         "name": "Shudder (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/shudder_prime_100px.png"
       },
       {
         "id": 234,
         "name": "STARZ (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/starz_amazon_prime_100px.png"
       },
       {
         "id": 731,
         "name": "STARZ Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/731_generic_v4.png"
       },
       {
         "id": 269,
         "name": "SundanceNow Doc Club (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/269_generic_v4.png"
       },
       {
         "id": 644,
         "name": "ViX Premium Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/644_generic_v4.png"
       },
       {
         "id": 775,
         "name": "Wonder Project Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/775_generic_v4.png"
       },
       {
         "id": 443,
         "name": "Spectrum On Demand",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/443_generic_v4.png"
       },
       {
         "id": 442,
         "name": "DirecTV On Demand",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/directv_on_demand_100px.png"
       },
       {
         "id": 7,
         "name": "A&E",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/ae_100px.png"
       },
       {
         "id": 8,
         "name": "A&E",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/ae_100px.png"
       },
       {
         "id": 17,
         "name": "Acorn TV",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/acorn_tv_100px.png"
       },
       {
         "id": 19,
         "name": "Adult Swim",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/adultswim_100px.png"
       },
       {
         "id": 20,
         "name": "Adult Swim",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/adultswim_100px.png"
       },
       {
         "id": 12,
         "name": "AHC GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/ahc_100px.png"
       },
       {
         "id": 378,
         "name": "AMC+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/378_generic_v4.png"
       },
       {
         "id": 758,
         "name": "AmericaEast.TV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/758_generic_v4.png"
       },
       {
         "id": 30,
         "name": "Animal Planet GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/apgo_100px.png"
       },
       {
         "id": 522,
         "name": "Apple TV",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/522_generic_v4.png"
       },
       {
         "id": 757,
         "name": "B1G+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/757_generic_v4.png"
       },
       {
         "id": 32,
         "name": "BBC America",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/bbc_america_100px.png"
       },
       {
         "id": 34,
         "name": "BET",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/bet_100px.png"
       },
       {
         "id": 382,
         "name": "BET+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/betplus_100px.png"
       },
       {
         "id": 46,
         "name": "Bravo",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/bravo_100px.png"
       },
       {
         "id": 376,
         "name": "Britbox",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/britbox_100px.png"
       },
       {
         "id": 377,
         "name": "Britbox (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/britbox_primeVideo_100px.png"
       },
       {
         "id": 774,
         "name": "BYUtv",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/774_generic_v4.png"
       },
       {
         "id": 62,
         "name": "Cartoon Network",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/cn_100px.png"
       },
       {
         "id": 63,
         "name": "Cartoon Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/cn_100px.png"
       },
       {
         "id": 50,
         "name": "CBS",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/cbs_100px.png"
       },
       {
         "id": 53,
         "name": "CBS News",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/cbs_news_100px.png"
       },
       {
         "id": 782,
         "name": "College Conference of Illinois and Wisconsin",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/782_generic_v4.png"
       },
       {
         "id": 766,
         "name": "Centennial Conference Digital Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/766_generic_v4.png"
       },
       {
         "id": 761,
         "name": "CIAA Sports Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/761_generic_v4.png"
       },
       {
         "id": 384,
         "name": "Cinemax (Via Hulu)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/384_generic_v4.png"
       },
       {
         "id": 481,
         "name": "Cineverse",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/481_generic_v4.png"
       },
       {
         "id": 667,
         "name": "Cineverse Subscription",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/667_generic_v4.png"
       },
       {
         "id": 779,
         "name": "Conference of New England Sports Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/779_generic_v4.png"
       },
       {
         "id": 79,
         "name": "Crunchyroll",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/crunchyroll_100px.png"
       },
       {
         "id": 491,
         "name": "Crunchyroll Premium (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/491_generic_v4.png"
       },
       {
         "id": 421,
         "name": "Curiosity Stream",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/421_generic_v4.png"
       },
       {
         "id": 284,
         "name": "The CW",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/cw_100px.png"
       },
       {
         "id": 573,
         "name": "dAnime Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/573_generic_v4.png"
       },
       {
         "id": 405,
         "name": "Darkmatter TV",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/405_generic_v4.png"
       },
       {
         "id": 530,
         "name": "DAZN",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/530_generic_v4.png"
       },
       {
         "id": 86,
         "name": "Destination America GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/dest_america_go_100px.png"
       },
       {
         "id": 520,
         "name": "DIRECTV Stream",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/520_generic_v4.png"
       },
       {
         "id": 91,
         "name": "Discovery GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/discovery_go_100px.png"
       },
       {
         "id": 93,
         "name": "Discovery Life GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/discover_life_go_100px.png"
       },
       {
         "id": 445,
         "name": "Discovery+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/445_generic_v4.png"
       },
       {
         "id": 493,
         "name": "Discovery+ (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/493_generic_v4.png"
       },
       {
         "id": 778,
         "name": "Empire 8 Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/778_generic_v4.png"
       },
       {
         "id": 526,
         "name": "ESPN",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/526_generic_v4.png"
       },
       {
         "id": 525,
         "name": "ESPN Deportes",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/525_generic_v4.png"
       },
       {
         "id": 521,
         "name": "ESPN+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/521_generic_v4.png"
       },
       {
         "id": 759,
         "name": "Fanatiz",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/759_generic_v4.png"
       },
       {
         "id": 308,
         "name": "Fandango at Home Free",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fandangoAtHome_100px.png"
       },
       {
         "id": 772,
         "name": "Filmzie",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/772_generic_v4.png"
       },
       {
         "id": 422,
         "name": "Flix Premiere",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/422_generic_v4.png"
       },
       {
         "id": 399,
         "name": "FlixFling",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/flixfling_100px.png"
       },
       {
         "id": 531,
         "name": "Flo Rugby",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/531_generic_v4.png"
       },
       {
         "id": 751,
         "name": "FloCollege",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/751_generic_v4.png"
       },
       {
         "id": 131,
         "name": "Food Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/foodnet_100px.png"
       },
       {
         "id": 114,
         "name": "FOX",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fox_100px.png"
       },
       {
         "id": 115,
         "name": "FOX",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fox_100px.png"
       },
       {
         "id": 563,
         "name": "FOX One",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/563_generic_v4.png"
       },
       {
         "id": 564,
         "name": "FOX One Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/564_generic_v4.png"
       },
       {
         "id": 527,
         "name": "Fox Sports 1",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/527_generic_v4.png"
       },
       {
         "id": 361,
         "name": "Freeform",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/freeform_100px.png"
       },
       {
         "id": 132,
         "name": "Freeform",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/freeform_100px.png"
       },
       {
         "id": 373,
         "name": "fuboTV",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fuboTV_100px.png"
       },
       {
         "id": 347,
         "name": "fyi",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fyi_logo_100px.png"
       },
       {
         "id": 348,
         "name": "fyi",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/fyi_logo_100px.png"
       },
       {
         "id": 771,
         "name": "GAC Sports Network",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/771_generic_v4.png"
       },
       {
         "id": 763,
         "name": "GLVC Sports Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/763_generic_v4.png"
       },
       {
         "id": 401,
         "name": "GuideDoc",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/401_generic_v4.png"
       },
       {
         "id": 151,
         "name": "Hallmark Channel Everywhere",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/hallmark_100px.png"
       },
       {
         "id": 152,
         "name": "Hallmark Movies Now",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/hallmark_movies_now_100px.png"
       },
       {
         "id": 385,
         "name": "HBO (Via Hulu)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/385_generic_v4.png"
       },
       {
         "id": 147,
         "name": "HGTV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/hgtv_100px.png"
       },
       {
         "id": 420,
         "name": "HiDive",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/420_generic_v4.png"
       },
       {
         "id": 287,
         "name": "The History Channel",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/history_100px.png"
       },
       {
         "id": 288,
         "name": "The History Channel",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/history_100px.png"
       },
       {
         "id": 390,
         "name": "Hoopla",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/390_generic_v4.png"
       },
       {
         "id": 795,
         "name": "Howdy on Roku Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/795_generic_v4.png"
       },
       {
         "id": 160,
         "name": "IFC",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/ifc_100px.png"
       },
       {
         "id": 165,
         "name": "Investigation Discovery",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/165_generic_v4.png"
       },
       {
         "id": 166,
         "name": "Investigation Discovery GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/id_100px.png"
       },
       {
         "id": 788,
         "name": "JustWatch TV Free",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/788_generic_v4.png"
       },
       {
         "id": 789,
         "name": "JustWatch TV Plus",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/789_generic_v4.png"
       },
       {
         "id": 790,
         "name": "JustWatch TV Store",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/790_generic_v4.png"
       },
       {
         "id": 470,
         "name": "Kocowa",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/470_generic_v4.png"
       },
       {
         "id": 654,
         "name": "KQED",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/654_generic_v4.png"
       },
       {
         "id": 170,
         "name": "Lifetime",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/lifetime_100px.png"
       },
       {
         "id": 171,
         "name": "Lifetime",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/lifetime_100px.png"
       },
       {
         "id": 533,
         "name": "Lionsgate+ (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/533_generic_v4.png"
       },
       {
         "id": 169,
         "name": "LOGO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/logo_100px.png"
       },
       {
         "id": 768,
         "name": "MACtv",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/768_generic_v4.png"
       },
       {
         "id": 784,
         "name": "MASCAC TV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/784_generic_v4.png"
       },
       {
         "id": 753,
         "name": "MEAC Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/753_generic_v4.png"
       },
       {
         "id": 375,
         "name": "MGM+ (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/mgmplus_primevideo_100px.png"
       },
       {
         "id": 479,
         "name": "MHz Choice",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/479_generic_v4.png"
       },
       {
         "id": 762,
         "name": "MIAA Digital Network",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/762_generic_v4.png"
       },
       {
         "id": 780,
         "name": "MIAC",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/780_generic_v4.png"
       },
       {
         "id": 752,
         "name": "Midco Sports Plus",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/752_generic_v4.png"
       },
       {
         "id": 523,
         "name": "MLB.TV",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/523_generic_v4.png"
       },
       {
         "id": 755,
         "name": "Mountain West+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/755_generic_v4.png"
       },
       {
         "id": 178,
         "name": "MTV",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/mtv_100px.png"
       },
       {
         "id": 179,
         "name": "MTV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/mtv_100px.png"
       },
       {
         "id": 181,
         "name": "MUBI",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/mubi_100px.png"
       },
       {
         "id": 198,
         "name": "National Geographic",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/natgeo_100px.png"
       },
       {
         "id": 199,
         "name": "National Geographic",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/natgeo_100px.png"
       },
       {
         "id": 190,
         "name": "NBA League Pass",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/190_generic_v4.png"
       },
       {
         "id": 191,
         "name": "NBC",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/nbc_100px.png"
       },
       {
         "id": 194,
         "name": "NBC News",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/nbc_news_100px.png"
       },
       {
         "id": 756,
         "name": "NEC Front Row",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/756_generic_v4.png"
       },
       {
         "id": 651,
         "name": "NFL Sunday Ticket",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/651_generic_v4.png"
       },
       {
         "id": 650,
         "name": "NFL+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/650_generic_v4.png"
       },
       {
         "id": 769,
         "name": "North Coast Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/769_generic_v4.png"
       },
       {
         "id": 480,
         "name": "OnDemandKorea",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/480_generic_v4.png"
       },
       {
         "id": 214,
         "name": "Oxygen",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/oxygen_100px.png"
       },
       {
         "id": 767,
         "name": "PAC Digital Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/767_generic_v4.png"
       },
       {
         "id": 221,
         "name": "Paramount Network",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/paramount_network_100px.png"
       },
       {
         "id": 489,
         "name": "Paramount+ (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/489_generic_v4.png"
       },
       {
         "id": 501,
         "name": "Paramount+ (Via Apple TV)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/501_generic_v4.png"
       },
       {
         "id": 217,
         "name": "PBS Kids",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/pbs_kids_100px.png"
       },
       {
         "id": 485,
         "name": "PBS Masterpiece (Via Amazon Prime)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/485_generic_v4.png"
       },
       {
         "id": 565,
         "name": "Peacock Premium Plus Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/565_generic_v4.png"
       },
       {
         "id": 468,
         "name": "Philo",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/468_generic_v4.png"
       },
       {
         "id": 666,
         "name": "Philo Free",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/666_generic_v4.png"
       },
       {
         "id": 463,
         "name": "Plex",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/463_generic_v4.png"
       },
       {
         "id": 391,
         "name": "Pluto TV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/391_generic_v4.png"
       },
       {
         "id": 225,
         "name": "Popcornflix",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/popcornflix_100px.png"
       },
       {
         "id": 25,
         "name": "Prime Video Free",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/primeVideo_free_100px.png"
       },
       {
         "id": 760,
         "name": "PSAC Sports Digital Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/760_generic_v4.png"
       },
       {
         "id": 471,
         "name": "Rakuten Viki",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/471_generic_v4.png"
       },
       {
         "id": 770,
         "name": "RMAC Network",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/770_generic_v4.png"
       },
       {
         "id": 237,
         "name": "Science GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/scigo_100px.png"
       },
       {
         "id": 246,
         "name": "Shout! Factory TV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/shout_100px.png"
       },
       {
         "id": 764,
         "name": "SIAC Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/764_generic_v4.png"
       },
       {
         "id": 787,
         "name": "Sling Freestream",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/787_generic_v4.png"
       },
       {
         "id": 519,
         "name": "Sling TV",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/519_generic_v4.png"
       },
       {
         "id": 668,
         "name": "Sling TV Orange",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/668_generic_v4.png"
       },
       {
         "id": 259,
         "name": "South Park Studios",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/sps_100px.png"
       },
       {
         "id": 386,
         "name": "STARZ (Via Hulu)",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/386_generic_v4.png"
       },
       {
         "id": 433,
         "name": "Sun Nxt",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/433_generic_v4.png"
       },
       {
         "id": 267,
         "name": "Sundance",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/sundance_100px.png"
       },
       {
         "id": 268,
         "name": "SundanceNow Doc Club",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/sundance_now_100px.png"
       },
       {
         "id": 781,
         "name": "SUNYAC",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/781_generic_v4.png"
       },
       {
         "id": 754,
         "name": "SWAC TV",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/754_generic_v4.png"
       },
       {
         "id": 272,
         "name": "TBS",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/tbs_100px.png"
       },
       {
         "id": 528,
         "name": "Tennis Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/528_generic_v4.png"
       },
       {
         "id": 529,
         "name": "Tennis Channel Amazon Channel",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/529_generic_v4.png"
       },
       {
         "id": 274,
         "name": "TLC GO",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/tlcgo_100px.png"
       },
       {
         "id": 276,
         "name": "TNT",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/tnt_100px.png"
       },
       {
         "id": 292,
         "name": "Travel Channel",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/trvl_100px.png"
       },
       {
         "id": 353,
         "name": "truTV",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/trutv_100px.png"
       },
       {
         "id": 277,
         "name": "TV Land",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/tvland_100px.png"
       },
       {
         "id": 278,
         "name": "TV Land",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/tvland_100px.png"
       },
       {
         "id": 783,
         "name": "UMAC Sports Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/783_generic_v4.png"
       },
       {
         "id": 298,
         "name": "USA",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/usa_100px.png"
       },
       {
         "id": 302,
         "name": "VH1",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/vh1_100px.png"
       },
       {
         "id": 303,
         "name": "VH1",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/vh1_100px.png"
       },
       {
         "id": 305,
         "name": "Vice TV",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/viceland_100px.png"
       },
       {
         "id": 313,
         "name": "Vimeo",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/vimeo_100px.png"
       },
       {
         "id": 474,
         "name": "ViX",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/474_generic_v4.png"
       },
       {
         "id": 330,
         "name": "Watch Food Network",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/foodnet_100px.png"
       },
       {
         "id": 331,
         "name": "Watch HGTV",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/hgtv_100px.png"
       },
       {
         "id": 332,
         "name": "Watch TCM",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/tcm_100px.png"
       },
       {
         "id": 333,
         "name": "Watch Travel Channel",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/trvl_100px.png"
       },
       {
         "id": 315,
         "name": "WE tv",
-        "type": "tve"
+        "type": "tve",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/wetv_100px.png"
       },
       {
         "id": 478,
         "name": "WETA+",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/478_generic_v4.png"
       },
       {
         "id": 765,
         "name": "WIAC Network",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/765_generic_v4.png"
       },
       {
         "id": 398,
         "name": "Windows Store",
-        "type": "purchase"
+        "type": "purchase",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/windows_store_100px.png"
       },
       {
         "id": 524,
         "name": "WNBA League Pass",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/524_generic_v4.png"
       },
       {
         "id": 540,
         "name": "WOW Presents Plus",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/540_generic_v4.png"
       },
       {
         "id": 472,
         "name": "Xumo Play",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/472_generic_v4.png"
       },
       {
         "id": 345,
         "name": "YouTube",
-        "type": "free"
+        "type": "free",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/youtube_100px.png"
       },
       {
         "id": 469,
         "name": "YouTube TV",
-        "type": "sub"
+        "type": "sub",
+        "logo_100px": "https://cdn.watchmode.com/provider_logos/469_generic_v4.png"
       }
     ]
   },

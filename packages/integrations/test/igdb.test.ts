@@ -11,6 +11,7 @@ describe("igdb.search", () => {
       title: "Hades",
       releaseYear: 2020,
       posterUrl: expect.stringMatching(/^https:\/\/images\.igdb\.com\/.+\/t_cover_big\/.+\.jpg$/),
+      backdropUrl: null,
     });
   });
 

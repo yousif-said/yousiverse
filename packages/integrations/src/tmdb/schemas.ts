@@ -22,6 +22,7 @@ export const searchResponse = z.object({
       release_date: isoDate,
       first_air_date: isoDate,
       poster_path: imagePath,
+      backdrop_path: imagePath,
     }),
   ),
 });
@@ -83,12 +84,14 @@ const movieSummary = z.object({
   title: z.string(),
   release_date: isoDate,
   poster_path: imagePath,
+  backdrop_path: imagePath,
 });
 const tvSummary = z.object({
   id: z.number(),
   name: z.string(),
   first_air_date: isoDate,
   poster_path: imagePath,
+  backdrop_path: imagePath,
 });
 
 export const movieSearchResponse = z.object({ results: z.array(movieSummary) });

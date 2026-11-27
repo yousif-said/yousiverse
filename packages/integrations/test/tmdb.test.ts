@@ -14,6 +14,7 @@ describe("tmdb.search", () => {
       title: "Severance",
       releaseYear: 2022,
       posterUrl: expect.stringMatching(/^https:\/\/image\.tmdb\.org\/t\/p\/w342\/.+/),
+      backdropUrl: expect.stringMatching(/^https:\/\/image\.tmdb\.org\/t\/p\/w1280\/.+/),
     });
   });
 
@@ -68,6 +69,7 @@ describe("tmdb.findMovie", () => {
       title: "The Matrix",
       releaseYear: 1999,
       posterUrl: expect.stringContaining("/w342/"),
+      backdropUrl: expect.stringContaining("/w1280/"),
     });
   });
 
@@ -87,6 +89,7 @@ describe("tmdb.findByImdbId", () => {
       type: "tv",
       providerId: "95396",
       title: "Severance",
+      backdropUrl: expect.stringContaining("/w1280/"),
     });
   });
 

@@ -85,6 +85,7 @@ export async function search(query: string): Promise<CatalogSearchResult[]> {
     title: game.name,
     releaseYear: yearOf(isoDate(game.first_release_date)),
     posterUrl: imageUrl(game.cover, "cover_big"),
+    backdropUrl: null,
   }));
 }
 
@@ -112,6 +113,7 @@ export async function findBySteamIds(
       title: game.name,
       releaseYear: yearOf(isoDate(game.first_release_date)),
       posterUrl: imageUrl(game.cover, "cover_big"),
+      backdropUrl: null,
     });
   }
   return found;
@@ -128,6 +130,7 @@ export async function getSimilar(providerId: string): Promise<CatalogSearchResul
           title: similar.name,
           releaseYear: yearOf(isoDate(similar.first_release_date)),
           posterUrl: imageUrl(similar.cover, "cover_big"),
+          backdropUrl: null,
         }
       : [],
   );
@@ -152,6 +155,7 @@ export async function findBySlugs(slugs: string[]): Promise<Map<string, CatalogS
       title: game.name,
       releaseYear: yearOf(isoDate(game.first_release_date)),
       posterUrl: imageUrl(game.cover, "cover_big"),
+      backdropUrl: null,
     });
   }
   return found;

@@ -68,6 +68,8 @@ export type StreamingService = {
   /** Watchmode's id for the service. */
   id: number;
   name: string;
+  /** The service's logo: a small square image. */
+  logoUrl: string | null;
   /** True for services people pay a subscription for, such as Netflix. */
   subscription: boolean;
 };
@@ -81,6 +83,7 @@ export async function getStreamingServices(): Promise<StreamingService[]> {
   return sources.map((source) => ({
     id: source.id,
     name: source.name,
+    logoUrl: source.logo_100px?.startsWith("https://") ? source.logo_100px : null,
     subscription: KIND_FOR[source.type] === "subscription",
   }));
 }

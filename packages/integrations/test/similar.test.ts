@@ -15,13 +15,19 @@ describe("tmdb.getSimilar", () => {
       title: "The Matrix Reloaded",
       releaseYear: 2003,
       posterUrl: expect.stringMatching(/^https:\/\/image\.tmdb\.org\/t\/p\/w342\/.+/),
+      backdropUrl: expect.stringMatching(/^https:\/\/image\.tmdb\.org\/t\/p\/w1280\/.+/),
     });
   });
 
   it("lists the shows recommended for a show", async () => {
     const similar = await tmdb.getSimilar("tv", "95396");
 
-    expect(similar[0]).toMatchObject({ type: "tv", providerId: "91962", title: "Emergence" });
+    expect(similar[0]).toMatchObject({
+      type: "tv",
+      providerId: "91962",
+      title: "Emergence",
+      backdropUrl: expect.stringContaining("/w1280/"),
+    });
     expect(similar.every((show) => show.type === "tv")).toBe(true);
   });
 
@@ -41,6 +47,7 @@ describe("igdb.getSimilar", () => {
       title: "Hades II",
       releaseYear: 2025,
       posterUrl: expect.stringMatching(/t_cover_big\/.+\.jpg$/),
+      backdropUrl: null,
     });
   });
 
@@ -59,7 +66,12 @@ describe("openLibrary.getByAuthor", () => {
       "The Ladies of Grace Adieu and Other Stories",
       "Wood at Midwinter",
     ]);
-    expect(books[1]).toMatchObject({ type: "book", providerId: "OL20893680W", releaseYear: 2020 });
+    expect(books[1]).toMatchObject({
+      type: "book",
+      providerId: "OL20893680W",
+      releaseYear: 2020,
+      backdropUrl: null,
+    });
   });
 
   it("matches the author's name whatever the capitals", async () => {
