@@ -172,10 +172,6 @@
   .wait .skel--thumb {
     --art-h: 64px;
   }
-  /* The hero is dark before its artwork arrives, as it will be once it has. */
-  .hero--loading .hero__bg {
-    background: var(--bg-raised);
-  }
   /* A placeholder is there at once. Only the page that takes its place rises in. */
   .main > .page[aria-busy="true"] {
     animation: none;

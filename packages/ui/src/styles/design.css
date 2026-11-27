@@ -57,10 +57,6 @@
     letter-spacing: -0.016em;
     text-wrap: balance;
   }
-  .d4 {
-    font: 460 21px / 1.2 var(--display);
-    letter-spacing: -0.01em;
-  }
   .it {
     font-style: italic;
   }
@@ -612,17 +608,9 @@
     background: none;
     border: 1px solid var(--line-strong);
   }
-  .chip--tone {
-    background: color-mix(in srgb, var(--tone) 22%, transparent);
-    color: var(--fg);
-  }
   .chip--good {
     background: color-mix(in srgb, var(--good) 20%, transparent);
     color: var(--fg);
-  }
-  .chip--new {
-    background: var(--fg);
-    color: var(--on-fg);
   }
   .med {
     display: inline-flex;
@@ -813,11 +801,6 @@
     background: var(--tone, var(--fg));
   }
 
-  .card-surface {
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    background: var(--surface);
-  }
   .empty {
     padding: 40px 24px;
     border: 1px dashed var(--line-strong);
@@ -911,12 +894,6 @@
     font: 480 clamp(12px, 8.2cqw, 30px) / 1.05 var(--display);
     letter-spacing: -0.015em;
     text-wrap: balance;
-  }
-  .art__flag {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    z-index: 4;
   }
   .art__check {
     position: absolute;
@@ -1488,9 +1465,6 @@
   }
   .dial.dragging .dial__needle {
     transition: none;
-  }
-  .dial__needle[hidden] + .dial__ghost {
-    opacity: 1;
   }
   .dial__friends {
     position: absolute;
@@ -3144,11 +3118,6 @@
     align-items: center;
     gap: 6px;
   }
-  .pal__none {
-    padding: 36px 20px;
-    text-align: center;
-    color: var(--fg-2);
-  }
 
   .menu {
     z-index: 70;
@@ -3387,7 +3356,7 @@
     background: var(--surface);
   }
 
-  /* ---------- parts the app needs beyond the mockup's screens ---------- */
+  /* ---------- more parts: form fields, errors, skeletons, service marks ---------- */
   .btn:disabled,
   .btn[aria-disabled="true"],
   .iconbtn:disabled {
