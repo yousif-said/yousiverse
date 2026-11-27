@@ -1,0 +1,1 @@
+ALTER TABLE "import_items" ADD COLUMN "minutes_played" integer;

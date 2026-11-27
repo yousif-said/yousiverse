@@ -1,0 +1,1 @@
+ALTER TABLE "streaming_services" ADD COLUMN "logo_url" text;

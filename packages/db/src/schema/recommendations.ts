@@ -19,6 +19,7 @@ export const similarTitles = pgTable(
     title: text().notNull(),
     releaseYear: integer(),
     posterUrl: text(),
+    backdropUrl: text(),
   },
   (table) => [
     unique().on(table.mediaId, table.type, table.providerId),

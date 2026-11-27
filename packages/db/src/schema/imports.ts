@@ -81,6 +81,9 @@ export const importItems = pgTable(
     // Quarter points, 0 to 40, like `ratings.value`.
     rating: integer(),
     review: text(),
+    // How long the person has played a game, where the source says. It becomes the progress of
+    // the library entry the import adds.
+    minutesPlayed: integer(),
     state: importItemState().notNull().default("pending"),
     // The catalog title the row was matched to.
     mediaId: uuid().references(() => media.id, { onDelete: "set null" }),

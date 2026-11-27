@@ -33,6 +33,8 @@ export const listItems = pgTable(
     mediaId: uuid()
       .notNull()
       .references(() => media.id, { onDelete: "cascade" }),
+    // Why it is on the list, in the list maker's words.
+    note: text(),
     // Items are shown in the order they were added.
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
   },
