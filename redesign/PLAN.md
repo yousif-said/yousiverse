@@ -4,13 +4,13 @@ Written 2026-11-26. This is the plan for turning the app into the mockup in [moc
 
 ## 1. Where everything is
 
-| What | Where |
-| --- | --- |
-| The mockup, to click through | [mockup/index.html](mockup/index.html), or the private link `https://claude.ai/artifact/BXPKazHcK1kctTAqQUfueK` |
-| Its design system (every color, size, and component style) | [mockup/css/app.css](mockup/css/app.css) |
-| How each screen is put together | [mockup/js/views-a.js](mockup/js/views-a.js), [mockup/js/views-b.js](mockup/js/views-b.js) |
-| Shared pieces (artwork, cards, scores) | [mockup/js/core.js](mockup/js/core.js) |
-| Sample data | [mockup/js/data.js](mockup/js/data.js) |
+| What                                                       | Where                                                                                                           |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| The mockup, to click through                               | [mockup/index.html](mockup/index.html), or the private link `https://claude.ai/artifact/BXPKazHcK1kctTAqQUfueK` |
+| Its design system (every color, size, and component style) | [mockup/css/app.css](mockup/css/app.css)                                                                        |
+| How each screen is put together                            | [mockup/js/views-a.js](mockup/js/views-a.js), [mockup/js/views-b.js](mockup/js/views-b.js)                      |
+| Shared pieces (artwork, cards, scores)                     | [mockup/js/core.js](mockup/js/core.js)                                                                          |
+| Sample data                                                | [mockup/js/data.js](mockup/js/data.js)                                                                          |
 
 To open it locally with working fonts: `python3 -m http.server 4173 --directory redesign/mockup`, then visit `http://localhost:4173`. Opening the file directly also works.
 
@@ -18,16 +18,16 @@ To open it locally with working fonts: `python3 -m http.server 4173 --directory 
 
 ## 2. What was wrong, and what the redesign does about it
 
-| Problem today | What the redesign does |
-| --- | --- |
-| Every page is a title, a grey sentence, a row of pills, and a ruled list. Nothing leads. | Each page has one lead element, then supporting rows, then reference details. Home leads with what to pick up; a title page leads with its artwork and your status. |
-| Half the app is hidden. For you, Calendar, Alerts, and Import are only reachable from a row of text links on the Library page. | A sidebar holds every destination, grouped: yours, together, your clubs, alerts and import. Search opens from anywhere with ⌘K. |
-| Home is a marketing page even when you are signed in. | Signed in, Home is a dashboard: pick up where you left off, what is coming up, what on your want list is already on your services, friends, alerts, clubs. Signed out, it is a front door. |
-| Movies, shows, games, and books all look identical: the same 5:7 card. | Every medium keeps its own shape. A movie is a poster, a show is a screen, a game is a case, a book is a book with a spine. You can tell them apart before reading a word. |
-| Title pages ignore the artwork the app already stores. `backdropUrl` and episode `stillUrl` are in the database and never shown. | Title pages open on the backdrop. The whole page takes its color from the artwork. Episodes show their stills. |
-| Rating is a browser slider. | Rating is an instrument: a ruler in quarter points laid over how everyone else rated, with the people you follow marked on it. |
-| Franchise links, the app's most original idea, are a small grid at the bottom of a page. | Universes get their own place: a map of a story across books, films, shows, and games, with your progress through it. |
-| The feed, calendar, clubs, and lists are text only. | All of them show artwork, and each has its own layout instead of the shared ruled list. |
+| Problem today                                                                                                                    | What the redesign does                                                                                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Every page is a title, a grey sentence, a row of pills, and a ruled list. Nothing leads.                                         | Each page has one lead element, then supporting rows, then reference details. Home leads with what to pick up; a title page leads with its artwork and your status.                        |
+| Half the app is hidden. For you, Calendar, Alerts, and Import are only reachable from a row of text links on the Library page.   | A sidebar holds every destination, grouped: yours, together, your clubs, alerts and import. Search opens from anywhere with ⌘K.                                                            |
+| Home is a marketing page even when you are signed in.                                                                            | Signed in, Home is a dashboard: pick up where you left off, what is coming up, what on your want list is already on your services, friends, alerts, clubs. Signed out, it is a front door. |
+| Movies, shows, games, and books all look identical: the same 5:7 card.                                                           | Every medium keeps its own shape. A movie is a poster, a show is a screen, a game is a case, a book is a book with a spine. You can tell them apart before reading a word.                 |
+| Title pages ignore the artwork the app already stores. `backdropUrl` and episode `stillUrl` are in the database and never shown. | Title pages open on the backdrop. The whole page takes its color from the artwork. Episodes show their stills.                                                                             |
+| Rating is a browser slider.                                                                                                      | Rating is an instrument: a ruler in quarter points laid over how everyone else rated, with the people you follow marked on it.                                                             |
+| Franchise links, the app's most original idea, are a small grid at the bottom of a page.                                         | Universes get their own place: a map of a story across books, films, shows, and games, with your progress through it.                                                                      |
+| The feed, calendar, clubs, and lists are text only.                                                                              | All of them show artwork, and each has its own layout instead of the shared ruled list.                                                                                                    |
 
 ### The seven rules of the design
 
@@ -43,26 +43,26 @@ To open it locally with working fonts: `python3 -m http.server 4173 --directory 
 
 Routes stay where they are unless the table says otherwise, so no link anyone has saved breaks.
 
-| Route | Today | After |
-| --- | --- | --- |
-| `/` | Hero, search box, shelf of spines | Signed in: Home dashboard. Signed out: front door with sign-in |
-| `/search` | Search page | Kept and restyled. ⌘K palette added on every page |
-| `/library` | Flat grid with two rows of pills | Shelves grouped by status, tabs by medium with counts, sort, and a board view |
-| `/universes`, `/universes/[id]` | Do not exist | New. Index of story universes, and the map of one |
-| `/recommendations` | Rows of cards | Same route, shown in the sidebar as "For you" |
-| `/calendar` | Text list by month | Weeks with artwork and countdowns, plus small month grids |
-| `/feed` | Text list | Posts with artwork, grouped by day, with people to follow |
-| `/clubs`, `/clubs/[id]`, discussions | Text lists | Tiles with picks and members; club page with picks shelf |
-| `/lists`, `/lists/[id]` | Text lists | Tiles; a list is a numbered ranking with artwork |
-| `/u/[username]`, `/followers`, `/following` | Name, grid, lists | Header with stats and how they rate; followers and following become tabs (the two routes stay as deep links to those tabs) |
-| `/alerts` | List | What came through as cards with one action; what is waiting as rows |
-| `/import`, `/import/[id]` | Forms stacked | Pick a source, three steps, live counts |
-| `/account` | One column | Sections with their own sub-navigation; subscriptions as tiles |
-| `/admin/links` | Form and list | Review queue of pairs with approve and reject, and A / R keys |
-| `/movies/[id]`, `/tv/[id]`, `/games/[id]`, `/books/[id]` | Poster left, column of controls | Backdrop hero, status control, rating instrument, offers, universe, reviews, details aside |
-| `/tv/[id]/seasons/[n]` | Its own page | Kept as a deep link. The show page gains the season picker and episode list, and the season route renders the same section with that season selected |
-| `/tv/[id]/seasons/[n]/episodes/[e]` | Its own page | Kept, restyled: still, rating instrument, reviews, previous and next |
-| `/sign-in` | Form | Folded into the front door; the route stays and shows the same panel, including "Check your email" |
+| Route                                                    | Today                             | After                                                                                                                                                |
+| -------------------------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`                                                      | Hero, search box, shelf of spines | Signed in: Home dashboard. Signed out: front door with sign-in                                                                                       |
+| `/search`                                                | Search page                       | Kept and restyled. ⌘K palette added on every page                                                                                                    |
+| `/library`                                               | Flat grid with two rows of pills  | Shelves grouped by status, tabs by medium with counts, sort, and a board view                                                                        |
+| `/universes`, `/universes/[id]`                          | Do not exist                      | New. Index of story universes, and the map of one                                                                                                    |
+| `/recommendations`                                       | Rows of cards                     | Same route, shown in the sidebar as "For you"                                                                                                        |
+| `/calendar`                                              | Text list by month                | Weeks with artwork and countdowns, plus small month grids                                                                                            |
+| `/feed`                                                  | Text list                         | Posts with artwork, grouped by day, with people to follow                                                                                            |
+| `/clubs`, `/clubs/[id]`, discussions                     | Text lists                        | Tiles with picks and members; club page with picks shelf                                                                                             |
+| `/lists`, `/lists/[id]`                                  | Text lists                        | Tiles; a list is a numbered ranking with artwork                                                                                                     |
+| `/u/[username]`, `/followers`, `/following`              | Name, grid, lists                 | Header with stats and how they rate; followers and following become tabs (the two routes stay as deep links to those tabs)                           |
+| `/alerts`                                                | List                              | What came through as cards with one action; what is waiting as rows                                                                                  |
+| `/import`, `/import/[id]`                                | Forms stacked                     | Pick a source, three steps, live counts                                                                                                              |
+| `/account`                                               | One column                        | Sections with their own sub-navigation; subscriptions as tiles                                                                                       |
+| `/admin/links`                                           | Form and list                     | Review queue of pairs with approve and reject, and A / R keys                                                                                        |
+| `/movies/[id]`, `/tv/[id]`, `/games/[id]`, `/books/[id]` | Poster left, column of controls   | Backdrop hero, status control, rating instrument, offers, universe, reviews, details aside                                                           |
+| `/tv/[id]/seasons/[n]`                                   | Its own page                      | Kept as a deep link. The show page gains the season picker and episode list, and the season route renders the same section with that season selected |
+| `/tv/[id]/seasons/[n]/episodes/[e]`                      | Its own page                      | Kept, restyled: still, rating instrument, reviews, previous and next                                                                                 |
+| `/sign-in`                                               | Form                              | Folded into the front door; the route stays and shows the same panel, including "Check your email"                                                   |
 
 Sidebar order: Home, Library, Universes, For you, Calendar; then Feed, Clubs, Lists; then your clubs; then Alerts (with a count of what came through) and Import; then your name, which opens profile, account, night or day, link review for reviewers, and sign out. Under 760px the sidebar becomes a five-item bar at the bottom: Home, Library, Search, Calendar, You.
 
@@ -70,21 +70,21 @@ Sidebar order: Home, Library, Universes, For you, Calendar; then Feed, Clubs, Li
 
 The mockup's tokens are the top of [mockup/css/app.css](mockup/css/app.css). They move into [packages/ui/src/styles/globals.css](../packages/ui/src/styles/globals.css), keeping the shadcn names the components already read so nothing else has to change.
 
-| shadcn name | Night | Day |
-| --- | --- | --- |
-| `--background` | `#0b0b0d` | `#f3f2ee` |
-| `--foreground` | `#f4f1ea` | `#131316` |
-| `--card`, `--popover` | `#141417` | `#ffffff` |
+| shadcn name                          | Night                 | Day                   |
+| ------------------------------------ | --------------------- | --------------------- |
+| `--background`                       | `#0b0b0d`             | `#f3f2ee`             |
+| `--foreground`                       | `#f4f1ea`             | `#131316`             |
+| `--card`, `--popover`                | `#141417`             | `#ffffff`             |
 | `--primary` / `--primary-foreground` | `#f4f1ea` / `#0b0b0d` | `#131316` / `#f6f5f1` |
-| `--secondary`, `--accent`, `--muted` | white at 8% | ink at 7.5% |
-| `--muted-foreground` | ivory at 72% | ink at 74% |
-| `--border` / `--input` | white at 9% / 18% | ink at 10% / 22% |
-| `--ring` | `#f4f1ea` | `#131316` |
-| `--destructive` | `#ff8a7a` | `#b83a2a` |
-| `--movie` | `#ff7566` | `#c8402f` |
-| `--tv` | `#62adff` | `#1f6fd1` |
-| `--game` | `#b796ff` | `#6d43d9` |
-| `--book` | `#f2c14e` | `#94660a` |
+| `--secondary`, `--accent`, `--muted` | white at 8%           | ink at 7.5%           |
+| `--muted-foreground`                 | ivory at 72%          | ink at 74%            |
+| `--border` / `--input`               | white at 9% / 18%     | ink at 10% / 22%      |
+| `--ring`                             | `#f4f1ea`             | `#131316`             |
+| `--destructive`                      | `#ff8a7a`             | `#b83a2a`             |
+| `--movie`                            | `#ff7566`             | `#c8402f`             |
+| `--tv`                               | `#62adff`             | `#1f6fd1`             |
+| `--game`                             | `#b796ff`             | `#6d43d9`             |
+| `--book`                             | `#f2c14e`             | `#94660a`             |
 
 New tokens: `--fg-3` (third level of text, checked at 4.5:1 in both modes), `--good`, `--tone` (the current page's color, see 6.3), and the two shadows. Radii: 5 to 11px on artwork by medium, 11px on controls, 18 to 22px on panels. The current `--radius: 0.5rem` becomes `0.6875rem`.
 
@@ -96,25 +96,25 @@ Night becomes the default in `next-themes`. The class stays `.dark`, so no compo
 
 Everything below exists in the mockup. "Replaces" names what it takes over in [apps/web/src/components](../apps/web/src/components).
 
-| Component | Replaces | Notes |
-| --- | --- | --- |
-| `AppShell`, `Sidebar`, `TabBar`, `AmbientLight` | `site-header.tsx`, `nav-link.tsx` | Sidebar is a server component: session, your clubs, alert count |
-| `CommandPalette` | (new) | Titles, people, universes, lists, clubs, pages. Arrow keys and Enter |
-| `Artwork` | `cover.tsx` | Four shapes. Shows use the backdrop with the title set over it |
-| `TitleCard`, `Shelf`, `Wall` | `title-card.tsx`, `shelf.tsx` | Shelf scrolls sideways; Wall wraps. Cards keep one height and vary in width |
-| `TitleRow` | the `divide-y` lists | Fixed artwork column so titles line up |
-| `Score`, `Ring` | the bold numerals | Your rating in full strength, everyone's average dimmed |
-| `Avatar` | (new) | Initials on a gradient made from the username. No uploads |
-| `MediumBadge`, `Chip`, `Segmented`, `Tabs`, `Panel`, `Switch` | `filter-pill.tsx` | Tabs carry counts. Filters stay links so every view keeps its URL |
-| `Hero`, `StatusControl` | `media-header.tsx`, `library-control.tsx` | Four states, worded for the medium, one click |
-| `RatingDial` | `rating-control.tsx`, `rating-panel.tsx`, `episode-rating.tsx` | Drag, click, arrow keys, Page Up and Down, Home and End. Same save-after-rest behavior as today |
-| `Offers`, `PriceBar` | `where-to-watch.tsx`, `where-to-buy.tsx`, `title-alerts.tsx`, `alert-control.tsx` | Your subscriptions lead with one button; alerts sit in the same panel |
-| `EpisodeHeatmap`, `EpisodeList` | season page list | Heatmap is a grid of links; every cell has a text label |
-| `UniverseStrip`, `UniverseMap` | `related-titles.tsx` | The map's lines are drawn in SVG after layout |
-| `ReviewItem`, `Composer` | `review-section.tsx`, `review-editor.tsx`, `discussion-form.tsx` | People you follow first |
-| `Tile` | club and list rows | Used by clubs, lists, and universes |
-| `MonthGrid` | (new) | Small month with a dot per medium on days that have something |
-| `Dialog`, `Menu`, `Toast` | `list-control.tsx`, `club-control.tsx`, `<details>` forms | Add to a list, pick for a club, new list, new club, new discussion |
+| Component                                                     | Replaces                                                                          | Notes                                                                                           |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `AppShell`, `Sidebar`, `TabBar`, `AmbientLight`               | `site-header.tsx`, `nav-link.tsx`                                                 | Sidebar is a server component: session, your clubs, alert count                                 |
+| `CommandPalette`                                              | (new)                                                                             | Titles, people, universes, lists, clubs, pages. Arrow keys and Enter                            |
+| `Artwork`                                                     | `cover.tsx`                                                                       | Four shapes. Shows use the backdrop with the title set over it                                  |
+| `TitleCard`, `Shelf`, `Wall`                                  | `title-card.tsx`, `shelf.tsx`                                                     | Shelf scrolls sideways; Wall wraps. Cards keep one height and vary in width                     |
+| `TitleRow`                                                    | the `divide-y` lists                                                              | Fixed artwork column so titles line up                                                          |
+| `Score`, `Ring`                                               | the bold numerals                                                                 | Your rating in full strength, everyone's average dimmed                                         |
+| `Avatar`                                                      | (new)                                                                             | Initials on a gradient made from the username. No uploads                                       |
+| `MediumBadge`, `Chip`, `Segmented`, `Tabs`, `Panel`, `Switch` | `filter-pill.tsx`                                                                 | Tabs carry counts. Filters stay links so every view keeps its URL                               |
+| `Hero`, `StatusControl`                                       | `media-header.tsx`, `library-control.tsx`                                         | Four states, worded for the medium, one click                                                   |
+| `RatingDial`                                                  | `rating-control.tsx`, `rating-panel.tsx`, `episode-rating.tsx`                    | Drag, click, arrow keys, Page Up and Down, Home and End. Same save-after-rest behavior as today |
+| `Offers`, `PriceBar`                                          | `where-to-watch.tsx`, `where-to-buy.tsx`, `title-alerts.tsx`, `alert-control.tsx` | Your subscriptions lead with one button; alerts sit in the same panel                           |
+| `EpisodeHeatmap`, `EpisodeList`                               | season page list                                                                  | Heatmap is a grid of links; every cell has a text label                                         |
+| `UniverseStrip`, `UniverseMap`                                | `related-titles.tsx`                                                              | The map's lines are drawn in SVG after layout                                                   |
+| `ReviewItem`, `Composer`                                      | `review-section.tsx`, `review-editor.tsx`, `discussion-form.tsx`                  | People you follow first                                                                         |
+| `Tile`                                                        | club and list rows                                                                | Used by clubs, lists, and universes                                                             |
+| `MonthGrid`                                                   | (new)                                                                             | Small month with a dot per medium on days that have something                                   |
+| `Dialog`, `Menu`, `Toast`                                     | `list-control.tsx`, `club-control.tsx`, `<details>` forms                         | Add to a list, pick for a club, new list, new club, new discussion                              |
 
 Icons come from `lucide-react`, which the app already has (Film, Tv, Gamepad2, BookOpen, Orbit, and the rest). The mockup's hand-drawn icons are stand-ins.
 
@@ -122,27 +122,27 @@ Icons come from `lucide-react`, which the app already has (Film, Tv, Gamepad2, B
 
 ### 6.1 Uses data the app already stores (no migration)
 
-| Need | Change |
-| --- | --- |
-| Backdrops and stills | Return `backdropUrl` wherever a title summary is returned (`media.shelf`, `library.list`, `profiles.library`, `calendar.upcoming`, `feed.following`, `clubs.picks`, `lists`, `links.forTitle`). Return `stillUrl` with episodes. One shared "title summary" shape in `packages/api` |
-| Smaller backdrops for cards | A helper that swaps the size in a TMDB or IGDB image URL (`w1280` to `w780`, `t_1080p` to `t_720p`). No new columns |
-| The rating instrument | `ratings.distribution` (count per half point) and `ratings.fromFollowing` (the ratings of people you follow, honoring visibility). Tests for the visibility rules |
-| Episode heatmap | `ratings.forShow`: every episode's average in one query, instead of `forSeason` once per season |
-| Home | One `home.summary` query: in-progress entries, the next dated item per library title, came-through alerts, three feed items, latest discussions |
-| "Ready when you are" | Want-list titles whose **already stored** offers include one of your subscriptions. It must never fetch: Watchmode allows 2,500 requests a month, and CLAUDE.md forbids fetching offers for titles nobody opened. Titles with no stored offers are simply left out |
-| Universes | `links.universe` (every title connected to this one through verified links) and `links.universes`. A universe is computed from `media_links`; see decision 6 for its name |
-| Profile numbers | `profiles.stats`: counts and averages by medium, the rating histogram, highest rated. Honors visibility |
-| "In tune" percentage | `profiles.match`: how closely two people's ratings agree on what both rated, from public and friends-visible ratings only |
-| Tiles | `clubs.mine` and `clubs.discover` return four picks' artwork and the latest discussion; list queries return four items' artwork |
-| Reviews, people you follow first | An order change in `reviews.list` |
-| Library shelves | `library.list` returns counts per medium and status, and takes a sort |
+| Need                             | Change                                                                                                                                                                                                                                                                              |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Backdrops and stills             | Return `backdropUrl` wherever a title summary is returned (`media.shelf`, `library.list`, `profiles.library`, `calendar.upcoming`, `feed.following`, `clubs.picks`, `lists`, `links.forTitle`). Return `stillUrl` with episodes. One shared "title summary" shape in `packages/api` |
+| Smaller backdrops for cards      | A helper that swaps the size in a TMDB or IGDB image URL (`w1280` to `w780`, `t_1080p` to `t_720p`). No new columns                                                                                                                                                                 |
+| The rating instrument            | `ratings.distribution` (count per half point) and `ratings.fromFollowing` (the ratings of people you follow, honoring visibility). Tests for the visibility rules                                                                                                                   |
+| Episode heatmap                  | `ratings.forShow`: every episode's average in one query, instead of `forSeason` once per season                                                                                                                                                                                     |
+| Home                             | One `home.summary` query: in-progress entries, the next dated item per library title, came-through alerts, three feed items, latest discussions                                                                                                                                     |
+| "Ready when you are"             | Want-list titles whose **already stored** offers include one of your subscriptions. It must never fetch: Watchmode allows 2,500 requests a month, and CLAUDE.md forbids fetching offers for titles nobody opened. Titles with no stored offers are simply left out                  |
+| Universes                        | `links.universe` (every title connected to this one through verified links) and `links.universes`. A universe is computed from `media_links`; see decision 6 for its name                                                                                                           |
+| Profile numbers                  | `profiles.stats`: counts and averages by medium, the rating histogram, highest rated. Honors visibility                                                                                                                                                                             |
+| "In tune" percentage             | `profiles.match`: how closely two people's ratings agree on what both rated, from public and friends-visible ratings only                                                                                                                                                           |
+| Tiles                            | `clubs.mine` and `clubs.discover` return four picks' artwork and the latest discussion; list queries return four items' artwork                                                                                                                                                     |
+| Reviews, people you follow first | An order change in `reviews.list`                                                                                                                                                                                                                                                   |
+| Library shelves                  | `library.list` returns counts per medium and status, and takes a sort                                                                                                                                                                                                               |
 
 ### 6.2 Needs a small migration
 
-| Need | Change |
-| --- | --- |
+| Need                                           | Change                                                                                                                                                                                                              |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Shows as screens in search and recommendations | Search results and `similar_titles` only carry a poster. Add `backdropUrl` to `CatalogSearchResult` (TMDB already returns it) and a nullable column to `similar_titles`. Until then shows fall back to their poster |
-| Notes on list items | Nullable `note` on list items |
+| Notes on list items                            | Nullable `note` on list items                                                                                                                                                                                       |
 
 ### 6.3 The page's color
 
@@ -157,15 +157,15 @@ I recommend starting with A and adding B as its own PR once the title page is in
 
 These are features, not restyling. Each one is its own decision and its own PR, and none of the restyling depends on them.
 
-| In the mockup | What it would take |
-| --- | --- |
+| In the mockup                                                                                              | What it would take                                                                                                                                                                                                                         |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Progress**: "Season 2, episode 7 is next", "Page 141 of 279", "38 hours played", and episode check marks | An `episode_watches` table, plus nullable `pagesRead` and `minutesPlayed` on `library_entries`. Trakt and Steam imports already see this data and could fill it. Without it, Home falls back to "the episode after the last one you rated" |
-| **How long have you got?** | Already in PRODUCT.md as the time budget filter. A query over runtimes and page counts; games are left out until there is a source for their length |
-| **Something for two** | Already in PRODUCT.md. A query over your want list and a friend's high ratings |
-| **Library board** with drag | Interface only. Uses `library.save`. Every row also needs a status menu so it works without a mouse |
-| **Want the other N** in a universe | A loop over `library.save`, or one `library.saveMany` |
-| **Universe descriptions** | The one-line descriptions are invented. Real ones need a small `universes` table that reviewers fill, or they are dropped |
-| **Authors in search results** | Already in PRODUCT.md |
+| **How long have you got?**                                                                                 | Already in PRODUCT.md as the time budget filter. A query over runtimes and page counts; games are left out until there is a source for their length                                                                                        |
+| **Something for two**                                                                                      | Already in PRODUCT.md. A query over your want list and a friend's high ratings                                                                                                                                                             |
+| **Library board** with drag                                                                                | Interface only. Uses `library.save`. Every row also needs a status menu so it works without a mouse                                                                                                                                        |
+| **Want the other N** in a universe                                                                         | A loop over `library.save`, or one `library.saveMany`                                                                                                                                                                                      |
+| **Universe descriptions**                                                                                  | The one-line descriptions are invented. Real ones need a small `universes` table that reviewers fill, or they are dropped                                                                                                                  |
+| **Authors in search results**                                                                              | Already in PRODUCT.md                                                                                                                                                                                                                      |
 
 ## 7. Build order
 
@@ -247,15 +247,15 @@ That is 27 PRs for the redesign itself and up to 7 for new capabilities.
 
 ## 8. Risks
 
-| Risk | How it is handled |
-| --- | --- |
-| Watchmode quota | Nothing new fetches availability. Home and the calendar read only what is stored |
-| Test churn | Accessible names stay the same where they can. Specs change in the same PR as the screen |
-| Shows without a backdrop, books without a cover | `Artwork` falls back to the poster, then to the title set in type on a tinted panel |
-| Book covers vary in shape | Books use one fixed ratio (about 2:3) and crop. Measuring each cover would ride along with 7.1 |
-| Blur is expensive on slow machines | One blurred layer per page, fixed in place, switched off under reduced motion |
-| Halfway states | After Phase 1 old layouts sit in the new shell. That is expected and still coherent |
-| Third-level text contrast | Checked at 4.5:1 in both modes in the mockup; re-checked in 8.2 |
+| Risk                                            | How it is handled                                                                              |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Watchmode quota                                 | Nothing new fetches availability. Home and the calendar read only what is stored               |
+| Test churn                                      | Accessible names stay the same where they can. Specs change in the same PR as the screen       |
+| Shows without a backdrop, books without a cover | `Artwork` falls back to the poster, then to the title set in type on a tinted panel            |
+| Book covers vary in shape                       | Books use one fixed ratio (about 2:3) and crop. Measuring each cover would ride along with 7.1 |
+| Blur is expensive on slow machines              | One blurred layer per page, fixed in place, switched off under reduced motion                  |
+| Halfway states                                  | After Phase 1 old layouts sit in the new shell. That is expected and still coherent            |
+| Third-level text contrast                       | Checked at 4.5:1 in both modes in the mockup; re-checked in 8.2                                |
 
 ## 9. What I need from you before starting
 

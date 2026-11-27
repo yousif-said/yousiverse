@@ -102,8 +102,33 @@ packages/
 - **Background jobs** are plain functions in `packages/api` that take a step runner (see `alerts/check.ts`), wrapped by a thin Inngest function in `jobs.ts`, so they can be tested without Inngest. Keep each step short, give it a name that is the same on every replay, and return only counts and catalog ids from it: Inngest stores what steps return, so nothing about a person may go there.
 - **Calendar dates** are US calendar days (`usToday` in `packages/api/src/calendar/dates.ts`), never the server's own date. The daily calendar job refreshes only titles in someone's library whose dates could still change, within `TITLES_PER_RUN`.
 - **Alerts** fire once. The daily job is the only thing that spends provider requests on titles nobody opened, and it keeps to a daily budget (`STREAMING_REFRESHES_PER_RUN`); never add another path that refreshes availability in bulk.
-- UI should feel fast, clean, and modern. Use the frontend-design plugin for new screens. Support light and dark mode and keyboard navigation from the start.
+- UI follows the design system below. Support night and day and keyboard navigation from the start.
 - Write or update tests with every feature. Use Playwright for critical user flows (sign-in, adding to library, rating, reviewing).
+
+### Design system
+
+The look was designed as a clickable mockup in `redesign/mockup` (reference only; the app does not load it) and the plan in `redesign/PLAN.md`. Seven rules hold everywhere:
+
+1. **The interface is monochrome; the artwork is the light.** Buttons, text, and surfaces are ink and ivory. Color comes from titles and from one hue per medium (`--movie`, `--tv`, `--game`, `--book`).
+2. **Every medium keeps its shape**, at every size: a movie is a 2:3 poster, a show is a 16:9 screen with its name set over it, a game is a 3:4 case, a book is a book with a spine.
+3. **One lead per page.** If two things compete, one moves down.
+4. **Serif for stories, sans for the interface, mono for measurements**: Fraunces (`--display`) for titles and big numbers, Hanken Grotesk (`--sans`) for what you operate, Geist Mono (`--mono`) for prices, dates, and counts.
+5. **Rings mean a rating or progress** (`Meter`, `Score`, `Average`). Nothing else is a ring.
+6. **Night first, day equal.** Night is the default; day is designed, not inverted. Check both.
+7. **Nothing is only color.** A medium has a shape and an icon; a state has a word.
+
+How it is built:
+
+- **Styles** are component classes in `packages/ui/src/styles/design.css` (`.btn`, `.card`, `.row`, `.hero`, `.panel`, `.dial`, `.offers`, `.tile` ...), with tokens in `globals.css` and page-specific additions in `styles/parts/*.css`. Use those classes; reach for Tailwind utilities only for one-off layout (`min-w-0`, `mt-4`, `sr-only`). Never hard-code a color: use the tokens (`var(--fg)`, `--fg-2`, `--fg-3`, `--surface`, `--line`, `--good`, `--warn`).
+- **A page** is `<div className="page">` (or `page page--narrow`) directly inside the layout's `<main>`, with at most one `<Ambient src>` as its sibling for the blurred-artwork glow. Title pages are a `.hero` followed by a `.tgrid`.
+- **Tone:** a page or part takes a title's color with `className="toned"` and `style={toneStyle(title)}` (`lib/titles.ts`). `.night` keeps a part dark in day mode (artwork with type over it).
+- **Titles** are drawn with `Artwork`, `Thumb`, `TitleCard`, `Shelf`, `Wall`, and `TitleRow` (`components/media`). Queries that return titles select `titleSummary` (`packages/api/src/titles.ts`), which carries what those need. `getMarks` (`lib/marks.ts`) gives the viewer's status and rating for a set of titles.
+- **Parts:** `Icon` (the app's own icon set), `Avatar`, `PageHeader`, `SectionHead`, `Crumb`, `LinkTabs`, `LinkSegmented`, `Ambient`, `VisibilityChip`, `toast()` in `components/ui`; `Medium`, `Score`, `Average`, `Meter`, `ServiceMark` in `components/media`; `Button`, `Input`, `Textarea`, `Label`, `Switch`, `Dialog`, `DropdownMenu` in `packages/ui`. A streaming service or store is always shown with its `ServiceMark`.
+- **Filters are links** (`LinkTabs`, `LinkSegmented`), so every view has its own address. Buttons are for things that change data.
+- **Loading:** a page that redirects (sign-in) or can answer "not found" has no `loading.tsx`, because a route-level one starts the response before the page can do either. It checks first, then wraps the rest in `<Suspense>` with its skeleton from `components/states/page-skeletons.tsx`. Title routes have none at all: the artwork a person clicked grows into the page's poster (`Artwork` with `arrives`), which only works when the page arrives in one piece.
+- **Anything that scrolls sideways is `position: relative`.** Hidden text for screen readers inside it (`sr-only`) is absolutely positioned, and otherwise escapes the scroller and widens the page on a phone.
+- **Words:** the place for franchises is "Youniverses" (`/youniverses`); one of them is "a universe". A finished movie is "Watched", a finished book is "Read" (`statusLabel`).
+- **The demo world:** `bun run --cwd packages/api demo:seed` fills a database whose name ends in `_design` with the mockup's sample people, library, clubs, and lists, for looking at screens with something on them. It erases every account in that database.
 
 ### Database schema
 
