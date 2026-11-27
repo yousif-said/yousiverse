@@ -107,7 +107,7 @@ packages/
 
 ### Design system
 
-The look was designed as a clickable mockup in `redesign/mockup` (reference only; the app does not load it) and the plan in `redesign/PLAN.md`. Seven rules hold everywhere:
+Seven rules hold everywhere:
 
 1. **The interface is monochrome; the artwork is the light.** Buttons, text, and surfaces are ink and ivory. Color comes from titles and from one hue per medium (`--movie`, `--tv`, `--game`, `--book`).
 2. **Every medium keeps its shape**, at every size: a movie is a 2:3 poster, a show is a 16:9 screen with its name set over it, a game is a 3:4 case, a book is a book with a spine.
@@ -128,7 +128,6 @@ How it is built:
 - **Loading:** a page that redirects (sign-in) or can answer "not found" has no `loading.tsx`, because a route-level one starts the response before the page can do either. It checks first, then wraps the rest in `<Suspense>` with its skeleton from `components/states/page-skeletons.tsx`. Title routes have none at all: the artwork a person clicked grows into the page's poster (`Artwork` with `arrives`), which only works when the page arrives in one piece.
 - **Anything that scrolls sideways is `position: relative`.** Hidden text for screen readers inside it (`sr-only`) is absolutely positioned, and otherwise escapes the scroller and widens the page on a phone.
 - **Words:** the place for franchises is "Youniverses" (`/youniverses`); one of them is "a universe". A finished movie is "Watched", a finished book is "Read" (`statusLabel`).
-- **The demo world:** `bun run --cwd packages/api demo:seed` fills a database whose name ends in `_design` with the mockup's sample people, library, clubs, and lists, for looking at screens with something on them. It erases every account in that database.
 
 ### Database schema
 

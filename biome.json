@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/drizzle/meta", "!**/fixtures/*.json", "!redesign/mockup"]
+    "includes": ["**", "!**/drizzle/meta", "!**/fixtures/*.json"]
   },
   "formatter": {
     "indentStyle": "space",
