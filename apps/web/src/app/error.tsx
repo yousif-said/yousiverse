@@ -1,26 +1,27 @@
 "use client";
 
-import { Button } from "@yousiverse/ui/components/button";
+import type { ErrorInfo } from "next/error";
+import Link from "next/link";
 import { useEffect } from "react";
+import { NOT_LOADED, Notice } from "@/components/states/notice";
 
-type Props = { error: Error & { digest?: string }; reset: () => void };
-
-export default function ErrorPage({ error, reset }: Props) {
+export default function ErrorPage({ error, retry }: ErrorInfo) {
   useEffect(() => {
     console.error(error);
   }, [error]);
 
   return (
-    <section className="max-w-xl pt-16 sm:pt-24">
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">
-        This page didn&apos;t load
-      </h1>
-      <p className="mt-4 text-muted-foreground">
-        Something went wrong while fetching it. Your data is unaffected.
-      </p>
-      <Button className="mt-8" onClick={reset}>
-        Try again
-      </Button>
-    </section>
+    <Notice {...NOT_LOADED}>
+      <title>Something went wrong · Yousiverse</title>
+      <div className="notice__actions">
+        {/* `retry` asks the server for the page again; `reset` would only redraw what failed. */}
+        <button type="button" className="btn btn--primary" onClick={retry}>
+          Try again
+        </button>
+        <Link className="btn btn--soft" href="/">
+          Back to Home
+        </Link>
+      </div>
+    </Notice>
   );
 }

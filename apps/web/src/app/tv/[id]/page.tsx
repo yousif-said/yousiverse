@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { MediaHeader } from "@/components/media-header";
-import { RelatedTitles } from "@/components/related-titles";
-import { ReviewSection } from "@/components/review-section";
-import { WhereToWatch } from "@/components/where-to-watch";
+import { NO_DATE, TitlePage } from "@/components/title/title-page";
+import { usToday } from "@/lib/days";
 import { formatDate, pluralize } from "@/lib/format";
-import { mediaPath } from "@/lib/media";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
+
+/** What TMDB calls a show that will make no more episodes. */
+const OVER = ["Ended", "Canceled"];
 
 function getTvShow(providerId: string) {
   return orNotFound(getQueryClient().fetchQuery(trpc.media.tvShow.queryOptions({ providerId })));
@@ -17,55 +16,30 @@ export async function generateMetadata({ params }: PageProps<"/tv/[id]">): Promi
   return { title: show.title, description: show.overview };
 }
 
-export default async function TvShowPage({ params }: PageProps<"/tv/[id]">) {
-  const { id } = await params;
+export default async function TvShowPage({ params, searchParams }: PageProps<"/tv/[id]">) {
+  const [{ id }, { season }] = await Promise.all([params, searchParams]);
   const show = await getTvShow(id);
+  // Specials (season 0) do not count as a season.
+  const seasonCount = show.seasons.filter((each) => each.seasonNumber > 0).length;
+  const running =
+    !OVER.includes(show.status ?? "") && show.releaseDate !== null && show.releaseDate <= usToday();
 
   return (
-    <>
-      <MediaHeader
-        mediaId={show.id}
-        providerId={id}
-        type="tv"
-        title={show.title}
-        tagline={show.tagline}
-        overview={show.overview}
-        posterUrl={show.posterUrl}
-        facts={[
-          { label: "First aired", value: show.releaseDate && formatDate(show.releaseDate) },
-          { label: "Status", value: show.status },
-          { label: "Genres", value: show.genres.join(", ") },
-        ]}
-      />
-
-      <WhereToWatch mediaId={show.id} type="tv" />
-
-      {show.seasons.length > 0 && (
-        <section aria-labelledby="seasons-heading" className="mt-16 max-w-3xl">
-          <h2 id="seasons-heading" className="font-display text-2xl font-bold tracking-tight">
-            Seasons
-          </h2>
-          <ul className="mt-4 divide-y border-y">
-            {show.seasons.map((season) => (
-              <li key={season.seasonNumber}>
-                <Link
-                  href={`${mediaPath("tv", id)}/seasons/${season.seasonNumber}`}
-                  className="flex items-baseline justify-between gap-6 px-1 py-4 outline-none transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                >
-                  <span className="font-medium">{season.name}</span>
-                  <span className="shrink-0 text-sm text-muted-foreground tabular-nums">
-                    {season.airDate && `${season.airDate.slice(0, 4)}, `}
-                    {pluralize(season.episodeCount, "episode")}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      <RelatedTitles mediaId={show.id} />
-      <ReviewSection target={{ mediaId: show.id }} path={mediaPath("tv", id)} />
-    </>
+    <TitlePage
+      title={{ ...show, mediaId: show.id, type: "tv", providerId: id }}
+      meta={[
+        show.releaseYear ? `${show.releaseYear}${running ? " to now" : ""}` : NO_DATE,
+        seasonCount > 0 && pluralize(seasonCount, "season"),
+        show.genres.slice(0, 2).join(", "),
+      ]}
+      tagline={show.tagline}
+      facts={[
+        { label: "First aired", value: show.releaseDate && formatDate(show.releaseDate) },
+        { label: "Status", value: show.status?.replace("Returning Series", "Returning") },
+        { label: "Seasons", value: seasonCount },
+        { label: "Genres", value: show.genres.join(", ") },
+      ]}
+      season={typeof season === "string" && /^\d{1,4}$/.test(season) ? Number(season) : undefined}
+    />
   );
 }

@@ -7,7 +7,7 @@ async function chooseUsername(page: Page, username: string, name: string) {
   await page.getByLabel("Username").fill(username);
   await page.getByLabel("Display name").fill(name);
   await page.getByRole("button", { name: "Save profile" }).click();
-  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await expect(page.getByRole("status").filter({ hasText: "Saved." })).toBeVisible();
 }
 
 test("sends a signed-out visitor to sign in before showing a feed", async ({ page }) => {
@@ -43,7 +43,7 @@ test("shows what a followed person adds and reviews", async ({ page, browser }) 
   await followed;
 
   await page.goto("/feed");
-  const items = page.getByRole("main").getByRole("listitem");
+  const items = page.locator("li.post");
   await expect(items).toHaveCount(2);
   await expect(items.filter({ hasText: "reviewed" })).toContainText(`Feed review by ${writer}`);
   const playing = items.filter({ hasText: "is playing" });

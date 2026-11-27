@@ -19,7 +19,7 @@ test("writes, edits, hides, and deletes a review of a book", async ({ page, brow
 
   await page.getByRole("button", { name: "Edit review" }).click();
   await page.getByLabel("Your review").fill(`${body} Edited.`);
-  await page.getByLabel("Who can read this review").selectOption("Only me");
+  await page.getByLabel("Who can read this review").selectOption("Only you");
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(
     page.getByRole("heading", { name: "Your review, visible only to you" }),
@@ -45,10 +45,14 @@ test("opens an episode from its season, then rates and reviews it", async ({ pag
 
   await expect(page).toHaveURL("/tv/95396/seasons/1/episodes/3");
   await expect(page.getByRole("heading", { level: 1, name: "In Perpetuity" })).toBeVisible();
-  await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toContainText("Season 1");
+  await expect(page.getByRole("link", { name: "Severance", exact: true })).toBeVisible();
+  await expect(page.getByText("Season 1, episode 3")).toBeVisible();
 
-  await page.getByRole("slider", { name: "Your rating" }).fill("34");
-  await expect(page.getByRole("status")).toHaveText("8.5");
+  const slider = page.getByRole("slider", { name: "Your rating" });
+  await slider.focus();
+  await slider.press("End");
+  for (let step = 0; step < 6; step++) await slider.press("ArrowLeft");
+  await expect(page.locator(".dial__num")).toHaveText("8.5");
   const body = `The wellness session. ${Date.now()}`;
   await page.getByLabel("Your review").fill(body);
   await page.getByRole("button", { name: "Post review" }).click();

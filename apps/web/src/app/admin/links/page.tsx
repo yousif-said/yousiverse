@@ -1,34 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { LinkForm } from "@/components/link-form";
-import { RemoveLinkButton } from "@/components/remove-link-button";
-import { SuggestionFinder } from "@/components/suggestion-finder";
-import { SuggestionReview } from "@/components/suggestion-review";
+import { LinkForm } from "@/components/review/link-form";
+import { PairTitle } from "@/components/review/pair-title";
+import { RemoveLinkButton } from "@/components/review/remove-link-button";
+import { ReviewKeys } from "@/components/review/review-keys";
+import { QUEUE_RELATIONS, queueOrder, type Side, sideLabel } from "@/components/review/sides";
+import { SuggestionCard } from "@/components/review/suggestion-card";
+import { SuggestionFinder } from "@/components/review/suggestion-finder";
+import { Icon } from "@/components/ui/icon";
+import { Crumb } from "@/components/ui/page-header";
 import { pluralize } from "@/lib/format";
-import { LINK_PHRASES, suggestionSides } from "@/lib/links";
-import { MEDIA, type MediaType, mediaPath } from "@/lib/media";
+import { LINK_PHRASES } from "@/lib/links";
+import { mediaPath } from "@/lib/media";
 import { requireSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Franchise links" };
 
-const sectionHeading = "font-display text-2xl font-bold tracking-tight";
-
-type Side = { type: MediaType; providerId: string; title: string; releaseYear?: number | null };
-
-/** "The Matrix (movie, 1999)", for telling apart titles that share a name. */
-function sideLabel(side: Side): string {
-  const kind = side.type === "tv" ? MEDIA.tv.singular : MEDIA[side.type].singular.toLowerCase();
-  return `${side.title} (${kind}${side.releaseYear ? `, ${side.releaseYear}` : ""})`;
-}
-
 function TitleLink({ side }: { side: Side }) {
   return (
-    <Link
-      href={mediaPath(side.type, side.providerId)}
-      className="rounded-sm font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-    >
+    <Link className="link" href={mediaPath(side.type, side.providerId)}>
       {sideLabel(side)}
     </Link>
   );
@@ -46,88 +38,116 @@ export default async function FranchiseLinksPage() {
   ]);
 
   return (
-    <div className="max-w-3xl pt-14 sm:pt-20">
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Franchise links</h1>
-      <p className="mt-3 max-w-[65ch] text-muted-foreground">
-        Links connect a title to its source, its adaptations, its sequels, and the rest of its
-        franchise. Nothing here appears on a title&apos;s page until you approve it.
-      </p>
+    <div className="page page--narrow">
+      <Crumb href="/account">Account</Crumb>
+      <header className="ph" style={{ marginTop: 14 }}>
+        <div className="ph__text">
+          <span className="label">
+            <Icon name="shield" size="sm" /> Reviewers only
+          </span>
+          <h1 className="d2">Franchise links</h1>
+          <p className="lede">
+            Suggestions come from Wikidata and stay hidden until one of you approves them. A
+            rejected suggestion is not raised again.
+          </p>
+        </div>
+        <div className="ph__actions">
+          <a className="btn btn--soft" href="#by-hand">
+            <Icon name="link" />
+            Link two titles
+          </a>
+        </div>
+      </header>
 
-      <section aria-labelledby="find-heading" className="mt-12">
-        <h2 id="find-heading" className={sectionHeading}>
-          Find suggestions
-        </h2>
-        <p className="mt-2 mb-4 max-w-[65ch] text-sm text-muted-foreground">
-          Suggestions come from Wikidata, which is edited by volunteers and is sometimes wrong.
-        </p>
-        <SuggestionFinder uncheckedTitles={uncheckedTitles} />
-      </section>
-
-      <section aria-labelledby="review-heading" className="mt-12">
-        <h2 id="review-heading" className={sectionHeading}>
-          Waiting for review
-        </h2>
-        {pending.length === 0 ? (
-          <p className="mt-4 text-muted-foreground">No suggestions are waiting.</p>
+      <section aria-labelledby="queue-h">
+        <div className="sh">
+          <h2 className="d3" id="queue-h">
+            {pluralize(pendingCount, "suggestion")} waiting
+          </h2>
+          <span className="hint">
+            <span className="kbd">A</span> approve &nbsp; <span className="kbd">R</span> reject
+          </span>
+        </div>
+        {pending.length > 0 ? (
+          <ReviewKeys>
+            {pending.map((suggestion) => {
+              const [first, second] = queueOrder(suggestion);
+              const relation = QUEUE_RELATIONS[suggestion.kind];
+              return (
+                <SuggestionCard
+                  key={suggestion.id}
+                  suggestionId={suggestion.id}
+                  summary={`${sideLabel(first)} ${relation} ${sideLabel(second)}`}
+                >
+                  <PairTitle side={first} />
+                  <div className="pair__rel">
+                    <Icon name="arrow-r" />
+                    <span>{relation}</span>
+                  </div>
+                  <PairTitle side={second} />
+                </SuggestionCard>
+              );
+            })}
+          </ReviewKeys>
         ) : (
-          <>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {pluralize(pendingCount, "suggestion")} waiting
-              {pendingCount > pending.length && `, showing the first ${pending.length}`}. Open a
-              title to check it before approving.
-            </p>
-            <ul className="mt-4 divide-y border-y">
-              {pending.map((suggestion) => {
-                const [first, second] = suggestionSides(suggestion);
-                const phrase = LINK_PHRASES[suggestion.kind];
-                return (
-                  <li
-                    key={suggestion.id}
-                    className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4"
-                  >
-                    <p className="max-w-[55ch]">
-                      <TitleLink side={first} /> {phrase} <TitleLink side={second} />
-                    </p>
-                    <SuggestionReview
-                      suggestionId={suggestion.id}
-                      summary={`${sideLabel(first)} ${phrase} ${sideLabel(second)}`}
-                    />
-                  </li>
-                );
-              })}
-            </ul>
-          </>
+          <div className="empty">
+            Nothing waiting. New suggestions arrive as titles are looked up.
+          </div>
+        )}
+        {pendingCount > pending.length && (
+          <p className="hint mt-4">
+            Showing the first {pending.length}. The rest follow as these are settled.
+          </p>
         )}
       </section>
 
-      <section aria-labelledby="add-heading" className="mt-12">
-        <h2 id="add-heading" className={sectionHeading}>
-          Link two titles yourself
-        </h2>
-        <p className="mt-2 mb-4 max-w-[65ch] text-sm text-muted-foreground">
-          Open each title&apos;s page and copy its address from the browser.
-        </p>
+      <section className="section" aria-labelledby="find-h">
+        <div className="sh">
+          <div>
+            <h2 className="d3" id="find-h">
+              Find suggestions
+            </h2>
+            <p className="sh__sub">
+              Wikidata is edited by volunteers and is sometimes wrong. Open a title to check it
+              before approving.
+            </p>
+          </div>
+        </div>
+        <SuggestionFinder uncheckedTitles={uncheckedTitles} />
+      </section>
+
+      <section className="section" id="by-hand" aria-labelledby="by-hand-h">
+        <div className="sh">
+          <div>
+            <h2 className="d3" id="by-hand-h">
+              Link two titles yourself
+            </h2>
+            <p className="sh__sub">
+              Open each title&apos;s page and copy its address from the browser.
+            </p>
+          </div>
+        </div>
         <LinkForm />
       </section>
 
-      <section aria-labelledby="verified-heading" className="mt-12">
-        <h2 id="verified-heading" className={sectionHeading}>
-          Recently verified
-        </h2>
-        {verified.length === 0 ? (
-          <p className="mt-4 text-muted-foreground">No links have been verified yet.</p>
-        ) : (
-          <ul className="mt-4 divide-y border-y">
+      <section className="section" aria-labelledby="verified-h">
+        <div className="sh">
+          <div>
+            <h2 className="d3" id="verified-h">
+              Recently verified
+            </h2>
+            <p className="sh__sub">Removing a link takes it off both titles&apos; pages.</p>
+          </div>
+        </div>
+        {verified.length > 0 ? (
+          <ul>
             {verified.map((link) => {
               const phrase = LINK_PHRASES[link.kind];
               return (
-                <li
-                  key={link.id}
-                  className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-4"
-                >
-                  <p className="max-w-[55ch]">
+                <li key={link.id} className="kv">
+                  <div className="min-w-0">
                     <TitleLink side={link.from} /> {phrase} <TitleLink side={link.to} />
-                  </p>
+                  </div>
                   <RemoveLinkButton
                     linkId={link.id}
                     summary={`${sideLabel(link.from)} ${phrase} ${sideLabel(link.to)}`}
@@ -136,6 +156,8 @@ export default async function FranchiseLinksPage() {
               );
             })}
           </ul>
+        ) : (
+          <div className="empty">No links have been verified yet.</div>
         )}
       </section>
     </div>

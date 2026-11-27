@@ -32,7 +32,8 @@ test("signs in with an emailed link, reaches the protected account page, and sig
 
   await page.getByRole("button", { name: "Sign out" }).click();
   await expect(page).toHaveURL("/");
-  await expect(page.getByRole("link", { name: "Sign in" }).first()).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: /One universe\./ })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Send sign-in link" })).toBeVisible();
 
   await page.goto("/account");
   await expect(page).toHaveURL("/sign-in?next=%2Faccount");

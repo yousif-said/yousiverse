@@ -46,13 +46,16 @@ test("a reviewer links two titles, which then point at each other, and removes t
   await expect(form.getByRole("alert")).toHaveText("These two titles are already linked.");
 
   await page.goto("/movies/603");
-  const related = page.getByRole("region", { name: "Related titles" });
-  await expect(related.getByRole("heading", { name: "Followed by" })).toBeVisible();
-  await related.getByRole("link", { name: /The Matrix Reloaded/ }).click();
+  const universe = page.getByRole("region", { name: "The Matrix universe" });
+  const sequel = universe.getByRole("listitem").filter({ hasText: "After this" });
+  await expect(sequel).toContainText("The Matrix Reloaded");
+  await sequel.getByRole("link", { name: /The Matrix Reloaded/ }).click();
   await expect(page).toHaveURL("/movies/604");
-  const relatedToSequel = page.getByRole("region", { name: "Related titles" });
-  await expect(relatedToSequel.getByRole("heading", { name: "Follows" })).toBeVisible();
-  await expect(relatedToSequel.getByRole("link", { name: /The Matrix/ })).toHaveAttribute(
+  const predecessor = page
+    .getByRole("region", { name: /universe$/ })
+    .getByRole("listitem")
+    .filter({ hasText: "Before this" });
+  await expect(predecessor.getByRole("link", { name: /The Matrix/ })).toHaveAttribute(
     "href",
     "/movies/603",
   );
@@ -62,5 +65,5 @@ test("a reviewer links two titles, which then point at each other, and removes t
   await expect(verified.getByText(LINK)).toHaveCount(0);
   await page.goto("/movies/603");
   await expect(page.getByRole("heading", { level: 1, name: "The Matrix" })).toBeVisible();
-  await expect(page.getByRole("region", { name: "Related titles" })).toHaveCount(0);
+  await expect(page.getByRole("region", { name: /universe$/ })).toHaveCount(0);
 });

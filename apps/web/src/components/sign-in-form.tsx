@@ -1,9 +1,7 @@
 "use client";
 
 import type { SignInMethods } from "@yousiverse/auth";
-import { Button } from "@yousiverse/ui/components/button";
-import { Input } from "@yousiverse/ui/components/input";
-import { Label } from "@yousiverse/ui/components/label";
+import { cn } from "cn";
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
@@ -12,6 +10,10 @@ type Props = { methods: SignInMethods; redirectTo: string };
 /** How long "Send again" stays off after a link goes out, so one slow email is not asked for twice. */
 const SEND_AGAIN_WAIT_SECONDS = 30;
 
+/**
+ * The front door's sign-in panel: Google where it is set up, and a sign-in link by email. Once a
+ * link is sent the panel becomes "Check your email", so it cannot be asked for twice by accident.
+ */
 export function SignInForm({ methods, redirectTo }: Props) {
   const [sentTo, setSentTo] = useState<string>();
   const [isSending, setIsSending] = useState(false);
@@ -57,34 +59,34 @@ export function SignInForm({ methods, redirectTo }: Props) {
   }
 
   const error = errorMessage && (
-    <p className="text-sm text-destructive" role="alert">
+    <p className="error" role="alert">
       {errorMessage}
     </p>
   );
 
   if (sentTo) {
     return (
-      <div className="mt-8 space-y-6">
-        <div className="space-y-2" role="status">
-          <h2 className="text-lg font-semibold">Check your email</h2>
-          <p className="text-muted-foreground">
+      <div className="sent">
+        <div className="sent__what" role="status">
+          <h2 className="d3">Check your email</h2>
+          <p className="dim">
             We sent a sign-in link to{" "}
-            <span className="break-words font-medium text-foreground">{sentTo}</span>. It works
-            once, for {methods.linkMinutes} minutes.
+            <b className="break-words" style={{ color: "var(--fg)" }}>
+              {sentTo}
+            </b>
+            . It works once, for the next {methods.linkMinutes} minutes.
           </p>
           {methods.linkIsPrinted && (
-            <p className="text-sm text-muted-foreground">
+            <p className="hint">
               Development only: nothing was emailed. Open the link from the terminal running the dev
               server.
             </p>
           )}
         </div>
-
-        <div className="space-y-2">
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full"
+        <div className="flex flex-wrap gap-2.5">
+          <button
+            type="button"
+            className="btn btn--soft"
             disabled={isSending || secondsUntilSendAgain > 0}
             onClick={() => sendSignInLink(sentTo)}
           >
@@ -93,81 +95,54 @@ export function SignInForm({ methods, redirectTo }: Props) {
               : secondsUntilSendAgain > 0
                 ? `Send again in ${secondsUntilSendAgain}s`
                 : "Send again"}
-          </Button>
-          <Button variant="ghost" size="lg" className="w-full" onClick={changeEmail}>
-            Use a different email
-          </Button>
+          </button>
         </div>
-
+        <button type="button" className="hint link self-start" onClick={changeEmail}>
+          Use a different email
+        </button>
         {error}
       </div>
     );
   }
 
   return (
-    <div className="mt-8 space-y-6">
+    <div className="door__cta">
       {methods.google && (
-        <Button variant="outline" size="lg" className="w-full" onClick={signInWithGoogle}>
-          <GoogleLogo />
-          Continue with Google
-        </Button>
+        <>
+          <button type="button" className="btn btn--primary btn--lg" onClick={signInWithGoogle}>
+            Continue with Google
+          </button>
+          <div className="door__or">or</div>
+        </>
       )}
-
-      {methods.google && (
-        <p className="flex items-center gap-4 text-sm text-muted-foreground">
-          <span className="h-px flex-1 bg-border" />
-          or use your email
-          <span className="h-px flex-1 bg-border" />
-        </p>
-      )}
-
-      <form onSubmit={submitEmail} className="space-y-3">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="you@example.com"
-            required
-            className="h-10 bg-card"
-          />
-        </div>
-        <Button type="submit" size="lg" className="w-full" disabled={isSending}>
+      <form className="door__form" onSubmit={submitEmail}>
+        <label className="sr-only" htmlFor="email">
+          Email
+        </label>
+        <input
+          className="input"
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="you@example.com"
+          required
+        />
+        {/* With no Google button above it, the link is the one thing to do here. */}
+        <button
+          className={cn("btn btn--lg", methods.google ? "btn--soft" : "btn--primary")}
+          type="submit"
+          disabled={isSending}
+        >
           {isSending ? "Sending…" : "Send sign-in link"}
-        </Button>
-        <p className="text-sm text-muted-foreground">
-          {methods.linkIsPrinted
-            ? "Development only: the link prints in the terminal instead of being emailed."
-            : "We will email you a link that signs you in. No password needed, and it works for new accounts too."}
-        </p>
+        </button>
       </form>
-
+      <p className="hint">
+        {methods.linkIsPrinted
+          ? "Development only: the link prints in the terminal instead of being emailed."
+          : "No password. The first link creates your account."}
+      </p>
       {error}
     </div>
-  );
-}
-
-function GoogleLogo() {
-  return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" className="size-[18px]">
-      <path
-        fill="#EA4335"
-        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-      />
-      <path
-        fill="#4285F4"
-        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-      />
-      <path
-        fill="#FBBC05"
-        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-      />
-      <path
-        fill="#34A853"
-        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-      />
-    </svg>
   );
 }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28" fill="none" stroke-width="4" stroke-linecap="round">
+  <title>Yousiverse</title>
+  <circle cx="14" cy="14" r="10" stroke="#ff7566" stroke-dasharray="9.4 53.5" transform="rotate(-72 14 14)" />
+  <circle cx="14" cy="14" r="10" stroke="#62adff" stroke-dasharray="9.4 53.5" transform="rotate(18 14 14)" />
+  <circle cx="14" cy="14" r="10" stroke="#b796ff" stroke-dasharray="9.4 53.5" transform="rotate(108 14 14)" />
+  <circle cx="14" cy="14" r="10" stroke="#f2c14e" stroke-dasharray="9.4 53.5" transform="rotate(198 14 14)" />
+  <circle cx="14" cy="14" r="2.6" fill="#8a8a8a" />
+</svg>

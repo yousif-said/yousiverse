@@ -1,10 +1,14 @@
 import type { RouterOutputs } from "@yousiverse/api";
+import type { IconName } from "@/components/ui/icon";
 
 export type MediaType = RouterOutputs["media"]["shelf"][number]["type"];
 
 type MediaInfo = {
   /** Heading for a group of this type: "Movies". */
   label: string;
+  /** One item, in a single word, for a badge: "Show". */
+  one: string;
+  icon: IconName;
   /** One item, as a label: "TV show". */
   singular: string;
   /** Several items, mid-sentence: "TV shows". */
@@ -18,6 +22,8 @@ type MediaInfo = {
 export const MEDIA: Record<MediaType, MediaInfo> = {
   movie: {
     label: "Movies",
+    one: "Movie",
+    icon: "movie",
     singular: "Movie",
     plural: "movies",
     color: "bg-movie text-movie-foreground",
@@ -26,6 +32,8 @@ export const MEDIA: Record<MediaType, MediaInfo> = {
   },
   tv: {
     label: "TV",
+    one: "Show",
+    icon: "tv",
     singular: "TV show",
     plural: "TV shows",
     color: "bg-tv text-tv-foreground",
@@ -34,6 +42,8 @@ export const MEDIA: Record<MediaType, MediaInfo> = {
   },
   game: {
     label: "Games",
+    one: "Game",
+    icon: "game",
     singular: "Game",
     plural: "games",
     color: "bg-game text-game-foreground",
@@ -42,6 +52,8 @@ export const MEDIA: Record<MediaType, MediaInfo> = {
   },
   book: {
     label: "Books",
+    one: "Book",
+    icon: "book",
     singular: "Book",
     plural: "books",
     color: "bg-book text-book-foreground",

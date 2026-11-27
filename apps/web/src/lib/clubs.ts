@@ -1,18 +1,24 @@
 import type { RouterOutputs } from "@yousiverse/api";
+import type { IconName } from "@/components/ui/icon";
 import { MEDIA, type MediaType } from "./media";
 
 export type Club = RouterOutputs["clubs"]["get"];
 export type ClubAccess = Club["access"];
 
-export const ACCESS_LABELS: Record<ClubAccess, { label: string; help: string }> = {
-  public: { label: "Public", help: "Anyone can find the club and join." },
-  invite_only: {
-    label: "Invite only",
-    help: "Only people with the invite link can see the club or join.",
-  },
+type AccessInfo = {
+  /** What the club is: "Invite only". */
+  label: string;
+  /** The same thing as an answer to "Who can join": "Invite link only". */
+  choice: string;
+  icon: IconName;
 };
 
-export const CLUB_ACCESS_LEVELS = Object.keys(ACCESS_LABELS) as ClubAccess[];
+export const ACCESS: Record<ClubAccess, AccessInfo> = {
+  public: { label: "Public", choice: "Anyone", icon: "globe" },
+  invite_only: { label: "Invite only", choice: "Invite link only", icon: "lock" },
+};
+
+export const CLUB_ACCESS_LEVELS = Object.keys(ACCESS) as ClubAccess[];
 
 /** "Books", "Movies and TV", "Movies, TV, and games". */
 export function coveredTypes(types: MediaType[]): string {

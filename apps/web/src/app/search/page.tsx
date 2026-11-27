@@ -1,159 +1,98 @@
-import { cn } from "cn";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
-import { FilterPill } from "@/components/filter-pill";
-import { PeopleList } from "@/components/people-list";
-import { SearchBox } from "@/components/search-box";
-import { TitleCard, titleGridClasses } from "@/components/title-card";
+import { SearchField } from "@/components/find/search-field";
+import {
+  NothingFound,
+  PeopleResults,
+  ResultCount,
+  ResultsPlaceholder,
+  TitleResults,
+  UniverseResults,
+} from "@/components/find/search-results";
+import { type LinkChoice, LinkTabs } from "@/components/ui/link-tabs";
 import { isMediaType, MEDIA, MEDIA_TYPES, type MediaType, searchPath } from "@/lib/media";
-import { getQueryClient, trpc } from "@/trpc/server";
 
-export const metadata: Metadata = { title: "Search" };
+const queryOf = (q: string | string[] | undefined) =>
+  (typeof q === "string" ? q : "").trim().slice(0, 100);
 
-/** How many results each media type shows when all four are on the page together. */
-const PREVIEW_COUNT = 6;
+export async function generateMetadata({ searchParams }: PageProps<"/search">): Promise<Metadata> {
+  const query = queryOf((await searchParams).q);
+  return { title: query ? `“${query}”` : "Search" };
+}
 
-const linkFocus = "outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50";
-
-type SectionProps = { query: string; type: MediaType; preview: boolean };
-
-async function Results({ query, type, preview }: SectionProps) {
-  const { results, unavailable } = await getQueryClient().fetchQuery(
-    trpc.catalog.search.queryOptions({ query, types: [type] }),
-  );
-
-  if (unavailable.length > 0) {
-    return (
-      <p role="alert" className="rounded-lg border bg-card p-4">
-        {MEDIA[type].label} search is unavailable right now. Try again in a minute.
-      </p>
-    );
-  }
-  if (results.length === 0) {
-    return (
-      <p className="text-muted-foreground">
-        No {MEDIA[type].plural} match “{query}”.
-      </p>
-    );
-  }
-
-  const shown = preview ? results.slice(0, PREVIEW_COUNT) : results;
-  return (
+/** The media types as tabs, each with how many titles match once its source has answered. */
+function TypeTabs({ query, selected }: { query: string; selected: MediaType | undefined }) {
+  const counted = (label: string, types: MediaType[]) => (
     <>
-      <ul className={titleGridClasses}>
-        {shown.map((result) => (
-          <li key={result.providerId}>
-            <TitleCard {...result} />
-          </li>
-        ))}
-      </ul>
-      {shown.length < results.length && (
-        <Link
-          href={searchPath(query, type)}
-          className={cn(
-            "mt-6 inline-block rounded-sm font-medium text-primary underline-offset-4 hover:underline",
-            linkFocus,
-          )}
-        >
-          See all {results.length} {MEDIA[type].plural}
-        </Link>
-      )}
+      {label}
+      <Suspense key={query}>
+        <ResultCount query={query} types={types} />
+      </Suspense>
     </>
   );
-}
-
-/** People whose username or name matches. Shows nothing at all when nobody does. */
-async function People({ query }: { query: string }) {
-  const people = await getQueryClient().fetchQuery(trpc.profiles.search.queryOptions({ query }));
-  if (people.length === 0) return null;
-
-  return (
-    <section aria-labelledby="people-results" className="mt-12 max-w-3xl">
-      <h2 id="people-results" className="mb-5 font-display text-2xl font-bold tracking-tight">
-        People
-      </h2>
-      <PeopleList people={people} />
-    </section>
-  );
-}
-
-function ResultsPlaceholder({ type }: { type: MediaType }) {
-  return (
-    <div className={titleGridClasses} role="status" aria-label={`Searching ${MEDIA[type].plural}`}>
-      {Array.from({ length: PREVIEW_COUNT }, (_, index) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: identical static placeholders
-        <div key={index} className="aspect-[5/7] animate-pulse rounded-[3px] bg-muted" />
-      ))}
-    </div>
-  );
-}
-
-function TypeFilter({ query, selected }: { query: string; selected: MediaType | undefined }) {
-  const options = [
-    { type: undefined, label: "All", color: undefined },
-    ...MEDIA_TYPES.map((type) => ({ type, label: MEDIA[type].label, color: MEDIA[type].color })),
+  const choices: LinkChoice[] = [
+    { href: searchPath(query), label: counted("Everything", MEDIA_TYPES), current: !selected },
+    ...MEDIA_TYPES.map((type) => ({
+      href: searchPath(query, type),
+      label: counted(MEDIA[type].label, [type]),
+      current: type === selected,
+      icon: MEDIA[type].icon,
+      iconClassName: `c-${type}`,
+    })),
   ];
-
-  return (
-    <nav aria-label="Filter results by type" className="mt-5 flex flex-wrap gap-2">
-      {options.map(({ type, label, color }) => (
-        <FilterPill
-          key={label}
-          href={searchPath(query, type)}
-          selected={type === selected}
-          color={color}
-        >
-          {label}
-        </FilterPill>
-      ))}
-    </nav>
-  );
+  return <LinkTabs label="Filter results by type" choices={choices} />;
 }
 
 export default async function SearchPage({ searchParams }: PageProps<"/search">) {
   const { q, type } = await searchParams;
-  const query = (typeof q === "string" ? q : "").trim().slice(0, 100);
+  const query = queryOf(q);
   const selected = isMediaType(type) ? type : undefined;
   const sections = selected ? [selected] : MEDIA_TYPES;
 
   return (
-    <section className="pt-10 sm:pt-16">
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Search</h1>
-      <div className="mt-6 max-w-2xl">
-        <SearchBox initialQuery={query} type={selected} />
-      </div>
-      <TypeFilter query={query} selected={selected} />
+    <div className="page">
+      <header className="ph" style={{ marginBottom: 20 }}>
+        <div className="ph__text" style={{ width: "100%" }}>
+          <h1 className="sr-only">Search</h1>
+          <SearchField initialQuery={query} type={selected} />
+        </div>
+      </header>
 
-      {query && !selected && (
-        <Suspense key={`people-${query}`}>
-          <People query={query.slice(0, 50)} />
-        </Suspense>
-      )}
       {query ? (
-        // Each media type comes from a different source, so each section shows up as soon as
-        // its own source answers instead of waiting for the slowest one.
-        sections.map((sectionType) => (
-          <section key={sectionType} aria-labelledby={`${sectionType}-results`} className="mt-12">
-            <h2
-              id={`${sectionType}-results`}
-              className="mb-5 font-display text-2xl font-bold tracking-tight"
-            >
-              {MEDIA[sectionType].label}
-            </h2>
-            <Suspense
-              key={`${sectionType}-${query}`}
-              fallback={<ResultsPlaceholder type={sectionType} />}
-            >
-              <Results query={query} type={sectionType} preview={!selected} />
+        <>
+          <TypeTabs query={query} selected={selected} />
+          {!selected && (
+            <>
+              <Suspense key={`people-${query}`}>
+                <PeopleResults query={query} />
+              </Suspense>
+              <Suspense key={`universes-${query}`}>
+                <UniverseResults query={query} />
+              </Suspense>
+            </>
+          )}
+          {/* Each medium comes from a different source, so each section shows up as soon as
+              its own source answers instead of waiting for the slowest one. */}
+          {sections.map((section) => (
+            <Suspense key={`${section}-${query}`} fallback={<ResultsPlaceholder type={section} />}>
+              <TitleResults query={query} type={section} preview={!selected} />
             </Suspense>
-          </section>
-        ))
+          ))}
+          {!selected && (
+            <Suspense key={`nothing-${query}`}>
+              <NothingFound query={query} />
+            </Suspense>
+          )}
+        </>
       ) : (
-        <p className="mt-10 text-muted-foreground">
-          Type a title to find a movie, TV show, game, or book, or a name to find a person.
-        </p>
+        <div className="empty" style={{ marginTop: 20 }}>
+          Start typing to search every movie, show, game, and book, and the people here.
+          <br />
+          <span className="hint">
+            Press <span className="kbd">⌘K</span> from anywhere for the quick version.
+          </span>
+        </div>
       )}
-    </section>
+    </div>
   );
 }

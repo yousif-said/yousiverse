@@ -1,9 +1,10 @@
-import { auth } from "@yousiverse/auth";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { cache } from "react";
+import { getContext } from "@/trpc/server";
 
-export const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
+/** The session of whoever is asking for this page, looked up once however often it is asked for. */
+export async function getSession() {
+  return (await getContext()).session;
+}
 
 /** For protected pages: returns the session, or sends the visitor to sign in and back. */
 export async function requireSession(returnTo: string) {

@@ -1,15 +1,16 @@
+import type { IconName } from "@/components/ui/icon";
 import type { LibraryEntry } from "./library";
 
 export type Visibility = LibraryEntry["visibility"];
 
-/** The choices for who can see something, most open first. */
-export const VISIBILITY_LABELS: Record<Visibility, string> = {
-  public: "Everyone",
-  friends: "Friends only",
-  private: "Only me",
+/** Who can see something, most open first: one or two words and an icon for each choice. */
+export const VISIBILITY: Record<Visibility, { label: string; icon: IconName }> = {
+  public: { label: "Everyone", icon: "globe" },
+  friends: { label: "Friends", icon: "clubs" },
+  private: { label: "Only you", icon: "lock" },
 };
 
-export const VISIBILITIES = Object.keys(VISIBILITY_LABELS) as Visibility[];
+export const VISIBILITIES = Object.keys(VISIBILITY) as Visibility[];
 
 export function isVisibility(value: unknown): value is Visibility {
   return VISIBILITIES.includes(value as Visibility);

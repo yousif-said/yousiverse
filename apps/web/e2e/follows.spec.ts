@@ -7,7 +7,7 @@ async function chooseUsername(page: Page, username: string, name: string) {
   await page.getByLabel("Username").fill(username);
   await page.getByLabel("Display name").fill(name);
   await page.getByRole("button", { name: "Save profile" }).click();
-  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await expect(page.getByRole("status").filter({ hasText: "Saved." })).toBeVisible();
 }
 
 test("finds a person by searching, follows them, and is followed back", async ({
@@ -41,7 +41,11 @@ test("finds a person by searching, follows them, and is followed back", async ({
 
   await page.getByRole("link", { name: "1 follower", exact: true }).click();
   await expect(page).toHaveURL(`/u/${grace}/followers`);
-  await expect(page.getByRole("heading", { level: 1, name: "Followers" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Followers" })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^Followers/ })).toHaveAttribute(
+    "aria-current",
+    "true",
+  );
   await expect(page.getByRole("link", { name: /Ada Follower/ })).toHaveAttribute(
     "href",
     `/u/${ada}`,
@@ -49,19 +53,19 @@ test("finds a person by searching, follows them, and is followed back", async ({
 
   // Grace sees that Ada follows her, and follows back.
   await other.goto(`/u/${ada}`);
-  await expect(other.getByText("Follows you.")).toBeVisible();
+  await expect(other.getByText("Follows you", { exact: true })).toBeVisible();
   await expect(other.getByRole("link", { name: "1 following" })).toBeVisible();
   const followedBack = other.waitForResponse(/follows\.follow/);
-  await other.getByRole("button", { name: "Follow", exact: true }).click();
+  await other.getByRole("button", { name: "Follow back", exact: true }).click();
   await followedBack;
-  await expect(other.getByText("You follow each other, so you are friends.")).toBeVisible();
+  await expect(other.getByText("Friends", { exact: true })).toBeVisible();
 
   // Ada changes her mind.
   await page.goto(`/u/${grace}`);
   const unfollowed = page.waitForResponse(/follows\.unfollow/);
   await page.getByRole("button", { name: "Following" }).click();
   await unfollowed;
-  await expect(page.getByRole("button", { name: "Follow", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Follow back", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "0 followers" })).toBeVisible();
   await other.close();
 });
@@ -80,15 +84,19 @@ test("shows friends-only library entries to friends and to no one else", async (
 
   await page.goto("/movies/603");
   let stored = page.waitForResponse(/library\.save/);
-  await page.getByRole("button", { name: "Finished" }).click();
+  await page.getByRole("button", { name: "Watched" }).click();
   await stored;
   stored = page.waitForResponse(/library\.save/);
-  await page.getByLabel("Who can see this in your library").selectOption("Friends only");
+  await page.getByRole("button", { name: "Who can see this in your library: Everyone" }).click();
   await stored;
+  await expect(
+    page.getByRole("button", { name: "Who can see this in your library: Friends" }),
+  ).toBeVisible();
   await page.goto("/library");
-  await expect(page.getByRole("main").getByRole("listitem")).toContainText(
-    "Finished, friends only",
-  );
+  const finished = page.getByRole("region", { name: "Finished" }).getByRole("article");
+  await expect(finished).toHaveCount(1);
+  await expect(finished).toContainText("The Matrix");
+  await expect(finished).toContainText("Friends only");
 
   // Following one way is not friendship.
   await other.goto(`/u/${owner}`);
@@ -100,7 +108,7 @@ test("shows friends-only library entries to friends and to no one else", async (
 
   await page.goto(`/u/${friend}`);
   followed = page.waitForResponse(/follows\.follow/);
-  await page.getByRole("button", { name: "Follow", exact: true }).click();
+  await page.getByRole("button", { name: "Follow back", exact: true }).click();
   await followed;
 
   await other.reload();

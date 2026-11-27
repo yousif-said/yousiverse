@@ -20,6 +20,8 @@ test("sets a price alert on a game, sees it on the alerts page, and removes it",
   const prices = page.getByRole("region", { name: "Where to buy" });
   const price = prices.getByLabel("Tell me when it costs this or less");
 
+  // One click offers a price just under today's best; any other price goes in the field.
+  await prices.getByRole("button", { name: "Other price" }).click();
   await price.fill("cheap");
   await prices.getByRole("button", { name: "Set alert" }).click();
   await expect(prices.getByRole("alert")).toHaveText("Enter a price in dollars, like 9.99.");
@@ -31,19 +33,26 @@ test("sets a price alert on a game, sees it on the alerts page, and removes it",
 
   await price.fill("$9.99");
   await prices.getByRole("button", { name: "Set alert" }).click();
-  await expect(prices.getByText("We will tell you when it costs $9.99 or less.")).toBeVisible();
+  await expect(prices.getByRole("button", { name: "Alert at $9.99" })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await expect(prices.getByRole("button", { name: "Change price" })).toBeVisible();
+  await expect(prices.getByText("Your alert $9.99")).toBeVisible();
 
-  await page.goto("/library");
-  await page.getByRole("link", { name: "Your alerts" }).click();
+  await page
+    .getByRole("navigation", { name: "More" })
+    .getByRole("link", { name: "Alerts" })
+    .click();
   await expect(page).toHaveURL("/alerts");
   const waiting = page.getByRole("region", { name: "Still waiting" });
   await expect(waiting.getByRole("link", { name: "Hades" })).toBeVisible();
-  await expect(waiting.getByText("Waiting until it costs $9.99 or less")).toBeVisible();
+  await expect(waiting.getByText("$9.99 or less at a PC store")).toBeVisible();
 
-  const emails = page.getByRole("checkbox", { name: "Email me when an alert comes through" });
+  const emails = page.getByRole("switch", { name: "Alert emails" });
   await expect(emails).toBeChecked();
   const saved = page.waitForResponse(/alerts\.setEmails/);
-  await emails.uncheck();
+  await emails.click();
   await saved;
   await page.reload();
   await expect(emails).not.toBeChecked();
@@ -56,21 +65,28 @@ test("sets a price alert on a game, sees it on the alerts page, and removes it",
   await expect(page.getByText("You have no alerts yet.")).toBeVisible();
 });
 
-test("offers streaming alerts on a movie and explains what is missing", async ({ page }) => {
+test("offers streaming alerts on a movie only when they can be set", async ({ page }) => {
   await signIn(page);
   await page.goto("/movies/603");
   const watch = page.getByRole("region", { name: "Where to watch" });
 
-  // The Matrix can already be streamed, so there is nothing to wait for.
-  await watch.getByRole("button", { name: "Tell me when it can be streamed" }).click();
-  await expect(watch.getByRole("alert")).toContainText("No alert needed: it is now streaming on");
+  // The Matrix can already be streamed and this person has ticked nothing, so the page asks
+  // for subscriptions instead of offering an alert that would be refused.
+  await expect(watch.getByRole("link", { name: "Tick your subscriptions" })).toBeVisible();
+  await expect(watch.getByRole("button", { name: /^Tell me when/ })).toHaveCount(0);
 
-  await watch
-    .getByRole("button", { name: "Tell me when it is on one of your subscriptions" })
-    .click();
-  await expect(watch.getByRole("alert")).toHaveText(
-    "Tick the services you subscribe to on your account page first.",
-  );
+  await page.goto("/account");
+  const saved = page.waitForResponse(/subscriptions\.set/);
+  await page.getByRole("button", { name: "Netflix", exact: true }).click();
+  await saved;
+
+  await page.goto("/movies/603");
+  const alert = watch.getByRole("button", { name: "Tell me when it's on mine" });
+  await alert.click();
+  const waiting = watch.getByRole("button", { name: /^Alert set/ });
+  await expect(waiting).toHaveAttribute("aria-pressed", "true");
+  await waiting.click();
+  await expect(watch.getByRole("button", { name: "Tell me when it's on mine" })).toBeVisible();
 });
 
 test("stops alert emails from an unsubscribe link without signing in", async ({ page }) => {
@@ -79,7 +95,7 @@ test("stops alert emails from an unsubscribe link without signing in", async ({ 
 
   await page.goto("/alerts/unsubscribe?token=not-a-real-token");
   await page.getByRole("button", { name: "Stop alert emails" }).click();
-  await expect(page.getByRole("status")).toContainText(
+  await expect(page.getByRole("status").filter({ hasText: "Done." })).toContainText(
     "Done. You will not get alert emails any more.",
   );
 });

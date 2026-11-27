@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ReplyForm } from "@/components/discussion-form";
 import { MemberName } from "@/components/member-name";
-import { RemovePostButton } from "@/components/remove-post-button";
-import { SignInPrompt } from "@/components/sign-in-prompt";
+import { getViewer } from "@/components/shell/viewer";
+import { DeletePostButton } from "@/components/together/delete-post-button";
+import { ReplyComposer } from "@/components/together/reply-composer";
+import { Avatar } from "@/components/ui/avatar";
+import { Icon } from "@/components/ui/icon";
+import { Crumb, PageHeader } from "@/components/ui/page-header";
 import { clubPath, discussionPath } from "@/lib/clubs";
-import { formatDay, pluralize } from "@/lib/format";
-import { getSession } from "@/lib/session";
+import { agoLabel, dayOf, midSentence } from "@/lib/days";
+import { pluralize } from "@/lib/format";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
 
 type Props = PageProps<"/clubs/[id]/discussions/[threadId]">;
@@ -27,82 +30,84 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${thread.title} · ${thread.club.name}` };
 }
 
-const postBody = "mt-3 max-w-[65ch] text-pretty leading-relaxed whitespace-pre-line";
+type MessageProps = {
+  author: string | null;
+  /** When it was posted. */
+  at: string | Date;
+  body: string;
+  /** The opening post reads a little larger than the replies to it. */
+  first?: boolean;
+  /** The delete button, for someone allowed to delete this post. */
+  children?: React.ReactNode;
+};
 
-function Byline({ author, at }: { author: string | null; at: string }) {
+function Message({ author, at, body, first, children }: MessageProps) {
   return (
-    <p className="text-sm text-muted-foreground">
-      {author ? <MemberName username={author} /> : "A former member"}, {formatDay(new Date(at))}
-    </p>
+    <li className={first ? "msg msg--first" : "msg"}>
+      <Avatar username={author} size={44} />
+      <div>
+        <div className="flex items-baseline gap-2.5">
+          <b>{author ? <MemberName username={author} /> : "A former member"}</b>
+          <span className="hint">{agoLabel(dayOf(new Date(at)))}</span>
+          {children}
+        </div>
+        <p className="msg__body">{body}</p>
+      </div>
+    </li>
   );
 }
 
 export default async function DiscussionPage({ params }: Props) {
-  const [thread, session] = await Promise.all([getThread(params), getSession()]);
+  const [thread, viewer] = await Promise.all([getThread(params), getViewer()]);
+  const started = midSentence(agoLabel(dayOf(new Date(thread.createdAt))));
 
   return (
-    <div className="max-w-3xl pt-10 sm:pt-16">
-      <p className="text-sm">
-        <Link
-          href={clubPath(thread.club.id)}
-          className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-        >
-          {thread.club.name}
-        </Link>
-      </p>
-      <h1 className="mt-2 text-balance font-display text-4xl leading-none font-extrabold tracking-tight">
-        {thread.title}
-      </h1>
-      <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <Byline author={thread.author} at={thread.createdAt} />
-        {thread.canRemove && (
-          <RemovePostButton kind="discussion" id={thread.id} clubId={thread.club.id} />
-        )}
-      </div>
-      <p className={postBody}>{thread.body}</p>
-
-      <section aria-labelledby="replies-heading" className="mt-12">
-        <h2 id="replies-heading" className="font-display text-2xl font-bold tracking-tight">
-          {thread.replies.length === 0
-            ? "No replies yet"
-            : pluralize(thread.replies.length, "reply", "replies")}
-        </h2>
-        {thread.replies.length > 0 && (
-          <ol className="mt-4 divide-y border-y">
-            {thread.replies.map((reply) => (
-              <li key={reply.id} className="py-5">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-                  <Byline author={reply.author} at={reply.createdAt} />
-                  {reply.canRemove && (
-                    <RemovePostButton kind="reply" id={reply.id} author={reply.author} />
-                  )}
-                </div>
-                <p className={postBody}>{reply.body}</p>
-              </li>
-            ))}
-          </ol>
-        )}
-      </section>
-
-      <div className="mt-8">
-        {thread.isMember ? (
-          <ReplyForm threadId={thread.id} />
-        ) : session ? (
-          <p className="text-muted-foreground">
-            <Link
-              href={clubPath(thread.club.id)}
-              className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            >
-              Join {thread.club.name}
-            </Link>{" "}
-            to reply.
-          </p>
-        ) : (
-          <SignInPrompt returnTo={discussionPath(thread.club.id, thread.id)}>
-            and join the club to reply.
-          </SignInPrompt>
-        )}
-      </div>
+    <div className="page page--narrow">
+      <Crumb href={clubPath(thread.club.id)}>{thread.club.name}</Crumb>
+      <PageHeader title={thread.title} className="mt-3.5">
+        <p className="dim">
+          {pluralize(thread.replies.length, "reply", "replies")} · started {started}
+        </p>
+      </PageHeader>
+      <ol>
+        <Message author={thread.author} at={thread.createdAt} body={thread.body} first>
+          {thread.canRemove && (
+            <DeletePostButton kind="discussion" id={thread.id} clubId={thread.club.id} />
+          )}
+        </Message>
+        {thread.replies.map((reply) => (
+          <Message key={reply.id} author={reply.author} at={reply.createdAt} body={reply.body}>
+            {reply.canRemove && (
+              <DeletePostButton kind="reply" id={reply.id} author={reply.author} />
+            )}
+          </Message>
+        ))}
+      </ol>
+      {thread.isMember ? (
+        <ReplyComposer threadId={thread.id} username={viewer?.username ?? null} />
+      ) : (
+        <div className="note" style={{ marginTop: 20 }}>
+          <Icon name="info" />
+          {viewer ? (
+            <span>
+              <Link className="link" href={clubPath(thread.club.id)}>
+                Join {thread.club.name}
+              </Link>{" "}
+              to reply.
+            </span>
+          ) : (
+            <span>
+              <Link
+                className="link"
+                href={`/sign-in?next=${encodeURIComponent(discussionPath(thread.club.id, thread.id))}`}
+              >
+                Sign in
+              </Link>{" "}
+              and join {thread.club.name} to reply.
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

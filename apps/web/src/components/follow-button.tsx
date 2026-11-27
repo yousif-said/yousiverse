@@ -4,12 +4,28 @@ import { useMutation } from "@tanstack/react-query";
 import { Button } from "@yousiverse/ui/components/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "@/components/ui/toast";
 import { useTRPC } from "@/trpc/client";
 
-type Props = { username: string; initiallyFollowing: boolean };
+type Props = {
+  username: string;
+  initiallyFollowing: boolean;
+  /** Whether this person follows the signed-in person, so that following them makes friends. */
+  followsYou?: boolean;
+  /** What to call the person when confirming. Defaults to their username. */
+  name?: string;
+  /** `sm` sits at the end of a row of people; `default` leads a profile. */
+  size?: "sm" | "default";
+};
 
-/** Follows or unfollows the person whose profile this is. */
-export function FollowButton({ username, initiallyFollowing }: Props) {
+/** Follows or unfollows a person. */
+export function FollowButton({
+  username,
+  initiallyFollowing,
+  followsYou = false,
+  name = `@${username}`,
+  size = "sm",
+}: Props) {
   const trpc = useTRPC();
   const router = useRouter();
   const [following, setFollowing] = useState(initiallyFollowing);
@@ -23,6 +39,8 @@ export function FollowButton({ username, initiallyFollowing }: Props) {
     setFailed(false);
     try {
       await (next ? follow : unfollow).mutateAsync({ username });
+      const friends = followsYou ? ". You are friends now." : "";
+      toast(next ? `Following ${name}${friends}` : `Unfollowed ${name}`);
       router.refresh();
     } catch {
       setFollowing(!next);
@@ -31,21 +49,22 @@ export function FollowButton({ username, initiallyFollowing }: Props) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-4">
+    <span className="control">
       <Button
         type="button"
-        variant={following ? "outline" : "default"}
+        size={size}
+        variant={following ? "secondary" : "default"}
         aria-pressed={following}
         disabled={follow.isPending || unfollow.isPending}
         onClick={toggle}
       >
-        {following ? "Following" : "Follow"}
+        {following ? "Following" : followsYou ? "Follow back" : "Follow"}
       </Button>
       {failed && (
-        <p role="alert" className="text-sm text-destructive">
+        <span role="alert" className="error">
           That did not go through. Check your connection and try again.
-        </p>
+        </span>
       )}
-    </div>
+    </span>
   );
 }

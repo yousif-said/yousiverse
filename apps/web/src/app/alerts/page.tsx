@@ -1,109 +1,131 @@
-import type { RouterOutputs } from "@yousiverse/api";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AlertEmailsToggle, RemoveAlertButton } from "@/components/alert-settings";
-import { alertCondition, sentenceCase } from "@/lib/alerts";
-import { formatDay } from "@/lib/format";
-import { MEDIA, mediaPath } from "@/lib/media";
+import { type CSSProperties, Suspense } from "react";
+import { AlertEmailsSwitch } from "@/components/alerts/alert-emails-switch";
+import { CameCard } from "@/components/alerts/came-card";
+import { WaitingRow } from "@/components/alerts/waiting-row";
+import { AlertsSkeleton } from "@/components/states/page-skeletons";
+import { Icon } from "@/components/ui/icon";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionHead } from "@/components/ui/section-head";
+import { pluralize } from "@/lib/format";
 import { requireSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Alerts" };
 
-type Alert = RouterOutputs["alerts"]["mine"]["alerts"][number];
-
-const sectionHeading = "font-display text-2xl font-bold tracking-tight";
-const titleLink =
-  "rounded-sm font-medium underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50";
-
-function AlertList({ alerts }: { alerts: Alert[] }) {
+export default async function AlertsPage() {
+  const { user } = await requireSession("/alerts");
   return (
-    <ul className="mt-4 divide-y border-y">
-      {alerts.map((alert) => {
-        const waitingFor = alertCondition(alert.kind, alert.targetCents);
-        return (
-          <li
-            key={alert.id}
-            className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4"
-          >
-            <div>
-              <Link
-                href={mediaPath(alert.title.type, alert.title.providerId)}
-                className={titleLink}
-              >
-                {alert.title.title}
-              </Link>
-              <span className="text-sm text-muted-foreground">
-                {" "}
-                {MEDIA[alert.title.type].singular}
-                {alert.title.releaseYear && `, ${alert.title.releaseYear}`}
-              </span>
-              <p className="text-sm text-muted-foreground">
-                {alert.triggeredAt && alert.outcome
-                  ? `${sentenceCase(alert.outcome)}, found ${formatDay(new Date(alert.triggeredAt))}`
-                  : `Waiting until ${waitingFor}`}
-              </p>
-            </div>
-            <RemoveAlertButton
-              alertId={alert.id}
-              label={`Remove the alert on ${alert.title.title} for when ${waitingFor}`}
-            />
-          </li>
-        );
-      })}
-    </ul>
+    <Suspense fallback={<AlertsSkeleton />}>
+      <Alerts email={user.email} />
+    </Suspense>
   );
 }
 
-export default async function AlertsPage() {
-  await requireSession("/alerts");
-  const { alerts, emails } = await getQueryClient().fetchQuery(trpc.alerts.mine.queryOptions());
-  const cameThrough = alerts.filter((alert) => alert.triggeredAt);
+async function Alerts({ email }: { email: string }) {
+  const queryClient = getQueryClient();
+  const [{ alerts, emails, limit, checkedPerDay }, subscriptions] = await Promise.all([
+    queryClient.fetchQuery(trpc.alerts.mine.queryOptions()),
+    queryClient.fetchQuery(trpc.subscriptions.mine.queryOptions()),
+  ]);
+  const cameThrough = alerts.flatMap((alert) =>
+    alert.triggeredAt ? { ...alert, triggeredAt: new Date(alert.triggeredAt) } : [],
+  );
   const waiting = alerts.filter((alert) => !alert.triggeredAt);
+  const services = subscriptions.map((service) => service.name);
 
   return (
-    <div className="max-w-3xl pt-10 sm:pt-16">
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Alerts</h1>
-      <p className="mt-3 max-w-[65ch] text-muted-foreground">
-        Be told when a movie or show reaches a service you can watch it on, or when a game drops to
-        a price you name. Set an alert from a title&apos;s page, under where to watch or buy it.
-      </p>
-      <div className="mt-6">
-        <AlertEmailsToggle enabled={emails} />
-        <p className="mt-2 text-sm text-muted-foreground">
-          Alerts are checked once a day. You get one email at most on a day something comes through;
-          with emails off, look here instead.
-        </p>
+    <div className="page">
+      <PageHeader
+        title="Alerts"
+        lede="Checked every morning. Each alert tells you once, then stays here until you remove it or set it again."
+      />
+      <div className="split">
+        <div>
+          {alerts.length === 0 && (
+            <div className="empty">
+              <p>You have no alerts yet.</p>
+              <p className="hint mt-2">
+                Ask to be told when a movie or show reaches a service you can watch it on, or when a
+                game drops to a price you name. Set one from any movie, show, or game page.
+              </p>
+              <Link className="btn btn--soft btn--sm mt-4" href="/search">
+                <Icon name="search" size="sm" />
+                Find a title
+              </Link>
+            </div>
+          )}
+          {cameThrough.length > 0 && (
+            <section aria-labelledby="came-through-heading">
+              <SectionHead
+                title="Came through"
+                sub={pluralize(cameThrough.length, "alert")}
+                id="came-through-heading"
+              />
+              <div className="camegrid">
+                {cameThrough.map((alert) => (
+                  <CameCard key={alert.id} alert={alert} removable />
+                ))}
+              </div>
+            </section>
+          )}
+          {waiting.length > 0 && (
+            <section
+              className={cameThrough.length > 0 ? "section" : undefined}
+              aria-labelledby="waiting-heading"
+            >
+              <SectionHead
+                title="Still waiting"
+                sub={pluralize(waiting.length, "alert")}
+                id="waiting-heading"
+              />
+              <ul>
+                {waiting.map((alert) => (
+                  <WaitingRow key={alert.id} alert={alert} subscriptions={services} />
+                ))}
+              </ul>
+            </section>
+          )}
+          {alerts.length > 0 && (
+            <p className="hint" style={{ marginTop: 16 }}>
+              Set an alert from any movie, show, or game page.
+            </p>
+          )}
+        </div>
+        <aside style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <div className="panel">
+            <div className="kv" style={{ padding: 0 }}>
+              <div>
+                <b>Email me</b>
+                <p>
+                  One email a morning with everything that came through, to{" "}
+                  <span className="wrap-anywhere">{email}</span>.
+                </p>
+              </div>
+              <AlertEmailsSwitch enabled={emails} />
+            </div>
+          </div>
+          <div className="panel">
+            <div className="panel__head">
+              <h2 className="label">Alerts in use</h2>
+              <span className="mono hint">
+                {alerts.length} of {limit}
+              </span>
+            </div>
+            <div className="bar" style={{ "--v": (alerts.length / limit) * 100 } as CSSProperties}>
+              <i />
+            </div>
+          </div>
+          <div className="note">
+            <Icon name="clock" />
+            <span>
+              Availability is checked for up to {checkedPerDay} movies and shows a day, the longest
+              unchecked first. With more than that waiting, each is checked less often.
+            </span>
+          </div>
+        </aside>
       </div>
-
-      {alerts.length === 0 && (
-        <p className="mt-10 max-w-[65ch] text-muted-foreground">
-          You have no alerts yet.{" "}
-          <Link
-            href="/search"
-            className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-          >
-            Find a title
-          </Link>{" "}
-          and set one from its page.
-        </p>
-      )}
-      {cameThrough.length > 0 && (
-        <section aria-labelledby="came-through-heading" className="mt-12">
-          <h2 id="came-through-heading" className={sectionHeading}>
-            Came through
-          </h2>
-          <AlertList alerts={cameThrough} />
-        </section>
-      )}
-      {waiting.length > 0 && (
-        <section aria-labelledby="waiting-heading" className="mt-12">
-          <h2 id="waiting-heading" className={sectionHeading}>
-            Still waiting
-          </h2>
-          <AlertList alerts={waiting} />
-        </section>
-      )}
     </div>
   );
 }

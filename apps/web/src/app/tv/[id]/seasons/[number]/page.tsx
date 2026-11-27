@@ -1,10 +1,11 @@
+import { cn } from "cn";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { EpisodeRating } from "@/components/episode-rating";
-import { formatAverageRating, formatDate, formatRuntime, pluralize } from "@/lib/format";
+import { Episodes } from "@/components/title/episodes";
+import { Ambient } from "@/components/ui/ambient";
+import { Crumb, PageHeader } from "@/components/ui/page-header";
 import { mediaPath } from "@/lib/media";
-import { getSession } from "@/lib/session";
+import { ambientOf, tonedClass, toneStyle } from "@/lib/titles";
 import { getQueryClient, orNotFound, trpc } from "@/trpc/server";
 
 type Props = PageProps<"/tv/[id]/seasons/[number]">;
@@ -24,82 +25,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${season.show.title}: ${season.name}`, description: season.overview };
 }
 
+/** One season at its own address: the show's episodes section, opened on this season. */
 export default async function SeasonPage({ params }: Props) {
-  const season = await getSeason(params);
-  const { id } = await params;
-  const [session, ratings] = await Promise.all([
-    getSession(),
-    getQueryClient().fetchQuery(trpc.ratings.forSeason.queryOptions({ seasonId: season.id })),
-  ]);
-  const ratingOf = new Map(ratings.map((rating) => [rating.episodeId, rating]));
+  const { show, ...season } = await getSeason(params);
 
   return (
-    <article className="max-w-3xl pt-10 sm:pt-16">
-      <Link
-        href={mediaPath("tv", id)}
-        className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-      >
-        {season.show.title}
-      </Link>
-      <h1 className="mt-2 font-display text-4xl leading-[0.95] font-extrabold tracking-tight sm:text-6xl">
-        {season.name}
-      </h1>
-      {season.overview && (
-        <p className="mt-6 max-w-[65ch] text-pretty leading-relaxed">{season.overview}</p>
-      )}
-
-      {season.episodes.length === 0 ? (
-        <p className="mt-10 text-muted-foreground">No episodes have been announced yet.</p>
-      ) : (
-        <ol className="mt-10 divide-y border-y">
-          {season.episodes.map((episode) => {
-            const rating = ratingOf.get(episode.id);
-            return (
-              <li key={episode.id} className="grid grid-cols-[2.5rem_1fr_auto] gap-x-4 py-5">
-                <span
-                  aria-hidden="true"
-                  className="font-display text-2xl leading-none font-bold text-muted-foreground tabular-nums"
-                >
-                  {episode.episodeNumber}
-                </span>
-                <div className="min-w-0">
-                  <h2 className="font-medium">
-                    <Link
-                      href={`${mediaPath("tv", id)}/seasons/${season.seasonNumber}/episodes/${episode.episodeNumber}`}
-                      className="rounded-sm underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                    >
-                      <span className="sr-only">Episode {episode.episodeNumber}: </span>
-                      {episode.name}
-                    </Link>
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {[
-                      episode.airDate && formatDate(episode.airDate),
-                      episode.runtimeMinutes && formatRuntime(episode.runtimeMinutes),
-                      rating?.average != null &&
-                        `average ${formatAverageRating(rating.average)} from ${pluralize(rating.count, "rating")}`,
-                    ]
-                      .filter(Boolean)
-                      .join(", ")}
-                  </p>
-                  {episode.overview && (
-                    <p className="mt-2 max-w-[65ch] text-pretty text-sm leading-relaxed">
-                      {episode.overview}
-                    </p>
-                  )}
-                </div>
-                {session && (
-                  <EpisodeRating
-                    episodeId={episode.id}
-                    episodeNumber={episode.episodeNumber}
-                    mine={rating?.mine ?? null}
-                  />
-                )}
-              </li>
-            );
-          })}
-        </ol>
-      )}
-    </article>
+    <>
+      <Ambient src={ambientOf(show)} />
+      <div className={cn("page page--narrow", tonedClass(show))} style={toneStyle(show)}>
+        <Crumb href={mediaPath("tv", show.providerId)}>{show.title}</Crumb>
+        <PageHeader title={season.name} lede={season.overview} className="mt-[18px]" />
+        <Episodes show={show} season={season.seasonNumber} linkTo="season" />
+      </div>
+    </>
   );
 }
