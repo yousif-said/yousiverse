@@ -1,48 +1,52 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { CreateListForm } from "@/components/create-list-form";
-import { pluralize } from "@/lib/format";
+import { ListDialog } from "@/components/together/list-dialog";
+import { ListTile } from "@/components/together/list-tile";
+import { PageHeader } from "@/components/ui/page-header";
+import { SectionHead } from "@/components/ui/section-head";
 import { requireSession } from "@/lib/session";
-import { visibilityNote } from "@/lib/visibility";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Lists" };
 
 export default async function ListsPage() {
   await requireSession("/lists");
-  const lists = await getQueryClient().fetchQuery(trpc.lists.mine.queryOptions());
+  const queryClient = getQueryClient();
+  const [mine, fromFollowing] = await Promise.all([
+    queryClient.fetchQuery(trpc.lists.mine.queryOptions()),
+    queryClient.fetchQuery(trpc.lists.fromFollowing.queryOptions()),
+  ]);
 
   return (
-    <section className="max-w-3xl pt-10 sm:pt-16">
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Lists</h1>
-      <p className="mt-3 max-w-[65ch] text-muted-foreground">
-        Group movies, shows, games, and books any way you like. Add titles from their own pages.
-      </p>
-
-      <div className="mt-8">
-        <CreateListForm />
-      </div>
-
-      {lists.length === 0 ? (
-        <p className="mt-10 text-muted-foreground">You have no lists yet.</p>
-      ) : (
-        <ul className="mt-10 divide-y border-y">
-          {lists.map((list) => (
-            <li key={list.id}>
-              <Link
-                href={`/lists/${list.id}`}
-                className="flex items-baseline justify-between gap-6 px-1 py-4 outline-none transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50"
-              >
-                <span className="font-medium">{list.name}</span>
-                <span className="shrink-0 text-sm text-muted-foreground tabular-nums">
-                  {pluralize(list.itemCount, "title")}
-                  {visibilityNote(list.visibility)}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <div className="page">
+      <PageHeader
+        title="Lists"
+        lede="Any mix of movies, shows, games, and books, in the order you put them."
+        actions={<ListDialog />}
+      />
+      <section aria-labelledby="your-lists-h">
+        <SectionHead title="Yours" id="your-lists-h" />
+        {mine.length === 0 ? (
+          <div className="empty">
+            You have no lists yet. Make one, then add titles to it from their own pages.
+          </div>
+        ) : (
+          <div className="tiles">
+            {mine.map((list) => (
+              <ListTile key={list.id} list={list} />
+            ))}
+          </div>
+        )}
+      </section>
+      {fromFollowing.length > 0 && (
+        <section className="section" aria-labelledby="followed-lists-h">
+          <SectionHead title="From people you follow" id="followed-lists-h" />
+          <div className="tiles">
+            {fromFollowing.map((list) => (
+              <ListTile key={list.id} list={list} />
+            ))}
+          </div>
+        </section>
       )}
-    </section>
+    </div>
   );
 }

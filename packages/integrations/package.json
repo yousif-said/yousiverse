@@ -5,6 +5,8 @@
   "type": "module",
   "exports": {
     "./catalog": "./src/catalog.ts",
+    "./images": "./src/images.ts",
+    "./artwork": "./src/artwork/index.ts",
     "./tmdb": "./src/tmdb/index.ts",
     "./igdb": "./src/igdb/index.ts",
     "./open-library": "./src/open-library/index.ts",
@@ -23,6 +25,7 @@
     "record": "bun --env-file=../../.env run scripts/record.ts"
   },
   "dependencies": {
+    "sharp": "^0.35.5",
     "zod": "^4.6.7"
   },
   "devDependencies": {

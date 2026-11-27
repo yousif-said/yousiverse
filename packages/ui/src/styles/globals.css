@@ -1,62 +1,116 @@
+@import "./design.css";
+@import "./parts/title.css";
+@import "./parts/instruments.css";
+@import "./parts/home.css";
+@import "./parts/find.css";
+@import "./parts/universe.css";
+@import "./parts/together.css";
+@import "./parts/people.css";
+@import "./parts/rest.css";
+
 @custom-variant dark (&:is(.dark *));
 
+/* Day. Night is the default look (see the theme provider); day is designed, not inverted. */
 :root {
-  --radius: 0.5rem;
+  --radius: 0.6875rem;
 
-  --background: #f4f5fa;
-  --foreground: #171a2e;
-  --card: #ffffff;
-  --card-foreground: #171a2e;
-  --popover: #ffffff;
-  --popover-foreground: #171a2e;
-  --primary: #3a32e0;
-  --primary-foreground: #ffffff;
-  --secondary: #e6e8f3;
-  --secondary-foreground: #171a2e;
-  --muted: #e9ebf4;
-  --muted-foreground: #565b78;
-  --accent: #e6e8f3;
-  --accent-foreground: #171a2e;
-  --destructive: #c4264b;
-  --border: #d5d8e6;
-  --input: #c4c8da;
-  --ring: #3a32e0;
+  --bg: #f3f2ee;
+  --bg-raised: #ffffff;
+  --side-bg: rgba(243, 242, 238, 0.82);
+  --surface: rgba(19, 19, 22, 0.04);
+  --surface-2: rgba(19, 19, 22, 0.075);
+  --surface-3: rgba(19, 19, 22, 0.13);
+  --line: rgba(19, 19, 22, 0.1);
+  --line-strong: rgba(19, 19, 22, 0.22);
+  --fg: #131316;
+  --fg-2: rgba(19, 19, 22, 0.74);
+  --fg-3: rgba(19, 19, 22, 0.62);
+  --on-fg: #f6f5f1;
+  --movie: #c8402f;
+  --tv: #1f6fd1;
+  --game: #6d43d9;
+  --book: #94660a;
+  --good: #1f7a4a;
+  --warn: #b83a2a;
+  --tone-l: 40%;
+  --on-tone: #ffffff;
+  --shadow-art: 0 14px 28px -16px rgba(19, 19, 22, 0.55), 0 2px 5px -2px rgba(19, 19, 22, 0.25);
+  --shadow-pop: 0 30px 80px -24px rgba(19, 19, 22, 0.45), 0 0 0 1px rgba(19, 19, 22, 0.08);
+  --edge: rgba(19, 19, 22, 0.14);
+  color-scheme: light;
 
-  /* One color per medium. Spines are objects, so these stay the same in dark mode. */
-  --movie: #f2a20c;
-  --movie-foreground: #2a1b00;
-  --tv: #19b5b0;
-  --tv-foreground: #04201f;
-  --game: #cf2860;
-  --game-foreground: #ffffff;
-  --book: #27774c;
-  --book-foreground: #ffffff;
+  --display: var(--font-fraunces), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --sans: var(--font-hanken), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  /* A page's own color, measured from its artwork. With none, tinted parts use the text color. */
+  --tone-h: 40;
+  --tone-s: 0;
+  --tone: var(--fg);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.dark {
-  --background: #0f1120;
-  --foreground: #ecedf7;
-  --card: #181b30;
-  --card-foreground: #ecedf7;
-  --popover: #181b30;
-  --popover-foreground: #ecedf7;
-  --primary: #9b96ff;
-  --primary-foreground: #0f1120;
-  --secondary: #23274a;
-  --secondary-foreground: #ecedf7;
-  --muted: #1e2138;
-  --muted-foreground: #a2a6c2;
-  --accent: #23274a;
-  --accent-foreground: #ecedf7;
-  --destructive: #ff6b8b;
-  --border: #2b2f52;
-  --input: #353a63;
-  --ring: #9b96ff;
+/* Night. `.night` keeps a part of the page dark in day mode: artwork with type set over it. */
+.dark,
+.night {
+  --bg: #0b0b0d;
+  --bg-raised: #141417;
+  --side-bg: rgba(11, 11, 13, 0.72);
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --surface-3: rgba(255, 255, 255, 0.13);
+  --line: rgba(255, 255, 255, 0.09);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --fg: #f4f1ea;
+  --fg-2: rgba(244, 241, 234, 0.72);
+  --fg-3: rgba(244, 241, 234, 0.52);
+  --on-fg: #0b0b0d;
+  --movie: #ff7566;
+  --tv: #62adff;
+  --game: #b796ff;
+  --book: #f2c14e;
+  --good: #6fd39a;
+  --warn: #ff8a7a;
+  --tone-l: 68%;
+  --on-tone: #0b0b0d;
+  --shadow-art: 0 14px 30px -14px rgba(0, 0, 0, 0.85), 0 2px 6px -2px rgba(0, 0, 0, 0.5);
+  --shadow-pop: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --edge: rgba(255, 255, 255, 0.12);
+  color-scheme: dark;
+}
+
+/* The names shadcn/ui components read, in both looks. */
+:root,
+.dark,
+.night {
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --card: var(--bg-raised);
+  --card-foreground: var(--fg);
+  --popover: var(--bg-raised);
+  --popover-foreground: var(--fg);
+  --primary: var(--fg);
+  --primary-foreground: var(--on-fg);
+  --secondary: var(--surface-2);
+  --secondary-foreground: var(--fg);
+  --muted: var(--surface-2);
+  --muted-foreground: var(--fg-2);
+  --accent: var(--surface-2);
+  --accent-foreground: var(--fg);
+  --destructive: var(--warn);
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--fg);
+}
+
+/* Parts that take a title's color. Set `--tone-h` and `--tone-s` on the element or above it. */
+.toned {
+  --tone: hsl(var(--tone-h) calc(var(--tone-s) * 1%) var(--tone-l));
 }
 
 @theme inline {
-  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--sans);
+  --font-display: var(--display);
+  --font-mono: var(--mono);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -82,31 +136,48 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  --color-dim: var(--fg-2);
+  --color-dimmer: var(--fg-3);
+  --color-surface: var(--surface);
+  --color-good: var(--good);
   --color-movie: var(--movie);
-  --color-movie-foreground: var(--movie-foreground);
   --color-tv: var(--tv);
-  --color-tv-foreground: var(--tv-foreground);
   --color-game: var(--game);
-  --color-game-foreground: var(--game-foreground);
   --color-book: var(--book);
-  --color-book-foreground: var(--book-foreground);
-
-  --animate-shelve: shelve 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.15) both;
-
-  @keyframes shelve {
-    from {
-      opacity: 0;
-      transform: translateY(-1.5rem);
-    }
-  }
 }
 
 @layer base {
+  /* In a layer so the breakpoints in design.css can change them. */
+  :root {
+    --side-w: 256px;
+    --pad: 48px;
+  }
+
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--fg);
+    font: 400 15px / 1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--fg);
+    color: var(--on-fg);
   }
 }

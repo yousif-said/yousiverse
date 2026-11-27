@@ -1,0 +1,118 @@
+/* Styles that only profiles, the account page, and alerts need, beyond design.css. Keep to the tokens in globals.css. */
+
+@layer components {
+  /* A person's name where they are credited: it leads to their profile. */
+  .who {
+    font-weight: 600;
+  }
+  .who:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* A control with the message shown under it when what it does could not be saved. */
+  .control {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+  .control .error {
+    max-width: 28ch;
+    text-align: right;
+  }
+
+  /* ---------- profile ---------- */
+  .prof__counts {
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 8px;
+  }
+  .prof__counts a:hover {
+    color: var(--fg);
+  }
+  /* What two people both loved, at the far end of the "in tune" panel. */
+  .match__loved {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
+    min-width: 0;
+  }
+
+  /* ---------- account ---------- */
+  /* The services past the first few, opened on request. */
+  .disclose > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 2px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--fg-2);
+    cursor: pointer;
+    list-style: none;
+  }
+  .disclose > summary::-webkit-details-marker {
+    display: none;
+  }
+  .disclose > summary:hover {
+    color: var(--fg);
+  }
+  .disclose > summary .i {
+    transition: transform 0.2s var(--ease);
+  }
+  .disclose[open] > summary .i {
+    transform: rotate(90deg);
+  }
+  .disclose > .subs {
+    margin-top: 12px;
+  }
+
+  /* ---------- alerts ---------- */
+  /* Alerts that came through, side by side where there is room. */
+  .camegrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    gap: 12px;
+  }
+  .camegrid .came {
+    margin-top: 0;
+  }
+  /* What to do about an alert that came through, with removing it at the far end. */
+  .came__acts {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .came__acts .control {
+    margin-left: auto;
+  }
+  /* A price bar in a row is narrow: room above it for the label that sits over the line, and
+     a label near either end hangs inward from its mark instead of centering on it. */
+  .wait .pricebar {
+    margin-top: 20px;
+  }
+  .pricebar__pt--start {
+    transform: translateX(-2px);
+    align-items: flex-start;
+  }
+  .pricebar__pt--end {
+    transform: translateX(calc(-100% + 2px));
+    align-items: flex-end;
+  }
+
+  @media (max-width: 760px) {
+    .match {
+      flex-wrap: wrap;
+    }
+    .match__loved {
+      position: relative;
+      width: 100%;
+      margin-left: 0;
+      overflow-x: auto;
+    }
+  }
+}

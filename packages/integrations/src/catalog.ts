@@ -6,6 +6,10 @@ export type CatalogSearchResult = {
   title: string;
   releaseYear: number | null;
   posterUrl: string | null;
+  /** A wide image of the title. Only TMDB gives one with a search result. */
+  backdropUrl: string | null;
+  /** Who wrote it. Only books found by a search say. */
+  authors?: string[];
 };
 
 export type CatalogItem = {

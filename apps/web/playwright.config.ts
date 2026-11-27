@@ -12,6 +12,9 @@ export default defineConfig({
   // a slow test is a signal.
   timeout: process.env.CI ? 120_000 : 30_000,
   expect: { timeout: process.env.CI ? 20_000 : 5_000 },
+  // Every test shares one dev server, which renders a page at a time. More than two browsers
+  // only queue behind each other: on a laptop four made the run slower and timed tests out.
+  workers: process.env.CI ? undefined : 2,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL,

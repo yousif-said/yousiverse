@@ -9,9 +9,16 @@ describe("statusLabel", () => {
     expect(statusLabel("in_progress", "book")).toBe("Reading");
   });
 
-  it("uses the same word for every type once a title is finished or dropped", () => {
-    expect(statusLabel("finished", "movie")).toBe("Finished");
+  it("says a finished movie was watched and a finished book was read", () => {
+    expect(statusLabel("finished", "movie")).toBe("Watched");
+    expect(statusLabel("finished", "book")).toBe("Read");
+    expect(statusLabel("finished", "tv")).toBe("Finished");
+    expect(statusLabel("finished", "game")).toBe("Finished");
+  });
+
+  it("uses the same word for every type once a title is dropped", () => {
     expect(statusLabel("dropped", "game")).toBe("Dropped");
+    expect(statusLabel("dropped", "book")).toBe("Dropped");
   });
 });
 
@@ -28,7 +35,8 @@ describe("activityPhrase", () => {
   it("words a status as something a person did, fitting the type of title", () => {
     expect(activityPhrase("want", "book")).toBe("wants to read");
     expect(activityPhrase("in_progress", "game")).toBe("is playing");
-    expect(activityPhrase("finished", "movie")).toBe("finished");
+    expect(activityPhrase("finished", "movie")).toBe("watched");
+    expect(activityPhrase("finished", "book")).toBe("finished");
     expect(activityPhrase("dropped", "tv")).toBe("dropped");
   });
 });

@@ -26,7 +26,7 @@ test("adds titles to the library, filters it, changes a status, and removes a ti
   await signIn(page);
 
   await page.goto("/library");
-  await expect(page.getByText("Your library is empty.")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Your library is empty." })).toBeVisible();
 
   await page.goto("/movies/603");
   await andSave(page, page.getByRole("button", { name: "Want to watch" }).click());
@@ -40,19 +40,39 @@ test("adds titles to the library, filters it, changes a status, and removes a ti
   await andSave(page, page.getByRole("button", { name: "Playing" }).click());
   await expect(page.getByRole("group", { name: "In your library" })).toBeVisible();
 
-  await page.getByRole("link", { name: "Library", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Yours" })
+    .getByRole("link", { name: "Library" })
+    .click();
   await expect(page).toHaveURL("/library");
-  const titles = page.getByRole("main").getByRole("listitem");
+  const titles = page.getByRole("main").getByRole("article");
   await expect(titles).toHaveCount(2);
-  await expect(titles.filter({ hasText: "The Matrix" })).toContainText("Want to watch");
-  await expect(titles.filter({ hasText: "Hades" })).toContainText("Playing");
+  await expect(
+    page
+      .getByRole("region", { name: "Want" })
+      .getByRole("article")
+      .filter({ hasText: "The Matrix" }),
+  ).toHaveCount(1);
+  await expect(
+    page
+      .getByRole("region", { name: "In progress" })
+      .getByRole("article")
+      .filter({ hasText: "Hades" }),
+  ).toHaveCount(1);
 
-  await page.getByRole("link", { name: "Games", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Medium" })
+    .getByRole("link", { name: /^Games\s*,\s*1$/ })
+    .click();
   await expect(page).toHaveURL("/library?type=game");
   await expect(titles).toHaveCount(1);
-  await page.getByRole("link", { name: "Finished", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Status" })
+    .getByRole("link", { name: "Finished", exact: true })
+    .click();
   await expect(page).toHaveURL("/library?type=game&status=finished");
-  await expect(page.getByText("Nothing in your library matches these filters.")).toBeVisible();
+  await expect(page.getByText("Nothing here matches these filters.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Show everything" })).toBeVisible();
 
   await page.goto("/games/113112");
   await expect(page.getByRole("button", { name: "Playing" })).toHaveAttribute(
@@ -60,16 +80,16 @@ test("adds titles to the library, filters it, changes a status, and removes a ti
     "true",
   );
   await andSave(page, page.getByRole("button", { name: "Finished" }).click());
-  await andSave(
-    page,
-    page
-      .getByLabel("Who can see this in your library")
-      .selectOption("Only me")
-      .then(() => {}),
-  );
+  const visibility = page.getByRole("button", { name: /^Who can see this in your library: / });
+  await expect(visibility).toHaveAccessibleName("Who can see this in your library: Everyone");
+  await andSave(page, visibility.click());
+  await expect(visibility).toHaveAccessibleName("Who can see this in your library: Friends");
+  await andSave(page, visibility.click());
+  await expect(visibility).toHaveAccessibleName("Who can see this in your library: Only you");
   await page.goto("/library?status=finished");
   await expect(titles).toHaveCount(1);
-  await expect(titles).toContainText("Finished, only you");
+  await expect(titles).toContainText("Hades");
+  await expect(titles).toContainText("Only you");
 
   await page.goto("/movies/603");
   await andSave(page, page.getByRole("button", { name: "Remove from library" }).click());

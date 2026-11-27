@@ -40,6 +40,7 @@ describe("library", () => {
     expect(await caller.library.entry({ mediaId: titles.matrix })).toEqual({
       status: "want",
       visibility: "public",
+      progress: null,
     });
   });
 
@@ -55,7 +56,7 @@ describe("library", () => {
 
     await caller.library.save({ mediaId: titles.matrix, status: "finished" });
 
-    expect(await caller.library.list()).toMatchObject([
+    expect((await caller.library.list()).entries).toMatchObject([
       { title: "The Matrix", status: "finished", visibility: "private" },
     ]);
   });
@@ -83,7 +84,7 @@ describe("library", () => {
 
     await caller.library.remove({ mediaId: titles.matrix });
 
-    expect(await caller.library.list()).toEqual([]);
+    expect((await caller.library.list()).entries).toEqual([]);
   });
 
   it("filters by media type and by status", async () => {
@@ -92,14 +93,15 @@ describe("library", () => {
     await caller.library.save({ mediaId: titles.hades, status: "in_progress" });
     await caller.library.save({ mediaId: titles.dune, status: "finished" });
 
-    const titlesOf = (entries: { title: string }[]) => entries.map((entry) => entry.title).sort();
+    const titlesOf = (list: { entries: { title: string }[] }) =>
+      list.entries.map((entry) => entry.title).sort();
     expect(titlesOf(await caller.library.list())).toEqual(["Dune", "Hades", "The Matrix"]);
     expect(titlesOf(await caller.library.list({ type: "game" }))).toEqual(["Hades"]);
     expect(titlesOf(await caller.library.list({ status: "finished" }))).toEqual([
       "Dune",
       "The Matrix",
     ]);
-    expect(await caller.library.list({ type: "book", status: "dropped" })).toEqual([]);
+    expect((await caller.library.list({ type: "book", status: "dropped" })).entries).toEqual([]);
   });
 
   it("keeps each person's library separate", async () => {
@@ -110,9 +112,9 @@ describe("library", () => {
 
     await grace.caller.library.remove({ mediaId: titles.matrix });
 
-    expect(await grace.caller.library.list()).toEqual([]);
+    expect((await grace.caller.library.list()).entries).toEqual([]);
     expect(await grace.caller.library.entry({ mediaId: titles.matrix })).toBeNull();
-    expect(await ada.caller.library.list()).toMatchObject([
+    expect((await ada.caller.library.list()).entries).toMatchObject([
       { title: "The Matrix", status: "finished" },
     ]);
   });

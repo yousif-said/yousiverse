@@ -41,9 +41,16 @@ async function saveSimilar(db: Database, title: SimilarSource, found: CatalogSea
       .filter((other) => !(other.type === title.type && other.providerId === title.providerId))
       .map((other) => [`${other.type}:${other.providerId}`, other]),
   );
-  const rows = [...unique.values()]
-    .slice(0, MAX_SIMILAR_TITLES)
-    .map((other, position) => ({ mediaId: title.id, position, ...other }));
+  const rows = [...unique.values()].slice(0, MAX_SIMILAR_TITLES).map((other, position) => ({
+    mediaId: title.id,
+    position,
+    type: other.type,
+    providerId: other.providerId,
+    title: other.title,
+    releaseYear: other.releaseYear,
+    posterUrl: other.posterUrl,
+    backdropUrl: other.backdropUrl,
+  }));
 
   await db.transaction(async (tx) => {
     await tx.delete(similarTitles).where(eq(similarTitles.mediaId, title.id));

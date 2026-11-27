@@ -9,6 +9,7 @@ import {
 import { asc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { ensureGamePrices, findGame } from "../availability/game-prices";
+import { ensureServiceList } from "../availability/services";
 import { ensureStreamingOffers, findStreamableTitle } from "../availability/streaming";
 import { type Context, publicProcedure, router } from "../trpc";
 
@@ -35,6 +36,8 @@ export const availabilityRouter = router({
 
       const check = await ensureStreamingOffers(ctx.db, title);
       if (!check) return { offers: null };
+      // An offer only names its service. The service's logo comes with the list of services.
+      await ensureServiceList(ctx.db);
 
       const [found, subscribed] = await Promise.all([
         ctx.db
@@ -43,6 +46,8 @@ export const availabilityRouter = router({
             kind: streamingOffers.kind,
             serviceId: streamingServices.id,
             service: streamingServices.name,
+            /** The service's own logo. Null for a service seen only on a title's offers. */
+            logoUrl: streamingServices.logoUrl,
             priceCents: streamingOffers.priceCents,
             url: streamingOffers.url,
           })
@@ -98,6 +103,8 @@ export const availabilityRouter = router({
         .orderBy(asc(gameDeals.priceCents), asc(gameDeals.shop));
       return {
         deals,
+        /** False for a game with no Steam listing, which is how its PC prices are found. */
+        onSteam: game.steamAppId !== null,
         lowestEverCents: check.lowestPriceCents,
         checkedAt: check.checkedAt,
         outOfDate: check.outOfDate,

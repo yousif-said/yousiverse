@@ -60,6 +60,7 @@ export async function search(query: string): Promise<CatalogSearchResult[]> {
       title,
       releaseYear: yearOf(isMovie ? result.release_date : result.first_air_date),
       posterUrl: imageUrl(result.poster_path, "w342"),
+      backdropUrl: imageUrl(result.backdrop_path, "w1280"),
     };
   });
 }
@@ -101,6 +102,7 @@ export async function findMovie(
     title: movie.title,
     releaseYear: yearOf(movie.release_date),
     posterUrl: imageUrl(movie.poster_path, "w342"),
+    backdropUrl: imageUrl(movie.backdrop_path, "w1280"),
   };
 }
 
@@ -117,6 +119,7 @@ export async function findByImdbId(imdbId: string): Promise<CatalogSearchResult 
       title: movie.title,
       releaseYear: yearOf(movie.release_date),
       posterUrl: imageUrl(movie.poster_path, "w342"),
+      backdropUrl: imageUrl(movie.backdrop_path, "w1280"),
     };
   }
   const [show] = found.tv_results;
@@ -127,6 +130,7 @@ export async function findByImdbId(imdbId: string): Promise<CatalogSearchResult 
       title: show.name,
       releaseYear: yearOf(show.first_air_date),
       posterUrl: imageUrl(show.poster_path, "w342"),
+      backdropUrl: imageUrl(show.backdrop_path, "w1280"),
     };
   }
   return null;
@@ -146,6 +150,7 @@ export async function getSimilar(
       title: movie.title,
       releaseYear: yearOf(movie.release_date),
       posterUrl: imageUrl(movie.poster_path, "w342"),
+      backdropUrl: imageUrl(movie.backdrop_path, "w1280"),
     }));
   }
   const { results } = await request(path, tvListResponse);
@@ -155,6 +160,7 @@ export async function getSimilar(
     title: show.name,
     releaseYear: yearOf(show.first_air_date),
     posterUrl: imageUrl(show.poster_path, "w342"),
+    backdropUrl: imageUrl(show.backdrop_path, "w1280"),
   }));
 }
 

@@ -17,6 +17,7 @@ export const subscriptionsRouter = router({
       .select({
         id: streamingServices.id,
         name: streamingServices.name,
+        logoUrl: streamingServices.logoUrl,
         subscribed: sql<boolean>`${userSubscriptions.id} is not null`,
       })
       .from(streamingServices)
@@ -30,6 +31,23 @@ export const subscriptionsRouter = router({
       .where(and(eq(streamingServices.subscription, true), isNotNull(streamingServices.rank)))
       .orderBy(asc(streamingServices.rank));
   }),
+
+  /**
+   * The services the signed-in person says they have, most widely used first. Reads only what
+   * is stored, so it is safe on pages that must not reach a provider.
+   */
+  mine: protectedProcedure.query(({ ctx }) =>
+    ctx.db
+      .select({
+        id: streamingServices.id,
+        name: streamingServices.name,
+        logoUrl: streamingServices.logoUrl,
+      })
+      .from(userSubscriptions)
+      .innerJoin(streamingServices, eq(streamingServices.id, userSubscriptions.serviceId))
+      .where(eq(userSubscriptions.userId, ctx.session.user.id))
+      .orderBy(asc(streamingServices.rank), asc(streamingServices.name)),
+  ),
 
   /** Says the signed-in person has, or no longer has, a subscription. */
   set: protectedProcedure

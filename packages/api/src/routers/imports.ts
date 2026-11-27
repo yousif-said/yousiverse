@@ -10,7 +10,7 @@ import {
 import { ProviderError } from "@yousiverse/integrations/errors";
 import { getOwnedGames, resolveSteamId } from "@yousiverse/integrations/steam";
 import { getTraktHistory, getTraktProfile, traktUsername } from "@yousiverse/integrations/trakt";
-import { and, asc, count, desc, eq, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { processNextBatch } from "../imports/process";
 import { ImportFileError, type ParsedImport } from "../imports/rows";
@@ -175,6 +175,7 @@ export const importsRouter = router({
             status: game.playtimeMinutes > 0 ? input.playedStatus : "want",
             rating: null,
             review: null,
+            minutesPlayed: game.playtimeMinutes > 0 ? game.playtimeMinutes : null,
           })),
         },
       );
@@ -253,7 +254,7 @@ export const importsRouter = router({
     };
   }),
 
-  /** The signed-in person's imports, newest first. */
+  /** The signed-in person's imports, newest first, with how many titles each has left to match. */
   mine: protectedProcedure.query(({ ctx }) =>
     ctx.db
       .select({
@@ -261,6 +262,7 @@ export const importsRouter = router({
         source: imports.source,
         createdAt: imports.createdAt,
         total: count(importItems.id),
+        pending: sql<number>`cast(count(${importItems.id}) filter (where ${importItems.state} = 'pending') as int)`,
       })
       .from(imports)
       .leftJoin(importItems, eq(importItems.importId, imports.id))

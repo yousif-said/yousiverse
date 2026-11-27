@@ -6,17 +6,24 @@ import {
   clubMembers,
   clubPicks,
   clubs,
+  clubThreads,
+  follows,
   media,
   mediaTypes,
   profiles,
   ratings,
   users,
 } from "@yousiverse/db/schema";
-import { and, asc, count, desc, eq, inArray, isNull, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, isNotNull, isNull, lte, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { z } from "zod";
+import { titleSummary, withPages } from "../titles";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const MAX_CLUBS_LISTED = 50;
+/** How many picks, and how many members, a club's tile shows. */
+const TILE_PICKS = 4;
+const TILE_MEMBERS = 4;
 
 const clubId = z.uuid();
 const mediaId = z.uuid();
@@ -96,6 +103,9 @@ async function requireUsername(db: Database, userId: string) {
 // without them, and a bare "id" inside the subquery would mean the membership's id.
 const memberCount = sql<number>`(select count(*)::int from "club_members" where "club_members"."club_id" = "clubs"."id")`;
 
+// Written out with table names for the same reason, in a query that starts from `club_threads`.
+export const replyCount = sql<number>`(select count(*)::int from "club_replies" where "club_replies"."thread_id" = "club_threads"."id")`;
+
 const summaryFields = {
   id: clubs.id,
   name: clubs.name,
@@ -103,7 +113,94 @@ const summaryFields = {
   access: clubs.access,
   mediaTypes: clubs.mediaTypes,
   memberCount,
+  // The person who runs the club.
+  owner: profiles.username,
 };
+
+/** The follow in the other direction, for asking both ways about two people in one query. */
+const followsBack = alias(follows, "follows_back");
+
+/** Only titles of the media types a club covers now count as its picks. */
+const coveredByClub = sql`${media.type} = any(${clubs.mediaTypes})`;
+
+/**
+ * Adds what a club's tile shows: its latest picks' artwork, its first members, and its most
+ * recently active discussion. Only for clubs the viewer may look inside: their own, or public.
+ */
+async function withTileDetails<Summary extends { id: string }>(db: Database, found: Summary[]) {
+  if (found.length === 0) return [];
+  const ids = found.map((club) => club.id);
+  const latestPicks = db
+    .select({
+      clubId: clubPicks.clubId,
+      ...titleSummary,
+      position:
+        sql<number>`row_number() over (partition by ${clubPicks.clubId} order by ${clubPicks.createdAt} desc, ${media.title})`.as(
+          "position",
+        ),
+    })
+    .from(clubPicks)
+    .innerJoin(clubs, eq(clubs.id, clubPicks.clubId))
+    .innerJoin(media, eq(media.id, clubPicks.mediaId))
+    .where(and(inArray(clubPicks.clubId, ids), coveredByClub, isNotNull(media.providerId)))
+    .as("latest_picks");
+  const firstMembers = db
+    .select({
+      clubId: clubMembers.clubId,
+      username: profiles.username,
+      position:
+        sql<number>`row_number() over (partition by ${clubMembers.clubId} order by ${clubMembers.createdAt})`.as(
+          "position",
+        ),
+    })
+    .from(clubMembers)
+    .innerJoin(profiles, eq(profiles.userId, clubMembers.userId))
+    .where(inArray(clubMembers.clubId, ids))
+    .as("first_members");
+
+  const [picks, members, discussions] = await Promise.all([
+    db
+      .select()
+      .from(latestPicks)
+      .where(lte(latestPicks.position, TILE_PICKS))
+      .orderBy(latestPicks.clubId, latestPicks.position),
+    db
+      .select()
+      .from(firstMembers)
+      .where(lte(firstMembers.position, TILE_MEMBERS))
+      .orderBy(firstMembers.clubId, firstMembers.position),
+    db
+      .selectDistinctOn([clubThreads.clubId], {
+        clubId: clubThreads.clubId,
+        id: clubThreads.id,
+        title: clubThreads.title,
+        replyCount,
+      })
+      .from(clubThreads)
+      .where(inArray(clubThreads.clubId, ids))
+      .orderBy(clubThreads.clubId, desc(clubThreads.activeAt), desc(clubThreads.id)),
+  ]);
+
+  return found.map((club) => {
+    const newestPicks = withPages(picks)
+      .filter((pick) => pick.clubId === club.id)
+      .map(({ clubId: _clubId, position: _position, ...title }) => title);
+    const latest = discussions.find((discussion) => discussion.clubId === club.id);
+    return {
+      ...club,
+      /** The color of the newest pick's artwork, for marking the club where it is only named. */
+      hue: newestPicks[0]?.artHue ?? null,
+      picks: newestPicks,
+      /** Usernames of the first members, the owner first. */
+      members: members
+        .filter((member) => member.clubId === club.id)
+        .map((member) => member.username),
+      latestDiscussion: latest
+        ? { id: latest.id, title: latest.title, replyCount: latest.replyCount }
+        : null,
+    };
+  });
+}
 
 export const clubsRouter = router({
   /** Starts a club. Its maker becomes the owner and its first member. */
@@ -126,27 +223,35 @@ export const clubsRouter = router({
     });
   }),
 
-  /** The clubs the signed-in person belongs to, by name. */
-  mine: protectedProcedure.query(({ ctx }) =>
-    ctx.db
-      .select(summaryFields)
-      .from(clubs)
-      .innerJoin(clubMembers, eq(clubMembers.clubId, clubs.id))
-      .where(eq(clubMembers.userId, ctx.session.user.id))
-      .orderBy(asc(clubs.name)),
+  /** The clubs the signed-in person belongs to, by name, each with what its tile shows. */
+  mine: protectedProcedure.query(async ({ ctx }) =>
+    withTileDetails(
+      ctx.db,
+      await ctx.db
+        .select(summaryFields)
+        .from(clubs)
+        .innerJoin(clubMembers, eq(clubMembers.clubId, clubs.id))
+        .leftJoin(profiles, eq(profiles.userId, clubs.ownerId))
+        .where(eq(clubMembers.userId, ctx.session.user.id))
+        .orderBy(asc(clubs.name)),
+    ),
   ),
 
   /**
-   * Public clubs anyone can join, largest first and newest first among clubs of a size.
-   * Invite-only clubs are never listed.
+   * Public clubs anyone can join, largest first and newest first among clubs of a size, each
+   * with what its tile shows. Invite-only clubs are never listed.
    */
-  discover: publicProcedure.query(({ ctx }) =>
-    ctx.db
-      .select(summaryFields)
-      .from(clubs)
-      .where(eq(clubs.access, "public"))
-      .orderBy(desc(memberCount), desc(clubs.createdAt))
-      .limit(MAX_CLUBS_LISTED),
+  discover: publicProcedure.query(async ({ ctx }) =>
+    withTileDetails(
+      ctx.db,
+      await ctx.db
+        .select(summaryFields)
+        .from(clubs)
+        .leftJoin(profiles, eq(profiles.userId, clubs.ownerId))
+        .where(eq(clubs.access, "public"))
+        .orderBy(desc(memberCount), desc(clubs.createdAt))
+        .limit(MAX_CLUBS_LISTED),
+    ),
   ),
 
   /**
@@ -174,10 +279,31 @@ export const clubsRouter = router({
         // Someone only holding an invite sees how many members there are, not who they are.
         inside
           ? ctx.db
-              .select({ username: profiles.username, name: users.name })
+              .select({
+                userId: clubMembers.userId,
+                username: profiles.username,
+                name: users.name,
+                /** Whether the viewer follows this member, and the other way round. */
+                isFollowing: sql<boolean>`${follows.id} is not null`,
+                followsYou: sql<boolean>`${followsBack.id} is not null`,
+              })
               .from(clubMembers)
               .innerJoin(users, eq(users.id, clubMembers.userId))
               .innerJoin(profiles, eq(profiles.userId, clubMembers.userId))
+              .leftJoin(
+                follows,
+                and(
+                  eq(follows.followerId, userId ?? ""),
+                  eq(follows.followedId, clubMembers.userId),
+                ),
+              )
+              .leftJoin(
+                followsBack,
+                and(
+                  eq(followsBack.followerId, clubMembers.userId),
+                  eq(followsBack.followedId, userId ?? ""),
+                ),
+              )
               .where(eq(clubMembers.clubId, club.id))
               .orderBy(asc(clubMembers.createdAt))
           : [],
@@ -191,7 +317,10 @@ export const clubsRouter = router({
         mediaTypes: club.mediaTypes,
         owner: owner?.username ?? null,
         memberCount: members?.count ?? 0,
-        members: people,
+        members: people.map(({ userId: memberId, ...person }) => ({
+          ...person,
+          isViewer: memberId === userId,
+        })),
         isMember: member,
         isOwner,
         /** Whether the viewer could join right now, given the invite code they sent. */
@@ -283,12 +412,7 @@ export const clubsRouter = router({
     const [picked, memberRatings] = await Promise.all([
       ctx.db
         .select({
-          mediaId: media.id,
-          type: media.type,
-          title: media.title,
-          releaseYear: media.releaseYear,
-          posterUrl: media.posterUrl,
-          providerId: media.providerId,
+          ...titleSummary,
           addedById: clubPicks.addedBy,
           // Null when the member who picked it has since deleted their account.
           addedBy: profiles.username,
@@ -320,13 +444,10 @@ export const clubsRouter = router({
     ]);
 
     const ratingOf = new Map(memberRatings.map((rating) => [rating.mediaId, rating]));
-    return picked.flatMap(({ addedById, providerId, ...pick }) => {
-      // Every title with a page has a provider id; this narrows the type for callers.
-      if (!providerId) return [];
+    return withPages(picked).map(({ addedById, ...pick }) => {
       const rating = ratingOf.get(pick.mediaId);
       return {
         ...pick,
-        providerId,
         /** The members' average rating in quarter points, and how many of them rated it. */
         clubRating: rating ? { average: rating.average, count: rating.count } : null,
         // The owner can remove any pick; a member can remove their own.

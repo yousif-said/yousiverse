@@ -1,85 +1,158 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { ProfileForm } from "@/components/profile-form";
-import { SignOutButton } from "@/components/sign-out-button";
-import { SubscriptionPicker } from "@/components/subscription-picker";
-import { profilePath } from "@/lib/profile";
+import { AlertEmailsSwitch } from "@/components/alerts/alert-emails-switch";
+import { AppearanceChoice } from "@/components/people/appearance-choice";
+import { ProfileForm } from "@/components/people/profile-form";
+import { SignOutButton } from "@/components/people/sign-out-button";
+import { SubscriptionTiles } from "@/components/people/subscription-tiles";
+import { Icon } from "@/components/ui/icon";
+import { PageHeader } from "@/components/ui/page-header";
+import { formatDay } from "@/lib/format";
 import { requireSession } from "@/lib/session";
 import { getQueryClient, trpc } from "@/trpc/server";
 
 export const metadata: Metadata = { title: "Account" };
 
-const joinedDateFormat = new Intl.DateTimeFormat("en-US", { dateStyle: "long" });
+const SECTIONS = [
+  { id: "set-profile", title: "Profile" },
+  { id: "set-subs", title: "Subscriptions" },
+  { id: "set-look", title: "Appearance" },
+  { id: "set-email", title: "Emails" },
+  { id: "set-import", title: "Import" },
+  { id: "set-signin", title: "Sign-in" },
+] as const;
+
+type SectionProps = {
+  id: (typeof SECTIONS)[number]["id"];
+  /** What the section is for, under its heading. */
+  sub?: string;
+  children: React.ReactNode;
+};
+
+function Section({ id, sub, children }: SectionProps) {
+  const title = SECTIONS.find((section) => section.id === id)?.title;
+  return (
+    <section className="set__sec" id={id} aria-labelledby={`${id}-heading`}>
+      <div>
+        <h2 className="d3" id={`${id}-heading`}>
+          {title}
+        </h2>
+        {sub && <p className="sh__sub">{sub}</p>}
+      </div>
+      {children}
+    </section>
+  );
+}
 
 export default async function AccountPage() {
   const { user } = await requireSession("/account");
   const queryClient = getQueryClient();
-  const [profile, services, canReviewLinks] = await Promise.all([
+  const [profile, services, alerts, canReviewLinks, requestHeaders] = await Promise.all([
     queryClient.fetchQuery(trpc.profiles.me.queryOptions()),
     queryClient.fetchQuery(trpc.subscriptions.services.queryOptions()),
+    queryClient.fetchQuery(trpc.alerts.mine.queryOptions()),
     queryClient.fetchQuery(trpc.links.canReview.queryOptions()),
+    headers(),
   ]);
 
-  const details = [
-    { label: "Email", value: user.email },
-    { label: "Joined", value: joinedDateFormat.format(user.createdAt) },
-  ];
-
   return (
-    <section className="max-w-xl pt-14 sm:pt-20">
-      <h1 className="font-display text-4xl font-extrabold tracking-tight">Account</h1>
-
-      <h2 className="mt-10 mb-4 font-display text-2xl font-bold tracking-tight">Profile</h2>
-      <ProfileForm initialProfile={profile} />
-      {profile.username && (
-        <p className="mt-3 text-sm">
-          <Link
-            href={profilePath(profile.username)}
-            className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
+    <div className="page">
+      <PageHeader title="Account" />
+      <div className="set">
+        <nav className="set__nav" aria-label="Account sections">
+          {SECTIONS.map((section) => (
+            <a key={section.id} href={`#${section.id}`}>
+              {section.title}
+            </a>
+          ))}
+        </nav>
+        <div>
+          <Section
+            id="set-profile"
+            sub="Your reviews and lists are credited to your username, and your profile shows your display name. Your email is never shown."
           >
-            View your public profile
-          </Link>
-        </p>
-      )}
+            <ProfileForm initialProfile={profile} host={requestHeaders.get("host")} />
+          </Section>
 
-      <h2 className="mt-10 font-display text-2xl font-bold tracking-tight">Subscriptions</h2>
-      <p className="mt-2 mb-4 text-sm text-muted-foreground">
-        Tick the streaming services you pay for, and movie and show pages will point out what you
-        can already watch. Only you can see this.
-      </p>
-      {services ? (
-        <SubscriptionPicker initialServices={services} />
-      ) : (
-        <p className="text-muted-foreground">
-          The list of services could not be loaded right now. Try again in a little while.
-        </p>
-      )}
+          <Section
+            id="set-subs"
+            sub="Tick the services you pay for. Movie and show pages then put what you can already watch first. Only you can see this."
+          >
+            {services ? (
+              <SubscriptionTiles initialServices={services} />
+            ) : (
+              <div className="note">
+                <Icon name="info" />
+                <span>
+                  The list of services could not be loaded right now. Try again in a little while.
+                </span>
+              </div>
+            )}
+          </Section>
 
-      <h2 className="mt-10 mb-4 font-display text-2xl font-bold tracking-tight">Sign-in</h2>
-      <dl className="divide-y rounded-lg border bg-card">
-        {details.map(({ label, value }) => (
-          <div key={label} className="flex items-baseline justify-between gap-6 px-5 py-4">
-            <dt className="text-sm text-muted-foreground">{label}</dt>
-            <dd className="truncate font-medium">{value}</dd>
-          </div>
-        ))}
-      </dl>
-      <p className="mt-3 text-sm text-muted-foreground">Your email is never shown to others.</p>
-      <SignOutButton className="mt-6" />
+          <Section id="set-look">
+            <AppearanceChoice />
+          </Section>
 
-      {canReviewLinks && (
-        <>
-          <h2 className="mt-10 font-display text-2xl font-bold tracking-tight">Reviewing</h2>
-          <p className="mt-2 text-sm">
-            <Link
-              href="/admin/links"
-              className="rounded-sm font-medium text-primary underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-            >
-              Review franchise links
-            </Link>
-          </p>
-        </>
-      )}
-    </section>
+          <Section id="set-email">
+            <div className="kv">
+              <div>
+                <b>Alert emails</b>
+                <p>
+                  One email a morning when something you are waiting for comes through. With this
+                  off, alerts still show on the Alerts page.
+                </p>
+              </div>
+              <AlertEmailsSwitch enabled={alerts.emails} />
+            </div>
+          </Section>
+
+          <Section
+            id="set-import"
+            sub="Bring your history with you. An import never changes anything you already have here."
+          >
+            <div>
+              <Link className="btn btn--soft" href="/import">
+                <Icon name="import" />
+                Import your history
+              </Link>
+            </div>
+          </Section>
+
+          <Section id="set-signin">
+            <dl>
+              <div className="kv">
+                <dt className="dim">Email</dt>
+                <dd className="min-w-0 wrap-anywhere text-right">
+                  <b>{user.email}</b>
+                </dd>
+              </div>
+              <div className="kv">
+                <dt className="dim">Joined</dt>
+                <dd>
+                  <b>{formatDay(user.createdAt)}</b>
+                </dd>
+              </div>
+              <div className="kv">
+                <dt className="dim">Signs in with</dt>
+                <dd className="text-right">
+                  <b>Google, or a link sent by email</b>
+                </dd>
+              </div>
+            </dl>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+              <SignOutButton />
+              {canReviewLinks && (
+                <Link className="btn btn--soft" href="/admin/links">
+                  <Icon name="shield" />
+                  Review franchise links
+                </Link>
+              )}
+            </div>
+          </Section>
+        </div>
+      </div>
+    </div>
   );
 }

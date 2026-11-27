@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./dates": "./src/calendar/dates.ts",
     "./jobs": "./src/jobs.ts"
   },
   "scripts": {

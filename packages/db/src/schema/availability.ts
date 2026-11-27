@@ -21,6 +21,8 @@ export const streamingServices = pgTable("streaming_services", {
   id: uuid().primaryKey().defaultRandom(),
   watchmodeId: integer().notNull().unique(),
   name: text().notNull(),
+  // The service's own logo, a small square image on Watchmode's CDN. Null until listed with one.
+  logoUrl: text(),
   // True for services people pay a subscription for, which they can say they have.
   subscription: boolean().notNull().default(false),
   // Position in Watchmode's list of US services, most widely used first. Null for a service

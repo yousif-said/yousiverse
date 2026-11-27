@@ -132,6 +132,19 @@ describe("friends-only visibility", () => {
     }
   });
 
+  it("offers a followed person's lists by the same rule: friends see friends-only ones", async () => {
+    const fromAda = async (caller: Caller) =>
+      (await caller.lists.fromFollowing())
+        .filter((list) => list.owner === "ada")
+        .map((list) => list.name)
+        .sort();
+
+    // Grace is a friend; Linus only follows Ada; Marie does not follow her at all.
+    expect(await fromAda(world.grace.caller)).toEqual(["friends list", "public list"]);
+    expect(await fromAda(world.linus.caller)).toEqual(["public list"]);
+    expect(await fromAda(world.marie.caller)).toEqual([]);
+  });
+
   it("opens a private list for its owner alone", async () => {
     const id = world.listIds.private as string;
 

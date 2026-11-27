@@ -93,6 +93,52 @@ describe("clubs", () => {
     expect(await grace.caller.clubs.mine()).toMatchObject([{ id }]);
   });
 
+  it("says who runs each listed club and who its first four members are, the owner first", async () => {
+    const ada = await signedInAs("Ada");
+    const { id } = await ada.caller.clubs.create(BOOK_CLUB);
+    for (const name of ["Grace", "Linus", "Marie", "Alan"]) {
+      const { caller } = await signedInAs(name);
+      await caller.clubs.join({ id });
+    }
+
+    const expected = [
+      {
+        id,
+        owner: "ada",
+        memberCount: 5,
+        members: ["ada", "grace", "linus", "marie"],
+        hue: null,
+        picks: [],
+        latestDiscussion: null,
+      },
+    ];
+    expect(await anonymous.clubs.discover()).toMatchObject(expected);
+    expect(await ada.caller.clubs.mine()).toMatchObject(expected);
+  });
+
+  it("says who in a club the viewer follows, who follows them, and which member they are", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const linus = await signedInAs("Linus");
+    const { id } = await ada.caller.clubs.create(BOOK_CLUB);
+    await grace.caller.clubs.join({ id });
+    await linus.caller.clubs.join({ id });
+    await grace.caller.follows.follow({ username: "ada" });
+    await linus.caller.follows.follow({ username: "grace" });
+
+    const nobody = { isFollowing: false, followsYou: false, isViewer: false };
+    expect((await grace.caller.clubs.get({ id })).members).toEqual([
+      { username: "ada", name: "Ada", ...nobody, isFollowing: true },
+      { username: "grace", name: "Grace", ...nobody, isViewer: true },
+      { username: "linus", name: "Linus", ...nobody, followsYou: true },
+    ]);
+    expect((await anonymous.clubs.get({ id })).members).toEqual([
+      { username: "ada", name: "Ada", ...nobody },
+      { username: "grace", name: "Grace", ...nobody },
+      { username: "linus", name: "Linus", ...nobody },
+    ]);
+  });
+
   it("lists public clubs largest first, and newest first among clubs of the same size", async () => {
     const ada = await signedInAs("Ada");
     const grace = await signedInAs("Grace");

@@ -1,5 +1,6 @@
 import { db } from "@yousiverse/db";
 import { follows, users } from "@yousiverse/db/schema";
+import { and, eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { anonymous, signedInAs } from "./helpers";
 
@@ -102,6 +103,84 @@ describe("follows", () => {
     expect(JSON.stringify(await anonymous.follows.followers({ username: "ada" }))).not.toContain(
       "example.com",
     );
+  });
+
+  it("lists who the signed-in person follows, newest first, saying who follows back", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await signedInAs("Linus");
+    await ada.caller.follows.follow({ username: "grace" });
+    await ada.caller.follows.follow({ username: "linus" });
+    await grace.caller.follows.follow({ username: "ada" });
+    await db
+      .update(follows)
+      .set({ createdAt: new Date("2020-01-01T00:00:00Z") })
+      .where(and(eq(follows.followerId, ada.user.id), eq(follows.followedId, grace.user.id)));
+
+    expect(await ada.caller.follows.mine()).toEqual([
+      { username: "linus", name: "Linus", followsYou: false },
+      { username: "grace", name: "Grace", followsYou: true },
+    ]);
+    expect(await ada.caller.follows.mine({ limit: 1 })).toMatchObject([{ username: "linus" }]);
+    expect(await grace.caller.follows.mine()).toEqual([
+      { username: "ada", name: "Ada", followsYou: true },
+    ]);
+    await expect(anonymous.follows.mine()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("suggests followers first, then people followed by the people one follows", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const linus = await signedInAs("Linus");
+    const marie = await signedInAs("Marie");
+    await signedInAs("Alan");
+    await signedInAs("Barbara");
+    // Ada follows Grace and Linus, who both follow Alan; only Linus follows Barbara.
+    await ada.caller.follows.follow({ username: "grace" });
+    await ada.caller.follows.follow({ username: "linus" });
+    await grace.caller.follows.follow({ username: "alan" });
+    await linus.caller.follows.follow({ username: "alan" });
+    await linus.caller.follows.follow({ username: "barbara" });
+    // Marie follows Ada and is not followed back.
+    await marie.caller.follows.follow({ username: "ada" });
+
+    expect(await ada.caller.follows.suggestions()).toEqual([
+      { username: "marie", name: "Marie", followsYou: true },
+      { username: "alan", name: "Alan", followsYou: false },
+      { username: "barbara", name: "Barbara", followsYou: false },
+    ]);
+  });
+
+  it("never suggests the viewer, people already followed, or the same person twice", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const linus = await signedInAs("Linus");
+    await signedInAs("Marie");
+    // Grace follows Ada back, and follows Linus, who also follows Ada.
+    await ada.caller.follows.follow({ username: "grace" });
+    await grace.caller.follows.follow({ username: "ada" });
+    await grace.caller.follows.follow({ username: "linus" });
+    await linus.caller.follows.follow({ username: "ada" });
+
+    expect(await ada.caller.follows.suggestions()).toEqual([
+      { username: "linus", name: "Linus", followsYou: true },
+    ]);
+
+    await ada.caller.follows.follow({ username: "linus" });
+    expect(await ada.caller.follows.suggestions()).toEqual([]);
+  });
+
+  it("suggests nobody to someone with no follows either way, and only people with a username", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const quiet = await signedInAs("Quiet", { username: false });
+    await quiet.caller.follows.follow({ username: "ada" });
+
+    expect(await grace.caller.follows.suggestions()).toEqual([]);
+    // Quiet follows Ada but has no profile to follow back.
+    expect(await ada.caller.follows.suggestions()).toEqual([]);
+    expect(JSON.stringify(await ada.caller.follows.suggestions())).not.toContain("example.com");
+    await expect(anonymous.follows.suggestions()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
 
   it("removes a person's follows when their account is deleted", async () => {

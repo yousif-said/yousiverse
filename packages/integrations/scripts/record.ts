@@ -298,7 +298,6 @@ const OMITTED_KEYS = new Set([
   "assets",
   // From Watchmode's list of services.
   "regions",
-  "logo_100px",
   "ios_appstore_url",
   "android_playstore_url",
   "android_scheme",

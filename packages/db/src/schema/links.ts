@@ -91,6 +91,26 @@ export const linkSuggestions = pgTable(
   ],
 );
 
+/**
+ * A name and a line of description for a universe: every title joined to `mediaId` through
+ * verified links. Written by reviewers. A universe without one goes by its oldest title's name.
+ */
+export const universes = pgTable("universes", {
+  id: uuid().primaryKey().defaultRandom(),
+  // Any one title of the universe. The name follows it, whatever else is linked later.
+  mediaId: uuid()
+    .notNull()
+    .unique()
+    .references(() => media.id, { onDelete: "cascade" }),
+  name: text().notNull(),
+  description: text(),
+  updatedBy: text().references(() => users.id, { onDelete: "set null" }),
+  updatedAt: timestamp({ withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
 /** When a title was last looked up for suggested links. */
 export const linkChecks = pgTable("link_checks", {
   mediaId: uuid()

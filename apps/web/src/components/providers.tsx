@@ -5,7 +5,13 @@ import { TRPCReactProvider } from "@/trpc/client";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    // Night is the default look: artwork reads best on it. Day is one click away in the menu.
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      disableTransitionOnChange
+    >
       <TRPCReactProvider>{children}</TRPCReactProvider>
     </ThemeProvider>
   );

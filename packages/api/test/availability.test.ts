@@ -119,6 +119,46 @@ describe("availability.streaming", () => {
     });
   });
 
+  it("gives each offer its service's logo once the list of services has one", async () => {
+    const mediaId = await addTitle({
+      type: "movie",
+      title: "The Matrix",
+      provider: "tmdb",
+      providerId: "603",
+    });
+
+    const { offers } = await anonymous.availability.streaming({ mediaId });
+
+    const amazon = offers?.find((offer) => offer.service === "Amazon" && offer.kind === "rent");
+    expect(amazon?.logoUrl).toMatch(/^https:\/\/cdn\.watchmode\.com\//);
+  });
+
+  it("leaves the logo empty for a service that is not in the list of services", async () => {
+    const mediaId = await addTitle({
+      type: "movie",
+      title: "Offline",
+      provider: "tmdb",
+      providerId: "424242",
+    });
+    const [service] = await db
+      .insert(streamingServices)
+      .values({ watchmodeId: 999_999, name: "Corner Video" })
+      .returning();
+    if (!service) throw new Error("The service was not created.");
+    await db.insert(streamingOffers).values({
+      mediaId,
+      serviceId: service.id,
+      kind: "rent",
+      priceCents: 299,
+      url: "https://corner-video.example/1",
+    });
+    await db.insert(availabilityChecks).values({ mediaId, checkedAt: new Date() });
+
+    expect(await anonymous.availability.streaming({ mediaId })).toMatchObject({
+      offers: [{ service: "Corner Video", logoUrl: null, priceCents: 299 }],
+    });
+  });
+
   it("has nothing for games, books, or titles that do not exist", async () => {
     const gameId = await addTitle({
       type: "game",
@@ -188,6 +228,22 @@ describe("availability.gamePrices", () => {
         lowestEverCents: null,
       });
     }
+  });
+
+  it("says whether a game is on Steam, so a page can tell no listing from no prices", async () => {
+    const notOnSteam = await addGame(null);
+    const unknown = await addGame("999999999");
+    const known = await addGame("1145360");
+
+    expect(await anonymous.availability.gamePrices({ mediaId: notOnSteam })).toMatchObject({
+      onSteam: false,
+    });
+    expect(await anonymous.availability.gamePrices({ mediaId: unknown })).toMatchObject({
+      onSteam: true,
+    });
+    expect(await anonymous.availability.gamePrices({ mediaId: known })).toMatchObject({
+      onSteam: true,
+    });
   });
 
   it("says the prices are unknown when the provider cannot be reached and nothing is stored", async () => {

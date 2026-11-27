@@ -3,17 +3,20 @@ import {
   type AlertKind,
   alertKinds,
   alerts,
+  availabilityChecks,
   emailPreferences,
+  gameDeals,
   type MediaType,
   media,
   userSubscriptions,
 } from "@yousiverse/db/schema";
-import { and, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, max, min, sql } from "drizzle-orm";
 import { z } from "zod";
 import { findMetAlerts } from "../alerts/conditions";
-import { ensureEmailPreferences } from "../alerts/run";
+import { ensureEmailPreferences, STREAMING_REFRESHES_PER_RUN } from "../alerts/run";
 import { ensureGamePrices, findGame } from "../availability/game-prices";
 import { ensureStreamingOffers, findStreamableTitle } from "../availability/streaming";
+import { titleSummary } from "../titles";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 /** Which alerts each type of title can have. Books have no availability or price data. */
@@ -153,23 +156,36 @@ export const alertsRouter = router({
 
   /**
    * Everything the signed-in person has asked to be told about: alerts that came through first,
-   * newest first, then the ones still waiting by title. Also whether they get alert emails.
+   * newest first, then the ones still waiting by title. Each says when its title was last
+   * checked, and a price alert carries the game's stored prices; nothing is fetched here. Also
+   * whether they get alert emails, and the limits alerts work within.
    */
   mine: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
+    const cheapest = ctx.db
+      .select({
+        mediaId: gameDeals.mediaId,
+        nowCents: min(gameDeals.priceCents).as("now_cents"),
+        regularCents: max(gameDeals.regularPriceCents).as("regular_cents"),
+      })
+      .from(gameDeals)
+      .groupBy(gameDeals.mediaId)
+      .as("cheapest");
+
     const [mine, [preferences]] = await Promise.all([
       ctx.db
         .select({
           ...alertFields,
-          title: {
-            type: media.type,
-            providerId: media.providerId,
-            title: media.title,
-            releaseYear: media.releaseYear,
-          },
+          title: { ...titleSummary, releaseDate: media.releaseDate },
+          checkedAt: availabilityChecks.checkedAt,
+          nowCents: cheapest.nowCents,
+          regularCents: cheapest.regularCents,
+          lowestCents: availabilityChecks.lowestPriceCents,
         })
         .from(alerts)
         .innerJoin(media, eq(media.id, alerts.mediaId))
+        .leftJoin(availabilityChecks, eq(availabilityChecks.mediaId, alerts.mediaId))
+        .leftJoin(cheapest, eq(cheapest.mediaId, alerts.mediaId))
         .where(and(eq(alerts.userId, userId), isNotNull(media.providerId)))
         .orderBy(sql`${alerts.triggeredAt} desc nulls last`, asc(media.title), desc(alerts.id)),
       ctx.db
@@ -178,10 +194,20 @@ export const alertsRouter = router({
         .where(eq(emailPreferences.userId, userId)),
     ]);
     return {
-      alerts: mine.flatMap(({ title, ...alert }) =>
-        title.providerId ? { ...alert, title: { ...title, providerId: title.providerId } } : [],
-      ),
+      alerts: mine.flatMap(({ title, nowCents, regularCents, lowestCents, ...alert }) => {
+        if (!title.providerId) return [];
+        // Known only for a game some PC store sells, once its prices have been fetched.
+        const price =
+          alert.kind === "price_at_most" && nowCents !== null && regularCents !== null
+            ? { nowCents, regularCents, lowestCents }
+            : null;
+        return { ...alert, title: { ...title, providerId: title.providerId }, price };
+      }),
       emails: preferences?.alertEmails ?? true,
+      /** The most alerts one person can hold. */
+      limit: MAX_ALERTS_PER_PERSON,
+      /** How many movies and shows the daily check can look up. */
+      checkedPerDay: STREAMING_REFRESHES_PER_RUN,
     };
   }),
 

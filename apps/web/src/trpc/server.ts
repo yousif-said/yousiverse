@@ -8,9 +8,15 @@ import { makeQueryClient } from "./query-client";
 
 export const getQueryClient = cache(makeQueryClient);
 
+/**
+ * One context for a whole page render. A page calls many procedures, and without this each of
+ * them would look the session up again.
+ */
+export const getContext = cache(async () => createTRPCContext({ headers: await headers() }));
+
 /** tRPC for Server Components: calls procedures directly, with no HTTP round trip. */
 export const trpc = createTRPCOptionsProxy({
-  ctx: async () => createTRPCContext({ headers: await headers() }),
+  ctx: getContext,
   router: appRouter,
   queryClient: getQueryClient,
 });

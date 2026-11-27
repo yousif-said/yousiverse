@@ -20,7 +20,7 @@ test("chooses a username, which then credits a public review", async ({ page, br
   await page.getByLabel("Username").fill(username.toUpperCase());
   await page.getByLabel("Display name").fill("E2E Tester");
   await page.getByRole("button", { name: "Save profile" }).click();
-  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await expect(page.getByRole("status").filter({ hasText: "Saved." })).toBeVisible();
   await page.reload();
   await expect(page.getByLabel("Username")).toHaveValue(username);
   await expect(page.getByLabel("Display name")).toHaveValue("E2E Tester");
@@ -38,7 +38,7 @@ test("refuses a username that someone else has", async ({ page, browser }) => {
   await page.getByLabel("Username").fill(username);
   await page.getByLabel("Display name").fill("First");
   await page.getByRole("button", { name: "Save profile" }).click();
-  await expect(page.getByRole("status")).toHaveText("Saved.");
+  await expect(page.getByRole("status").filter({ hasText: "Saved." })).toBeVisible();
 
   const context = await browser.newContext();
   const second = await context.newPage();

@@ -1,0 +1,108 @@
+/* Styles that only title pages: hero, rating instrument, offers, episodes, reviews need, beyond design.css. Keep to the tokens in globals.css. */
+
+@layer components {
+  /* A visitor's status control: the same four choices as links to sign in. */
+  .status a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    height: 40px;
+    padding: 0 15px;
+    border-radius: 11px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--fg-2);
+    white-space: nowrap;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .status a:hover {
+    color: var(--fg);
+    background: var(--surface-2);
+  }
+  .status a .i {
+    width: 15px;
+    height: 15px;
+    stroke-width: 2.2;
+  }
+  /* A message that takes its own line under the hero's controls. */
+  .hero__actions > :is(.hint, .error) {
+    flex-basis: 100%;
+  }
+
+  /* How far through the title the person is, with the button that records it. */
+  .hero__progress {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 440px;
+    margin-top: 18px;
+  }
+  .hero__progress > span {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .hero__progress .bar {
+    flex: 1;
+  }
+  .hero__progress .btn:first-child {
+    margin-left: -12px;
+  }
+
+  /* A row in a dialog that is ticked or not: a list holding the title, a club that picked it. */
+  .row[role="checkbox"] {
+    width: 100%;
+    text-align: left;
+  }
+  .row[role="checkbox"] .tick {
+    width: 26px;
+    height: 26px;
+  }
+  .row[aria-checked="true"] .tick {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--on-fg);
+  }
+
+  /* The review box fills its row, and shows where the keyboard is. */
+  .composer textarea {
+    display: block;
+    width: 100%;
+  }
+  .composer:has(textarea:focus-visible) {
+    border-color: var(--fg);
+    background: var(--surface-2);
+  }
+  .composer .error {
+    margin-top: 8px;
+  }
+  .composer__bar {
+    flex-wrap: wrap;
+  }
+  .composer__bar > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .composer__bar .select {
+    width: auto;
+    height: 34px;
+    padding-left: 10px;
+    border-radius: 9px;
+    font-size: 13px;
+  }
+  /* A person's own review while they rewrite it, in the place it holds in the list. */
+  .review > .composer,
+  .review > .error {
+    grid-column: 1 / -1;
+  }
+  .review__acts {
+    grid-column: 2 / -1;
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+  }
+}

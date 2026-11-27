@@ -8,34 +8,22 @@ import {
   media,
   mediaLinks,
 } from "@yousiverse/db/schema";
-import { and, asc, count, desc, eq, isNotNull, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, isNotNull } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { ensureImported } from "../catalog/import";
 import { parseTitleAddress } from "../links/address";
 import { checkNextTitles, countDueForCheck } from "../links/suggest";
+import { findUniverse, listUniverses, nameUniverse } from "../links/universes";
 import { adminProcedure, isAdmin, publicProcedure, router } from "../trpc";
 
-/** How a linked title relates to the one whose page is open, in the order pages show them. */
-export const titleRelations = [
-  "based_on",
-  "adapted_as",
-  "sequel_to",
-  "followed_by",
-  "same_franchise",
-] as const;
-export type TitleRelation = (typeof titleRelations)[number];
-
-/** Reads a stored link from one end: `outgoing` when the open title is the link's `from`. */
-function relationFor(kind: LinkKind, outgoing: boolean): TitleRelation {
-  if (kind === "adaptation_of") return outgoing ? "based_on" : "adapted_as";
-  if (kind === "sequel_of") return outgoing ? "sequel_to" : "followed_by";
-  return "same_franchise";
-}
-
 // Wikidata can take many seconds over one title, so each request looks up only one.
+// A suggestion names its other title by provider id; this finds that title when it is stored.
+const targetMedia = alias(media, "target_media");
 const TITLES_PER_CHECK = 1;
 const REVIEW_PAGE_SIZE = 50;
+const MAX_NAME_LENGTH = 80;
+const MAX_DESCRIPTION_LENGTH = 300;
 
 /** Stores a verified link. Answers CONFLICT when the two titles are already linked. */
 async function saveLink(
@@ -58,47 +46,48 @@ async function saveLink(
 }
 
 export const linksRouter = router({
-  /** The verified links of a title, each read from that title's side. */
-  forTitle: publicProcedure.input(z.object({ mediaId: z.uuid() })).query(async ({ ctx, input }) => {
-    const other = alias(media, "other");
-    const links = await ctx.db
-      .select({
-        id: mediaLinks.id,
-        kind: mediaLinks.kind,
-        fromMediaId: mediaLinks.fromMediaId,
-        title: {
-          type: other.type,
-          providerId: other.providerId,
-          title: other.title,
-          releaseYear: other.releaseYear,
-          posterUrl: other.posterUrl,
-        },
-      })
-      .from(mediaLinks)
-      .innerJoin(
-        other,
-        sql`${other.id} = case when ${mediaLinks.fromMediaId} = ${input.mediaId} then ${mediaLinks.toMediaId} else ${mediaLinks.fromMediaId} end`,
-      )
-      .where(
-        and(
-          or(eq(mediaLinks.fromMediaId, input.mediaId), eq(mediaLinks.toMediaId, input.mediaId)),
-          isNotNull(other.providerId),
-        ),
-      )
-      .orderBy(asc(other.releaseYear), asc(other.title));
-
-    return links
-      .flatMap(({ id, kind, fromMediaId, title }) =>
-        title.providerId
-          ? {
-              id,
-              relation: relationFor(kind, fromMediaId === input.mediaId),
-              title: { ...title, providerId: title.providerId },
-            }
-          : [],
-      )
-      .sort((a, b) => titleRelations.indexOf(a.relation) - titleRelations.indexOf(b.relation));
+  /** Every universe, largest first and then by name, each with its titles in release order. */
+  universes: publicProcedure.query(async ({ ctx }) => {
+    const universes = await listUniverses(ctx.db);
+    return universes.map(({ id, name, description, titles }) => ({
+      id,
+      name,
+      description,
+      titles,
+    }));
   }),
+
+  /** One universe with its titles and the links between them. Any member's media id finds it. */
+  universe: publicProcedure.input(z.object({ id: z.uuid() })).query(async ({ ctx, input }) => {
+    const universe = await findUniverse(ctx.db, input.id);
+    if (!universe) throw new TRPCError({ code: "NOT_FOUND" });
+    return universe;
+  }),
+
+  /** Which universe a title belongs to, for linking to it. Null for a title that stands alone. */
+  universeOf: publicProcedure
+    .input(z.object({ mediaId: z.uuid() }))
+    .query(async ({ ctx, input }) => {
+      const universe = await findUniverse(ctx.db, input.mediaId);
+      return universe && { id: universe.id, name: universe.name };
+    }),
+
+  /** Gives the universe a title belongs to its name and a line of description. */
+  nameUniverse: adminProcedure
+    .input(
+      z.object({
+        mediaId: z.uuid(),
+        name: z.string().trim().min(1).max(MAX_NAME_LENGTH),
+        description: z.string().trim().max(MAX_DESCRIPTION_LENGTH).nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const universe = await findUniverse(ctx.db, input.mediaId);
+      if (!universe) throw new TRPCError({ code: "NOT_FOUND" });
+      const naming = { name: input.name, description: input.description || null };
+      await nameUniverse(ctx.db, universe, naming, ctx.session.user.id);
+      return { id: universe.id, ...naming };
+    }),
 
   /** Whether the visitor is one of the people who review suggested links. */
   canReview: publicProcedure.query(({ ctx }) => isAdmin(ctx.session)),
@@ -116,15 +105,33 @@ export const linksRouter = router({
             providerId: media.providerId,
             title: media.title,
             releaseYear: media.releaseYear,
+            posterUrl: media.posterUrl,
+            backdropUrl: media.backdropUrl,
+            artHue: media.artHue,
+            artSaturation: media.artSaturation,
+            posterAspect: media.posterAspect,
           },
+          // The other title may not be in the catalog yet; its artwork is there only if it is.
           target: {
             type: linkSuggestions.targetType,
             providerId: linkSuggestions.targetProviderId,
             title: linkSuggestions.targetTitle,
+            posterUrl: targetMedia.posterUrl,
+            backdropUrl: targetMedia.backdropUrl,
+            artHue: targetMedia.artHue,
+            artSaturation: targetMedia.artSaturation,
+            posterAspect: targetMedia.posterAspect,
           },
         })
         .from(linkSuggestions)
         .innerJoin(media, eq(media.id, linkSuggestions.mediaId))
+        .leftJoin(
+          targetMedia,
+          and(
+            eq(targetMedia.type, linkSuggestions.targetType),
+            eq(targetMedia.providerId, linkSuggestions.targetProviderId),
+          ),
+        )
         .where(and(eq(linkSuggestions.state, "pending"), isNotNull(media.providerId)))
         // A title's closest connections first: enum order runs from adaptation to franchise.
         .orderBy(

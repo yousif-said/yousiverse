@@ -1,36 +1,53 @@
+import { signIn } from "./session";
 import { expect, test } from "./test";
 
-test("home page shows the shelf and switches theme", async ({ page }) => {
-  await page.emulateMedia({ colorScheme: "light" });
+test("shows the front door to a visitor, with the sign-in form and no shell", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("on one shelf");
-  await expect(page.getByRole("heading", { name: "Recently added" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "Everything you watch, play, and read. One universe.",
+  );
+  await expect(page.getByLabel("Email")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Send sign-in link" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Sign in" })).toHaveCount(0);
+  await expect(page.getByRole("navigation")).toHaveCount(0);
+});
 
-  await expect(page.locator("html")).not.toHaveClass(/dark/);
-  await page.getByRole("button", { name: "Switch between light and dark theme" }).click();
+test("greets a new account and offers three ways to start, then switches theme", async ({
+  page,
+}) => {
+  await signIn(page);
+
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    /^Good (morning|afternoon|evening)[,.]/,
+  );
+  await expect(page.getByRole("heading", { name: "Three ways to start" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Search the catalog" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Import your history" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Find people to follow" })).toBeVisible();
+
   await expect(page.locator("html")).toHaveClass(/dark/);
+  await page.getByRole("button", { name: "Your profile, account, and more" }).click();
+  await page.getByRole("menuitem", { name: "Switch to day" }).click();
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+
+  await page.getByRole("button", { name: "Your profile, account, and more" }).click();
+  await expect(page.getByRole("menuitem", { name: "Switch to night" })).toBeVisible();
 });
 
-test("every title on the shelf links to its page", async ({ page }) => {
-  await page.goto("/");
+test("searches from the sidebar's palette", async ({ page }) => {
+  await signIn(page);
 
-  const shelf = page.getByRole("region", { name: "Recently added" });
-  const titles = shelf.getByRole("listitem").getByRole("link");
-  await expect(titles.first()).toBeVisible();
-  for (const href of await titles.evaluateAll((links) =>
-    links.map((a) => a.getAttribute("href")),
-  )) {
-    expect(href).toMatch(/^\/(movies|tv|games|books)\/\w+$/);
-  }
-});
-
-test("searches from the home page", async ({ page }) => {
-  await page.goto("/");
-
-  await page.getByRole("searchbox", { name: "Search the catalog" }).fill("severance");
   await page.getByRole("button", { name: "Search" }).click();
+  const palette = page.getByRole("dialog", { name: "Search" });
+  await palette.getByRole("combobox", { name: "Search" }).fill("severance");
+  await palette.getByRole("option", { name: "Search everything for “severance”" }).click();
 
   await expect(page).toHaveURL("/search?q=severance");
-  await expect(page.getByRole("link", { name: "Severance TV show, 2022" })).toBeVisible();
+  await expect(
+    page
+      .getByRole("link", { name: "Severance", exact: true })
+      .and(page.locator('[href^="/tv/"]'))
+      .first(),
+  ).toBeVisible();
 });

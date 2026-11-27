@@ -8,7 +8,17 @@ async function addTitles() {
   const [matrix, hades, show] = await db
     .insert(media)
     .values([
-      { type: "movie", title: "The Matrix", provider: "tmdb", providerId: "603" },
+      {
+        type: "movie",
+        title: "The Matrix",
+        provider: "tmdb",
+        providerId: "603",
+        releaseYear: 1999,
+        posterUrl: "https://image.tmdb.org/t/p/original/matrix.jpg",
+        backdropUrl: "https://image.tmdb.org/t/p/original/matrix-wide.jpg",
+        artHue: 140,
+        artSaturation: 60,
+      },
       { type: "game", title: "Hades", provider: "igdb", providerId: "113112" },
       { type: "tv", title: "Severance", provider: "tmdb", providerId: "95396" },
     ])
@@ -85,6 +95,68 @@ describe("feed.following", () => {
     ]);
   });
 
+  it("returns what is needed to draw each title", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await ada.caller.follows.follow({ username: "grace" });
+    await grace.caller.library.save({ mediaId: ids.matrix, status: "want" });
+    await grace.caller.reviews.save({ target: { mediaId: ids.matrix }, body: "Whoa." });
+
+    const artwork = {
+      mediaId: ids.matrix,
+      type: "movie",
+      providerId: "603",
+      title: "The Matrix",
+      releaseYear: 1999,
+      posterUrl: "https://image.tmdb.org/t/p/original/matrix.jpg",
+      backdropUrl: "https://image.tmdb.org/t/p/original/matrix-wide.jpg",
+      artHue: 140,
+      artSaturation: 60,
+      posterAspect: null,
+    };
+    expect((await ada.caller.feed.following()).items).toMatchObject([
+      { kind: "review", ...artwork },
+      { kind: "library", ...artwork },
+    ]);
+  });
+
+  it("shows a new list with how many titles it holds and the first five of them", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await ada.caller.follows.follow({ username: "grace" });
+    const more = await db
+      .insert(media)
+      .values(
+        ["Arrival", "Brazil", "Contact", "Dark City"].map((title, index) => ({
+          type: "movie" as const,
+          title,
+          provider: "tmdb" as const,
+          providerId: `90${index}`,
+        })),
+      )
+      .returning({ id: media.id });
+    const { id } = await grace.caller.lists.create({ name: "Weekend" });
+    for (const mediaId of [ids.hades, ids.matrix, ...more.map((title) => title.id)]) {
+      await grace.caller.lists.addItem({ listId: id, mediaId });
+    }
+    await grace.caller.lists.create({ name: "Empty" });
+
+    const { items } = await ada.caller.feed.following();
+
+    expect(items).toMatchObject([
+      { kind: "list", name: "Empty", itemCount: 0, artwork: [] },
+      { kind: "list", id, name: "Weekend", itemCount: 6 },
+    ]);
+    const weekend = items.find((item) => item.kind === "list" && item.id === id);
+    expect(weekend?.kind === "list" && weekend.artwork).toMatchObject([
+      { title: "Hades", type: "game", providerId: "113112" },
+      { title: "The Matrix", artHue: 140 },
+      { title: "Arrival" },
+      { title: "Brazil" },
+      { title: "Contact" },
+    ]);
+  });
+
   it("shows 40 items at a time and pages back through older activity without gaps", async () => {
     const ada = await signedInAs("Ada");
     const grace = await signedInAs("Grace");
@@ -156,7 +228,11 @@ describe("feed.following", () => {
       body: "For friends.",
       visibility: "friends",
     });
-    await grace.caller.lists.create({ name: "Friends list", visibility: "friends" });
+    const friendsList = await grace.caller.lists.create({
+      name: "Friends list",
+      visibility: "friends",
+    });
+    await grace.caller.lists.addItem({ listId: friendsList.id, mediaId: ids.show });
     await grace.caller.library.save({
       mediaId: ids.hades,
       status: "dropped",
@@ -167,15 +243,24 @@ describe("feed.following", () => {
       body: "Secret.",
       visibility: "private",
     });
-    await grace.caller.lists.create({ name: "Secret list", visibility: "private" });
+    const secretList = await grace.caller.lists.create({
+      name: "Secret list",
+      visibility: "private",
+    });
+    await grace.caller.lists.addItem({ listId: secretList.id, mediaId: ids.show });
 
     // Ada follows Grace, but Grace does not follow back: they are not friends.
     expect((await ada.caller.feed.following()).items).toEqual([]);
 
     await grace.caller.follows.follow({ username: "ada" });
-    const kinds = (await ada.caller.feed.following()).items.map((item) => item.kind).sort();
-    expect(kinds).toEqual(["library", "list", "review"]);
-    expect(JSON.stringify(await ada.caller.feed.following())).not.toContain("Secret");
+    const { items } = await ada.caller.feed.following();
+    expect(items.map((item) => item.kind).sort()).toEqual(["library", "list", "review"]);
+    // A friend sees what is on the friends-only list; nobody sees the private one.
+    expect(items.find((item) => item.kind === "list")).toMatchObject({
+      name: "Friends list",
+      artwork: [{ title: "Severance" }],
+    });
+    expect(JSON.stringify(items)).not.toContain("Secret");
   });
 
   it("does not reveal a rating for a title whose library entry is hidden", async () => {

@@ -254,11 +254,20 @@ describe("alerts", () => {
     it("lists them with their titles, and only to their owner", async () => {
       const ada = await signedInAs("Ada");
       const grace = await signedInAs("Grace");
-      const mediaId = await addTitle(OBSCURE);
+      const mediaId = await addTitle({
+        ...OBSCURE,
+        releaseYear: 2027,
+        releaseDate: "2027-03-05",
+        posterUrl: "https://image.tmdb.org/t/p/original/obscure.jpg",
+        artHue: 210,
+        artSaturation: 40,
+      });
       await ada.caller.alerts.set({ mediaId, kind: "streamable" });
 
       expect(await ada.caller.alerts.mine()).toEqual({
         emails: true,
+        limit: 100,
+        checkedPerDay: STREAMING_REFRESHES_PER_RUN,
         alerts: [
           {
             id: expect.any(String),
@@ -266,12 +275,90 @@ describe("alerts", () => {
             targetCents: null,
             triggeredAt: null,
             outcome: null,
-            title: { type: "movie", providerId: "999999999", title: "Obscure", releaseYear: null },
+            title: {
+              mediaId,
+              type: "movie",
+              providerId: "999999999",
+              title: "Obscure",
+              releaseYear: 2027,
+              releaseDate: "2027-03-05",
+              posterUrl: "https://image.tmdb.org/t/p/original/obscure.jpg",
+              backdropUrl: null,
+              artHue: 210,
+              artSaturation: 40,
+              posterAspect: null,
+            },
+            // Setting the alert looked the movie up, to see whether there was anything to wait for.
+            checkedAt: expect.any(Date),
+            price: null,
           },
         ],
       });
-      expect(await grace.caller.alerts.mine()).toEqual({ emails: true, alerts: [] });
+      expect(await grace.caller.alerts.mine()).toEqual({
+        emails: true,
+        limit: 100,
+        checkedPerDay: STREAMING_REFRESHES_PER_RUN,
+        alerts: [],
+      });
       expect((await grace.caller.alerts.forTitle({ mediaId })).alerts).toEqual([]);
+    });
+
+    it("shows a price alert the game's stored prices: cheapest now, usual, and lowest ever", async () => {
+      const { caller } = await signedInAs("Ada");
+      const mediaId = await addHades();
+      await caller.alerts.set({ mediaId, kind: "price_at_most", targetCents: 1000 });
+      await db.update(gameDeals).set({ priceCents: 1999 }).where(eq(gameDeals.shop, "Steam"));
+      await db
+        .update(availabilityChecks)
+        .set({ lowestPriceCents: 1249 })
+        .where(eq(availabilityChecks.mediaId, mediaId));
+
+      const [alert] = (await caller.alerts.mine()).alerts;
+
+      expect(alert).toMatchObject({
+        kind: "price_at_most",
+        targetCents: 1000,
+        price: { nowCents: 1999, regularCents: 2499, lowestCents: 1249 },
+        checkedAt: expect.any(Date),
+      });
+    });
+
+    it("reads stored prices only, and says so when a title was never checked", async () => {
+      const ada = await signedInAs("Ada");
+      const gameId = await addHades();
+      const movieId = await addTitle(OBSCURE);
+      // Alerts as an import or an older version would leave them: nothing fetched yet.
+      await db
+        .insert(alerts)
+        .values({ userId: ada.user.id, mediaId: gameId, kind: "price_at_most", targetCents: 500 });
+      await waitingAlert(ada, movieId, "streamable");
+      const fetch = vi.fn();
+      vi.stubGlobal("fetch", fetch);
+      vi.stubEnv("PROVIDER_FIXTURES", "false");
+
+      const { alerts: mine } = await ada.caller.alerts.mine();
+
+      expect(mine).toMatchObject([
+        { title: { title: "Hades" }, price: null, checkedAt: null },
+        { title: { title: "Obscure" }, price: null, checkedAt: null },
+      ]);
+      expect(fetch).not.toHaveBeenCalled();
+      expect(await db.select().from(gameDeals)).toHaveLength(0);
+    });
+
+    it("gives prices to price alerts only", async () => {
+      const ada = await signedInAs("Ada");
+      const gameId = await addHades();
+      await ada.caller.alerts.set({ mediaId: gameId, kind: "price_at_most", targetCents: 1000 });
+      // Not an alert the app would set on a game, but the stored prices must not leak onto it.
+      await db.insert(alerts).values({ userId: ada.user.id, mediaId: gameId, kind: "streamable" });
+
+      const { alerts: mine } = await ada.caller.alerts.mine();
+
+      expect(mine.map((alert) => [alert.kind, alert.price !== null]).sort()).toEqual([
+        ["price_at_most", true],
+        ["streamable", false],
+      ]);
     });
 
     it("removes an alert, but never someone else's", async () => {

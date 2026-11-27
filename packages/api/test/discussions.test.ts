@@ -155,6 +155,43 @@ describe("discussions", () => {
     expect(await titles()).toEqual(["Chapter one", "Chapter two"]);
   });
 
+  it("shows a club's most recently active discussion on its tile, to those who may see inside", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const open = await startClub(ada);
+    const closed = await startClub(ada, "invite_only");
+    const older = await ada.caller.discussions.start({ clubId: open.id, ...OPENING });
+    const newer = await ada.caller.discussions.start({
+      clubId: open.id,
+      title: "Chapter two",
+      body: "And the statues?",
+    });
+    await db
+      .update(clubThreads)
+      .set({ activeAt: new Date("2020-01-01T00:00:00Z") })
+      .where(eq(clubThreads.id, older.id));
+    await ada.caller.discussions.start({ clubId: closed.id, title: "Members only", body: "Shh." });
+
+    expect(await anonymous.clubs.discover()).toMatchObject([
+      { id: open.id, latestDiscussion: { id: newer.id, title: "Chapter two", replyCount: 0 } },
+    ]);
+
+    await ada.caller.discussions.reply({ threadId: older.id, body: "Back to this." });
+    await ada.caller.discussions.reply({ threadId: older.id, body: "And again." });
+
+    // A reply makes a discussion the latest. The invite-only club is listed for members alone.
+    const listed = await grace.caller.clubs.discover();
+    expect(listed).toMatchObject([
+      { id: open.id, latestDiscussion: { id: older.id, title: "Chapter one", replyCount: 2 } },
+    ]);
+    expect(JSON.stringify(listed)).not.toContain("Members only");
+    expect(await grace.caller.clubs.mine()).toEqual([]);
+    const mine = await ada.caller.clubs.mine();
+    expect(mine.find((club) => club.id === closed.id)).toMatchObject({
+      latestDiscussion: { title: "Members only", replyCount: 0 },
+    });
+  });
+
   it("lets a reply be deleted by its author or the club's owner, and nobody else", async () => {
     const ada = await signedInAs("Ada");
     const grace = await signedInAs("Grace");

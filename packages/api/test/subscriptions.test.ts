@@ -56,6 +56,17 @@ describe("subscriptions", () => {
     expect(services.map((service) => service.name)).not.toContain("Amazon");
   });
 
+  it("gives each service its logo, for drawing its mark", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    expect(await serviceNamed(caller, "Netflix")).toEqual({
+      id: expect.any(String),
+      name: "Netflix",
+      logoUrl: "https://cdn.watchmode.com/provider_logos/netflix_100px.png",
+      subscribed: false,
+    });
+  });
+
   it("keeps the stored list for a month instead of asking the provider again", async () => {
     const { caller } = await signedInAs("Ada");
     await caller.subscriptions.services();
@@ -88,6 +99,30 @@ describe("subscriptions", () => {
 
     await ada.subscriptions.set({ serviceId: netflix.id, subscribed: false });
     expect(await serviceNamed(ada, "Netflix")).toMatchObject({ subscribed: false });
+  });
+
+  it("names a person's own subscriptions, most widely used first, from what is stored", async () => {
+    const { caller: ada } = await signedInAs("Ada");
+    const { caller: grace } = await signedInAs("Grace");
+    for (const name of ["AppleTV+", "Netflix"]) {
+      const service = await serviceNamed(ada, name);
+      await ada.subscriptions.set({ serviceId: service.id, subscribed: true });
+    }
+    const getStreamingServices = vi.spyOn(watchmode, "getStreamingServices");
+    await db.update(streamingServices).set({ listedAt: new Date(0) });
+
+    expect(await ada.subscriptions.mine()).toEqual([
+      {
+        id: expect.any(String),
+        name: "Netflix",
+        logoUrl: "https://cdn.watchmode.com/provider_logos/netflix_100px.png",
+      },
+      { id: expect.any(String), name: "AppleTV+", logoUrl: expect.any(String) },
+    ]);
+    expect(await grace.subscriptions.mine()).toEqual([]);
+    // Even a list due a refresh is read as it is: this never reaches the provider.
+    expect(getStreamingServices).not.toHaveBeenCalled();
+    await expect(anonymous.subscriptions.mine()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
   });
 
   it("refuses a service that is not a subscription or does not exist", async () => {

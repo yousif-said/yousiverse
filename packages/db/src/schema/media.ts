@@ -22,6 +22,12 @@ export const media = pgTable(
     releaseYear: integer(),
     posterUrl: text(),
     backdropUrl: text(),
+    // The poster's dominant color, measured once from the image: hue in degrees (0 to 359) and
+    // saturation as a percentage. Pages take their tint from it. Null until measured.
+    artHue: integer(),
+    artSaturation: integer(),
+    // The poster's width over its height, times 1000: 667 is a 2:3 poster. Book covers vary.
+    posterAspect: integer(),
     genres: text().array().notNull().default([]),
     // Where the item came from. Null for items that were not imported from a provider.
     provider: provider(),

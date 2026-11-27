@@ -5,10 +5,7 @@ import { profilePath } from "@/lib/profile";
 export function MemberName({ username }: { username: string | null }) {
   if (!username) return "A Yousiverse member";
   return (
-    <Link
-      href={profilePath(username)}
-      className="rounded-sm underline-offset-4 outline-none hover:underline focus-visible:ring-[3px] focus-visible:ring-ring/50"
-    >
+    <Link href={profilePath(username)} className="who">
       {username}
     </Link>
   );

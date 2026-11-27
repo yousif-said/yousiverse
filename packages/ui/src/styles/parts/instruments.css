@@ -1,0 +1,60 @@
+/* Styles that only the rating instrument, where to watch and buy, and episodes need, beyond design.css. Keep to the tokens in globals.css. */
+
+@layer components {
+  /* the rating instrument: what a visitor sees, and a rating that could not be saved */
+  .dial__sub a {
+    font-weight: 600;
+    color: var(--fg-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  /* The focus ring is drawn on the needle. Before there is a rating there is no needle. */
+  .dial__scale:focus-visible:has(.dial__needle[hidden]) {
+    outline: 2px solid var(--fg);
+    outline-offset: 6px;
+    border-radius: 6px;
+  }
+  .dial__scale--locked {
+    display: block;
+    cursor: pointer;
+    touch-action: auto;
+  }
+  .dial__error {
+    grid-column: 1 / -1;
+  }
+
+  /* where to watch and buy: the panel while it loads, a refused alert, and the price field */
+  .offers--loading {
+    min-height: 148px;
+    border-radius: 20px;
+  }
+  .offers .offers__problem {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--warn);
+  }
+  .offers__more,
+  .offers__price {
+    display: flex;
+    align-items: center;
+    gap: 8px 14px;
+    flex-wrap: wrap;
+  }
+  .offers__price {
+    column-gap: 8px;
+  }
+  .offers__price .input {
+    width: 96px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 9px;
+    font-family: var(--mono);
+  }
+
+  /* episodes: heatmap cells stay dark in day mode, so the mark on the ones you rated stays light */
+  html:not(.dark) .heat__cell.mine {
+    box-shadow: inset 0 -3px 0 var(--on-fg);
+  }
+}
