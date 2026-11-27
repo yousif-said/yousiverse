@@ -1,8 +1,15 @@
-import { type MediaType, mediaTypes } from "@yousiverse/db/schema";
+import {
+  type LibraryStatus,
+  libraryEntries,
+  type MediaType,
+  media,
+  mediaTypes,
+} from "@yousiverse/db/schema";
 import type { CatalogSearchResult } from "@yousiverse/integrations/catalog";
 import * as igdb from "@yousiverse/integrations/igdb";
 import * as openLibrary from "@yousiverse/integrations/open-library";
 import * as tmdb from "@yousiverse/integrations/tmdb";
+import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { publicProcedure, router } from "../trpc";
 
@@ -29,7 +36,8 @@ export const catalogRouter = router({
   /**
    * Searches the providers for the requested media types (all of them by default) at once.
    * A provider that fails does not fail the search: its media types are listed in
-   * `unavailable` so the page can say what is missing.
+   * `unavailable` so the page can say what is missing. Each result carries the signed-in
+   * person's library status for that title, or null.
    */
   search: publicProcedure
     .input(
@@ -38,7 +46,7 @@ export const catalogRouter = router({
         types: z.array(z.enum(mediaTypes)).min(1).optional(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
       const wanted = new Set<MediaType>(input.types ?? mediaTypes);
       const providers = searchProviders.filter((provider) =>
         provider.types.some((type) => wanted.has(type)),
@@ -58,6 +66,36 @@ export const catalogRouter = router({
           unavailable.push(...failedTypes.filter((type) => wanted.has(type)));
         }
       });
-      return { results: interleave(resultLists), unavailable };
+      const found = interleave(resultLists);
+
+      const userId = ctx.session?.user.id;
+      const inLibrary =
+        userId && found.length > 0
+          ? await ctx.db
+              .select({
+                type: media.type,
+                providerId: media.providerId,
+                status: libraryEntries.status,
+              })
+              .from(libraryEntries)
+              .innerJoin(media, eq(media.id, libraryEntries.mediaId))
+              .where(
+                and(
+                  eq(libraryEntries.userId, userId),
+                  inArray(
+                    media.providerId,
+                    found.map((result) => result.providerId),
+                  ),
+                ),
+              )
+          : [];
+      const statusOf = new Map<string, LibraryStatus>(
+        inLibrary.map((entry) => [`${entry.type}:${entry.providerId}`, entry.status]),
+      );
+      const results = found.map((result) => ({
+        ...result,
+        status: statusOf.get(`${result.type}:${result.providerId}`) ?? null,
+      }));
+      return { results, unavailable };
     }),
 });

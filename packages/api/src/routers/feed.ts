@@ -11,25 +11,23 @@ import {
 } from "@yousiverse/db/schema";
 import { and, desc, eq, inArray, isNull, lt, sql } from "drizzle-orm";
 import { z } from "zod";
+import { titleSummary, withPages } from "../titles";
 import { protectedProcedure, router } from "../trpc";
 import { visibleToOthers } from "../visibility";
+import { itemCount, withArtwork } from "./lists";
 
 /** How many items one page of the feed shows. */
 const FEED_LENGTH = 40;
 // A page could be all one kind, and one more than a page shows whether anything older exists.
 const PER_KIND = FEED_LENGTH + 1;
-
-const titleFields = {
-  type: media.type,
-  title: media.title,
-  providerId: media.providerId,
-  posterUrl: media.posterUrl,
-};
+/** How many of a new list's titles are shown with it. */
+const LIST_TITLES_SHOWN = 5;
 
 export const feedRouter = router({
   /**
    * What the people the signed-in person follows have lately added to their libraries,
-   * reviewed, and made lists of, newest first. Only content the viewer may see is included.
+   * reviewed, and made lists of, newest first. Only content the viewer may see is included:
+   * a list comes with its first titles because the viewer may open that list.
    * `before` asks for the page of activity older than that moment.
    */
   following: protectedProcedure
@@ -52,7 +50,7 @@ export const feedRouter = router({
             status: libraryEntries.status,
             // The person's rating of the title, in quarter points.
             rating: ratings.value,
-            ...titleFields,
+            ...titleSummary,
           })
           .from(libraryEntries)
           .innerJoin(profiles, eq(profiles.userId, libraryEntries.userId))
@@ -84,7 +82,7 @@ export const feedRouter = router({
             episodeName: episodes.name,
             episodeNumber: episodes.episodeNumber,
             seasonNumber: seasons.seasonNumber,
-            ...titleFields,
+            ...titleSummary,
           })
           .from(reviews)
           .innerJoin(profiles, eq(profiles.userId, reviews.userId))
@@ -114,6 +112,7 @@ export const feedRouter = router({
             at: lists.createdAt,
             username: profiles.username,
             name: lists.name,
+            itemCount,
           })
           .from(lists)
           .innerJoin(profiles, eq(profiles.userId, lists.userId))
@@ -129,22 +128,19 @@ export const feedRouter = router({
       ]);
 
       const items = [
-        // Every title with a page has a provider id; the checks narrow the type for callers.
-        ...libraryChanges.flatMap(({ providerId, ...change }) =>
-          providerId ? { kind: "library" as const, ...change, providerId } : [],
-        ),
-        ...newReviews.flatMap(
-          ({ providerId, episodeName, episodeNumber, seasonNumber, ...review }) => {
-            if (!providerId) return [];
-            // Set only for a review of one episode.
-            const episode =
-              episodeName !== null && episodeNumber !== null && seasonNumber !== null
-                ? { name: episodeName, episodeNumber, seasonNumber }
-                : null;
-            return { kind: "review" as const, ...review, providerId, episode };
-          },
-        ),
-        ...newLists.map((list) => ({ kind: "list" as const, ...list })),
+        ...withPages(libraryChanges).map((change) => ({ kind: "library" as const, ...change })),
+        ...withPages(newReviews).map(({ episodeName, episodeNumber, seasonNumber, ...review }) => {
+          // Set only for a review of one episode.
+          const episode =
+            episodeName !== null && episodeNumber !== null && seasonNumber !== null
+              ? { name: episodeName, episodeNumber, seasonNumber }
+              : null;
+          return { kind: "review" as const, ...review, episode };
+        }),
+        ...(await withArtwork(ctx.db, newLists, LIST_TITLES_SHOWN)).map((list) => ({
+          kind: "list" as const,
+          ...list,
+        })),
       ];
       items.sort((a, b) => b.at.getTime() - a.at.getTime());
 

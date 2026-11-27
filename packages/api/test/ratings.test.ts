@@ -171,4 +171,151 @@ describe("ratings", () => {
     expect(await caller.ratings.forSeason({ seasonId: ids.season })).toEqual([]);
     expect((await caller.ratings.summary({ target: { mediaId: ids.show } })).mine).toBe(36);
   });
+
+  it("counts ratings by half point, a quarter point counting with the half below it", async () => {
+    const [ada, grace, linus] = await Promise.all([
+      signedInAs("Ada"),
+      signedInAs("Grace"),
+      signedInAs("Linus"),
+    ]);
+    await ada.caller.ratings.save({ target: { mediaId: ids.movie }, value: 36 });
+    await grace.caller.ratings.save({ target: { mediaId: ids.movie }, value: 37 });
+    await linus.caller.ratings.save({ target: { mediaId: ids.movie }, value: 40 });
+    await linus.caller.ratings.save({ target: { episodeId: ids.first }, value: 0 });
+
+    const bars = await anonymous.ratings.distribution({ target: { mediaId: ids.movie } });
+
+    expect(bars).toHaveLength(21);
+    expect(bars[18]).toBe(2);
+    expect(bars[20]).toBe(1);
+    expect(bars.reduce((sum, bar) => sum + bar, 0)).toBe(3);
+    const ofEpisode = await anonymous.ratings.distribution({ target: { episodeId: ids.first } });
+    expect(ofEpisode[0]).toBe(1);
+    expect(await anonymous.ratings.distribution({ target: { mediaId: ids.show } })).toEqual(
+      new Array(21).fill(0),
+    );
+  });
+
+  describe("from the people you follow", () => {
+    /** Ada follows Grace and Linus; Grace follows her back, so they are friends. */
+    async function people() {
+      const [ada, grace, linus, marie] = await Promise.all([
+        signedInAs("Ada"),
+        signedInAs("Grace"),
+        signedInAs("Linus"),
+        signedInAs("Marie"),
+      ]);
+      await ada.caller.follows.follow({ username: "grace" });
+      await ada.caller.follows.follow({ username: "linus" });
+      await grace.caller.follows.follow({ username: "ada" });
+      return { ada, grace, linus, marie };
+    }
+    const fromFollowing = (caller: Awaited<ReturnType<typeof signedInAs>>["caller"]) =>
+      caller.ratings.fromFollowing({ target: { mediaId: ids.movie } });
+
+    it("credits a rating to someone followed whose library entry is public", async () => {
+      const { ada, grace, linus, marie } = await people();
+      for (const person of [grace, linus, marie]) {
+        await person.caller.library.save({ mediaId: ids.movie, status: "finished" });
+      }
+      await grace.caller.ratings.save({ target: { mediaId: ids.movie }, value: 30 });
+      await linus.caller.ratings.save({ target: { mediaId: ids.movie }, value: 38 });
+      // Marie is not followed, so her rating only counts in the average.
+      await marie.caller.ratings.save({ target: { mediaId: ids.movie }, value: 40 });
+
+      expect(await fromFollowing(ada.caller)).toEqual([
+        { username: "linus", value: 38 },
+        { username: "grace", value: 30 },
+      ]);
+    });
+
+    it("shows a friends-only entry's rating to a friend, and to nobody else who follows", async () => {
+      const { ada, grace, linus } = await people();
+      await linus.caller.follows.follow({ username: "grace" });
+      await grace.caller.library.save({
+        mediaId: ids.movie,
+        status: "finished",
+        visibility: "friends",
+      });
+      await grace.caller.ratings.save({ target: { mediaId: ids.movie }, value: 30 });
+
+      expect(await fromFollowing(ada.caller)).toEqual([{ username: "grace", value: 30 }]);
+      expect(await fromFollowing(linus.caller)).toEqual([]);
+    });
+
+    it("never credits a rating whose library entry is private or missing", async () => {
+      const { ada, grace, linus } = await people();
+      await grace.caller.library.save({
+        mediaId: ids.movie,
+        status: "finished",
+        visibility: "private",
+      });
+      await grace.caller.ratings.save({ target: { mediaId: ids.movie }, value: 30 });
+      // Linus rated without adding the title, so nothing says who may see that he did.
+      await linus.caller.ratings.save({ target: { mediaId: ids.movie }, value: 38 });
+
+      expect(await fromFollowing(ada.caller)).toEqual([]);
+      expect((await ada.caller.ratings.summary({ target: { mediaId: ids.movie } })).count).toBe(2);
+    });
+
+    it("credits an episode's rating by the show's library entry", async () => {
+      const { ada, grace } = await people();
+      await grace.caller.library.save({ mediaId: ids.show, status: "in_progress" });
+      await grace.caller.ratings.save({ target: { episodeId: ids.first }, value: 34 });
+
+      expect(await ada.caller.ratings.fromFollowing({ target: { episodeId: ids.first } })).toEqual([
+        { username: "grace", value: 34 },
+      ]);
+      expect(await ada.caller.ratings.fromFollowing({ target: { mediaId: ids.show } })).toEqual([]);
+    });
+
+    it("is empty for a visitor", async () => {
+      const { grace } = await people();
+      await grace.caller.library.save({ mediaId: ids.movie, status: "finished" });
+      await grace.caller.ratings.save({ target: { mediaId: ids.movie }, value: 30 });
+
+      expect(await fromFollowing(anonymous)).toEqual([]);
+    });
+  });
+
+  it("gives a person their own ratings of a set of titles, leaving out episodes", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await ada.caller.ratings.save({ target: { mediaId: ids.movie }, value: 30 });
+    await ada.caller.ratings.save({ target: { episodeId: ids.first }, value: 12 });
+    await grace.caller.ratings.save({ target: { mediaId: ids.show }, value: 40 });
+
+    expect(await ada.caller.ratings.mine({ mediaIds: [ids.movie, ids.show] })).toEqual([
+      { mediaId: ids.movie, value: 30 },
+    ]);
+    expect(await ada.caller.ratings.mine({ mediaIds: [] })).toEqual([]);
+    await expect(anonymous.ratings.mine({ mediaIds: [ids.movie] })).rejects.toMatchObject({
+      code: "UNAUTHORIZED",
+    });
+  });
+
+  it("averages each of a set of titles, leaving out episodes and unrated titles", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await ada.caller.ratings.save({ target: { mediaId: ids.movie }, value: 30 });
+    await grace.caller.ratings.save({ target: { mediaId: ids.movie }, value: 36 });
+    await grace.caller.ratings.save({ target: { episodeId: ids.first }, value: 8 });
+
+    expect(await anonymous.ratings.averages({ mediaIds: [ids.movie, ids.show] })).toEqual([
+      { mediaId: ids.movie, average: 33, count: 2 },
+    ]);
+  });
+
+  it("gives every rated episode of a show in one answer", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await ada.caller.ratings.save({ target: { episodeId: ids.first }, value: 32 });
+    await grace.caller.ratings.save({ target: { episodeId: ids.first }, value: 36 });
+    await grace.caller.ratings.save({ target: { mediaId: ids.show }, value: 40 });
+
+    expect(await ada.caller.ratings.forShow({ mediaId: ids.show })).toEqual([
+      { episodeId: ids.first, average: 34, count: 2, mine: 32 },
+    ]);
+    expect(await anonymous.ratings.forShow({ mediaId: ids.movie })).toEqual([]);
+  });
 });

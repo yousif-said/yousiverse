@@ -5,11 +5,13 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./dates": "./src/calendar/dates.ts",
     "./jobs": "./src/jobs.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "bun --env-file=../../.env run vitest run"
+    "test": "bun --env-file=../../.env run vitest run",
+    "demo:seed": "bun --env-file=../../.env run scripts/seed-demo.ts"
   },
   "dependencies": {
     "@trpc/server": "^11.26.0",

@@ -83,7 +83,13 @@ async function apply(db: Database, job: Import, item: Item, mediaId: string): Pr
       item.status
         ? tx
             .insert(libraryEntries)
-            .values({ userId, mediaId, status: item.status, visibility })
+            .values({
+              userId,
+              mediaId,
+              status: item.status,
+              visibility,
+              minutesPlayed: item.minutesPlayed,
+            })
             .onConflictDoNothing()
             .returning({ id: libraryEntries.id })
         : [],

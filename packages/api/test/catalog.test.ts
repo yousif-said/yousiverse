@@ -1,11 +1,12 @@
 import { db } from "@yousiverse/db";
-import { episodes, games, media, seasons } from "@yousiverse/db/schema";
+import { episodes, games, media, seasons, users } from "@yousiverse/db/schema";
 import { ProviderError } from "@yousiverse/integrations/errors";
 import * as igdb from "@yousiverse/integrations/igdb";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { eq } from "drizzle-orm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { appRouter } from "../src/root";
+import { signedInAs } from "./helpers";
 
 const caller = appRouter.createCaller({ db, session: null });
 
@@ -17,6 +18,7 @@ const EIGHT_DAYS_MS = 8 * 24 * 60 * 60 * 1000;
 
 beforeEach(async () => {
   await db.delete(media);
+  await db.delete(users);
 });
 
 afterEach(() => {
@@ -28,9 +30,16 @@ describe("catalog.search", () => {
     const { results, unavailable } = await caller.catalog.search({ query: "severance" });
 
     expect(unavailable).toEqual([]);
-    expect(results).toContainEqual(
-      expect.objectContaining({ type: "tv", providerId: SEVERANCE, title: "Severance" }),
-    );
+    // A show is drawn as a screen, so it comes with a wide image as well as its poster.
+    expect(results).toContainEqual({
+      type: "tv",
+      providerId: SEVERANCE,
+      title: "Severance",
+      releaseYear: 2022,
+      posterUrl: expect.stringContaining("/w342/"),
+      backdropUrl: expect.stringContaining("/w1280/"),
+      status: null,
+    });
   });
 
   it("mixes games in with movies and shows", async () => {
@@ -46,8 +55,39 @@ describe("catalog.search", () => {
     const { results } = await caller.catalog.search({ query: "piranesi" });
 
     expect(results).toContainEqual(
-      expect.objectContaining({ type: "book", providerId: PIRANESI, title: "Piranesi" }),
+      expect.objectContaining({
+        type: "book",
+        providerId: PIRANESI,
+        title: "Piranesi",
+        authors: ["Susanna Clarke"],
+        backdropUrl: null,
+      }),
     );
+  });
+
+  it("marks what is already in the signed-in person's library, and nobody else's", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const { id: mediaId } = await ada.caller.media.game({ providerId: HADES });
+    // A movie that happens to share the game's provider id is a different title.
+    const [sameId] = await db
+      .insert(media)
+      .values({ type: "movie", title: "Same id", provider: "tmdb", providerId: HADES })
+      .returning({ id: media.id });
+    await ada.caller.library.save({ mediaId, status: "in_progress" });
+    await grace.caller.library.save({ mediaId: sameId?.id ?? "", status: "finished" });
+
+    const statusOfHades = async (searcher: typeof caller) => {
+      const { results } = await searcher.catalog.search({ query: "hades" });
+      return results.find((result) => result.type === "game" && result.providerId === HADES)
+        ?.status;
+    };
+
+    expect(await statusOfHades(ada.caller)).toBe("in_progress");
+    expect(await statusOfHades(grace.caller)).toBeNull();
+    expect(await statusOfHades(caller)).toBeNull();
+    const { results } = await ada.caller.catalog.search({ query: "hades" });
+    expect(results.filter((result) => result.status !== null)).toHaveLength(1);
   });
 
   it("still returns other results when one provider fails, and says what is missing", async () => {

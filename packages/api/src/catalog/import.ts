@@ -23,6 +23,7 @@ import * as igdb from "@yousiverse/integrations/igdb";
 import * as openLibrary from "@yousiverse/integrations/open-library";
 import * as tmdb from "@yousiverse/integrations/tmdb";
 import { and, eq, sql } from "drizzle-orm";
+import { measurePoster } from "./artwork";
 
 const REFRESH_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -160,6 +161,7 @@ export async function ensureListed(db: Database, found: CatalogSearchResult): Pr
       title: found.title,
       releaseYear: found.releaseYear,
       posterUrl: found.posterUrl,
+      backdropUrl: found.backdropUrl,
     })
     .onConflictDoNothing({ target: [media.provider, media.type, media.providerId] });
   const [listed] = await db
@@ -176,6 +178,27 @@ export async function ensureListed(db: Database, found: CatalogSearchResult): Pr
   return listed.id;
 }
 
+async function fetchAndSave(
+  db: Database,
+  ref: CatalogRef,
+): Promise<{ mediaId: string; posterUrl: string | null }> {
+  const saved = async <Item extends CatalogItem>(
+    item: Item,
+    save: (db: Database, item: Item) => Promise<string>,
+  ) => ({ mediaId: await save(db, item), posterUrl: item.posterUrl });
+
+  switch (ref.type) {
+    case "movie":
+      return saved(await tmdb.getMovie(ref.providerId), saveMovie);
+    case "tv":
+      return saved(await tmdb.getTvShow(ref.providerId), saveTvShow);
+    case "game":
+      return saved(await igdb.getGame(ref.providerId), saveGame);
+    case "book":
+      return saved(await openLibrary.getBook(ref.providerId), saveBook);
+  }
+}
+
 /**
  * Returns the media id for a provider item, importing it on first use and refreshing it once
  * the stored copy is older than a week, or than `maxAgeMs`.
@@ -185,31 +208,36 @@ export async function ensureImported(
   ref: CatalogRef,
   maxAgeMs = REFRESH_AFTER_MS,
 ): Promise<string> {
+  const provider = PROVIDER_FOR[ref.type];
   const [stored] = await db
-    .select({ id: media.id, syncedAt: media.syncedAt })
+    .select({
+      id: media.id,
+      syncedAt: media.syncedAt,
+      posterUrl: media.posterUrl,
+      artHue: media.artHue,
+    })
     .from(media)
     .where(
       and(
-        eq(media.provider, PROVIDER_FOR[ref.type]),
+        eq(media.provider, provider),
         eq(media.type, ref.type),
         eq(media.providerId, ref.providerId),
       ),
     );
   if (stored?.syncedAt && Date.now() - stored.syncedAt.getTime() < maxAgeMs) {
+    // Titles saved before posters were measured are measured the next time they are opened.
+    if (stored.posterUrl && stored.artHue === null) {
+      await measurePoster(db, stored.id, provider, stored.posterUrl);
+    }
     return stored.id;
   }
 
   try {
-    switch (ref.type) {
-      case "movie":
-        return await saveMovie(db, await tmdb.getMovie(ref.providerId));
-      case "tv":
-        return await saveTvShow(db, await tmdb.getTvShow(ref.providerId));
-      case "game":
-        return await saveGame(db, await igdb.getGame(ref.providerId));
-      case "book":
-        return await saveBook(db, await openLibrary.getBook(ref.providerId));
+    const { mediaId, posterUrl } = await fetchAndSave(db, ref);
+    if (posterUrl && (posterUrl !== stored?.posterUrl || stored.artHue === null)) {
+      await measurePoster(db, mediaId, provider, posterUrl);
     }
+    return mediaId;
   } catch (error) {
     // A stored copy that is out of date is better than an error page while a provider is down.
     if (stored?.syncedAt && error instanceof ProviderError && error.kind !== "not_found") {

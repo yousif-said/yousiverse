@@ -1,5 +1,5 @@
 import { db } from "@yousiverse/db";
-import { episodes, media, seasons, users } from "@yousiverse/db/schema";
+import { episodes, media, profiles, reviews, seasons, users } from "@yousiverse/db/schema";
 import { beforeEach, describe, expect, it } from "vitest";
 import { anonymous, signedInAs } from "./helpers";
 
@@ -48,6 +48,7 @@ describe("reviews", () => {
     expect(await anonymous.reviews.list({ target: targets.movie })).toEqual({
       mine: null,
       others: [],
+      count: 0,
     });
   });
 
@@ -58,13 +59,29 @@ describe("reviews", () => {
     await ada.caller.reviews.save({ target: targets.movie, body: "  Still holds up.  " });
 
     expect(await ada.caller.reviews.list({ target: targets.movie })).toEqual({
-      mine: { body: "Still holds up.", visibility: "public" },
+      mine: {
+        body: "Still holds up.",
+        visibility: "public",
+        rating: 38,
+        createdAt: expect.any(Date),
+      },
       others: [],
+      count: 1,
     });
     for (const reader of [grace.caller, anonymous]) {
-      const { mine, others } = await reader.reviews.list({ target: targets.movie });
+      const { mine, others, count } = await reader.reviews.list({ target: targets.movie });
       expect(mine).toBeNull();
-      expect(others).toMatchObject([{ author: "ada", body: "Still holds up.", rating: 38 }]);
+      expect(others).toEqual([
+        {
+          id: expect.any(String),
+          author: "ada",
+          body: "Still holds up.",
+          rating: 38,
+          createdAt: expect.any(Date),
+          following: false,
+        },
+      ]);
+      expect(count).toBe(1);
     }
   });
 
@@ -95,12 +112,17 @@ describe("reviews", () => {
       visibility: "private",
     });
 
-    expect((await ada.caller.reviews.list({ target: targets.movie })).mine).toEqual({
-      body: "Just for me.",
-      visibility: "private",
+    expect(await ada.caller.reviews.list({ target: targets.movie })).toMatchObject({
+      mine: { body: "Just for me.", visibility: "private", rating: null },
+      count: 1,
     });
-    expect((await grace.caller.reviews.list({ target: targets.movie })).others).toEqual([]);
-    expect((await anonymous.reviews.list({ target: targets.movie })).others).toEqual([]);
+    for (const reader of [grace.caller, anonymous]) {
+      expect(await reader.reviews.list({ target: targets.movie })).toEqual({
+        mine: null,
+        others: [],
+        count: 0,
+      });
+    }
   });
 
   it("hides a public review once its author makes it private", async () => {
@@ -122,10 +144,120 @@ describe("reviews", () => {
 
     await ada.caller.reviews.save({ target: targets.movie, body: "Final." });
 
-    expect((await ada.caller.reviews.list({ target: targets.movie })).mine).toEqual({
+    expect((await ada.caller.reviews.list({ target: targets.movie })).mine).toMatchObject({
       body: "Final.",
       visibility: "private",
     });
+  });
+
+  it("keeps the day a review was first posted when it is rewritten", async () => {
+    const ada = await signedInAs("Ada");
+    await ada.caller.reviews.save({ target: targets.movie, body: "Draft." });
+    const posted = (await ada.caller.reviews.list({ target: targets.movie })).mine?.createdAt;
+
+    await ada.caller.reviews.save({ target: targets.movie, body: "Final." });
+
+    expect(posted).toBeInstanceOf(Date);
+    expect((await ada.caller.reviews.list({ target: targets.movie })).mine?.createdAt).toEqual(
+      posted,
+    );
+  });
+
+  it("lists people the reader follows first, then everyone else, newest first in each", async () => {
+    const ada = await signedInAs("Ada");
+    const [grace, linus, marie, joan] = await Promise.all(
+      ["Grace", "Linus", "Marie", "Joan"].map((name) => signedInAs(name)),
+    );
+    if (!grace || !linus || !marie || !joan) throw new Error("Reviewers were not created.");
+    for (const writer of [grace, linus, marie, joan, ada]) {
+      await writer.caller.reviews.save({ target: targets.movie, body: `By ${writer.user.name}.` });
+    }
+    await ada.caller.follows.follow({ username: "grace" });
+    await ada.caller.follows.follow({ username: "marie" });
+    // Being followed by someone does not put their review first.
+    await joan.caller.follows.follow({ username: "ada" });
+
+    const forAda = await ada.caller.reviews.list({ target: targets.movie });
+    expect(forAda.mine).toMatchObject({ body: "By Ada." });
+    expect(forAda.others.map((review) => [review.author, review.following])).toEqual([
+      ["marie", true],
+      ["grace", true],
+      ["joan", false],
+      ["linus", false],
+    ]);
+    expect(forAda.count).toBe(5);
+
+    const forVisitor = await anonymous.reviews.list({ target: targets.movie });
+    expect(forVisitor.others.map((review) => [review.author, review.following])).toEqual([
+      ["ada", false],
+      ["joan", false],
+      ["marie", false],
+      ["linus", false],
+      ["grace", false],
+    ]);
+    expect(forVisitor.count).toBe(5);
+  });
+
+  it("shows a friends-only review to a follower only once its author follows back", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await grace.caller.reviews.save({
+      target: targets.movie,
+      body: "Between friends.",
+      visibility: "friends",
+    });
+    await ada.caller.follows.follow({ username: "grace" });
+
+    expect(await ada.caller.reviews.list({ target: targets.movie })).toEqual({
+      mine: null,
+      others: [],
+      count: 0,
+    });
+
+    await grace.caller.follows.follow({ username: "ada" });
+
+    const { others, count } = await ada.caller.reviews.list({ target: targets.movie });
+    expect(others).toMatchObject([{ author: "grace", body: "Between friends.", following: true }]);
+    expect(count).toBe(1);
+  });
+
+  it("counts only the reviews the reader may see, their own included", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const linus = await signedInAs("Linus");
+    await ada.caller.reviews.save({ target: targets.movie, body: "Mine.", visibility: "private" });
+    await grace.caller.reviews.save({ target: targets.movie, body: "Hers." });
+    await linus.caller.reviews.save({ target: targets.movie, body: "His.", visibility: "private" });
+    await linus.caller.reviews.save({ target: targets.episode, body: "Another target." });
+
+    expect((await ada.caller.reviews.list({ target: targets.movie })).count).toBe(2);
+    expect((await grace.caller.reviews.list({ target: targets.movie })).count).toBe(1);
+    expect((await anonymous.reviews.list({ target: targets.movie })).count).toBe(1);
+  });
+
+  it("keeps a followed person's review when there are more reviews than it shows", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await grace.caller.reviews.save({ target: targets.movie, body: "The oldest one." });
+    await ada.caller.follows.follow({ username: "grace" });
+    const crowd = Array.from({ length: 55 }, (_, n) => ({ id: `user-crowd-${n}`, n }));
+    await db
+      .insert(users)
+      .values(
+        crowd.map(({ id, n }) => ({ id, name: `Crowd ${n}`, email: `crowd${n}@example.com` })),
+      );
+    await db
+      .insert(profiles)
+      .values(crowd.map(({ id, n }) => ({ userId: id, username: `crowd_${n}` })));
+    await db
+      .insert(reviews)
+      .values(crowd.map(({ id }) => ({ userId: id, ...targets.movie, body: "One of many." })));
+
+    const { others, count } = await ada.caller.reviews.list({ target: targets.movie });
+
+    expect(others).toHaveLength(50);
+    expect(others[0]).toMatchObject({ author: "grace", following: true });
+    expect(count).toBe(56);
   });
 
   it("rejects an empty review and one that is too long", async () => {

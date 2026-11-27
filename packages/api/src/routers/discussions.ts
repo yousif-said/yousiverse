@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import type { Database } from "@yousiverse/db";
 import { clubReplies, clubThreads, profiles } from "@yousiverse/db/schema";
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
-import { requireMembership, requireVisibleClub } from "./clubs";
+import { replyCount, requireMembership, requireVisibleClub } from "./clubs";
 
 const MAX_THREADS_LISTED = 50;
 const MAX_REPLIES_SHOWN = 500;
@@ -19,10 +19,6 @@ async function findThread(db: Database, id: string) {
 }
 
 const ONLY_AUTHOR_OR_OWNER = "Only the member who wrote it, or the club's owner, can delete it.";
-
-// Written out with table names: in a query that starts from `club_threads`, a bare "id" inside
-// the subquery would mean the reply's own id.
-const replyCount = sql<number>`(select count(*)::int from "club_replies" where "club_replies"."thread_id" = "club_threads"."id")`;
 
 export const discussionsRouter = router({
   /**

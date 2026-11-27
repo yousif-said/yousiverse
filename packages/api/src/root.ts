@@ -6,6 +6,7 @@ import { clubsRouter } from "./routers/clubs";
 import { discussionsRouter } from "./routers/discussions";
 import { feedRouter } from "./routers/feed";
 import { followsRouter } from "./routers/follows";
+import { homeRouter } from "./routers/home";
 import { importsRouter } from "./routers/imports";
 import { libraryRouter } from "./routers/library";
 import { linksRouter } from "./routers/links";
@@ -27,6 +28,7 @@ export const appRouter = router({
   discussions: discussionsRouter,
   feed: feedRouter,
   follows: followsRouter,
+  home: homeRouter,
   imports: importsRouter,
   library: libraryRouter,
   links: linksRouter,

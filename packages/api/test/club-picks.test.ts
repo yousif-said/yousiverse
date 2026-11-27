@@ -54,6 +54,10 @@ describe("club picks", () => {
         title: "Dune",
         releaseYear: null,
         posterUrl: null,
+        backdropUrl: null,
+        artHue: null,
+        artSaturation: null,
+        posterAspect: null,
         providerId: "OL893414W",
         addedBy: "grace",
         clubRating: null,
@@ -161,6 +165,81 @@ describe("club picks", () => {
 
     await linus.caller.clubs.join({ id: club.id, invite: inviteCode ?? "" });
     expect(await linus.caller.clubs.picks({ id: club.id })).toMatchObject([{ title: "Dune" }]);
+  });
+
+  it("shows a club's four newest picks on its tile, and takes its color from the newest", async () => {
+    const more = await db
+      .insert(media)
+      .values(
+        ["Emma", "Beloved", "Ulysses"].map((title, index) => ({
+          type: "book" as const,
+          title,
+          provider: "open_library" as const,
+          providerId: `OL${index}W`,
+          artHue: 100 + index,
+        })),
+      )
+      .returning({ id: media.id });
+    const start = Date.parse("2026-03-01T12:00:00Z");
+    const inOrder = [titles.dune, titles.piranesi, ...more.map((title) => title.id)];
+    for (const [index, mediaId] of inOrder.entries()) {
+      await ada.caller.clubs.addPick({ id: bookClub, mediaId });
+      await db
+        .update(clubPicks)
+        .set({ createdAt: new Date(start + index * 60_000) })
+        .where(eq(clubPicks.mediaId, mediaId));
+    }
+
+    const [tile] = await anonymous.clubs.discover();
+
+    expect(tile?.picks.map((pick) => pick.title)).toEqual([
+      "Ulysses",
+      "Beloved",
+      "Emma",
+      "Piranesi",
+    ]);
+    expect(tile?.picks[0]).toEqual({
+      mediaId: more[2]?.id,
+      type: "book",
+      providerId: "OL2W",
+      title: "Ulysses",
+      releaseYear: null,
+      posterUrl: null,
+      backdropUrl: null,
+      artHue: 102,
+      artSaturation: null,
+      posterAspect: null,
+    });
+    expect(tile?.hue).toBe(102);
+    expect(await grace.caller.clubs.mine()).toMatchObject([{ id: bookClub, hue: 102 }]);
+  });
+
+  it("leaves picks of a type the club no longer covers off its tile", async () => {
+    const club = await ada.caller.clubs.create({
+      name: "Everything",
+      access: "invite_only",
+      mediaTypes: ["movie", "book"],
+    });
+    await db.update(media).set({ artHue: 140 }).where(eq(media.id, titles.matrix));
+    await ada.caller.clubs.addPick({ id: club.id, mediaId: titles.dune });
+    await ada.caller.clubs.addPick({ id: club.id, mediaId: titles.matrix });
+    await db
+      .update(clubPicks)
+      .set({ createdAt: new Date("2020-01-01T00:00:00Z") })
+      .where(eq(clubPicks.mediaId, titles.dune));
+    const tile = async () => (await ada.caller.clubs.mine()).find(({ id }) => id === club.id);
+
+    expect(await tile()).toMatchObject({ hue: 140, picks: [{ title: "The Matrix" }, {}] });
+
+    await ada.caller.clubs.update({
+      id: club.id,
+      name: "Everything",
+      access: "invite_only",
+      mediaTypes: ["book"],
+    });
+
+    expect(await tile()).toMatchObject({ hue: null, picks: [{ title: "Dune" }] });
+    expect((await tile())?.picks).toHaveLength(1);
   });
 
   it("offers a title only to the person's clubs that cover its type", async () => {

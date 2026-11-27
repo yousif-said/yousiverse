@@ -25,6 +25,9 @@ tt13399862,8,2024-01-07,Good News About Hell,https://www.imdb.com/title/tt133998
 };
 
 /** Runs an import to the end, the way the import page does. */
+// What the recorded Steam profile reports for Hades.
+const HADES_MINUTES_ON_STEAM = 1234;
+
 async function runToEnd(caller: Caller, id: string) {
   for (let round = 0; round < 50; round++) {
     const { progress } = await caller.imports.process({ id });
@@ -66,7 +69,7 @@ describe("imports", () => {
 
     expect(await runToEnd(caller, id)).toMatchObject({ imported: 1, not_found: 1, pending: 0 });
 
-    expect(await caller.library.list()).toMatchObject([
+    expect((await caller.library.list()).entries).toMatchObject([
       { title: "The Matrix", type: "movie", status: "finished", visibility: "friends" },
     ]);
     const [matrix] = await db.select().from(media);
@@ -77,6 +80,8 @@ describe("imports", () => {
     expect((await caller.reviews.list({ target })).mine).toEqual({
       body: "Whoa.",
       visibility: "friends",
+      rating: 36,
+      createdAt: expect.any(Date),
     });
     expect(await caller.imports.get({ id })).toMatchObject({
       source: "letterboxd",
@@ -98,7 +103,7 @@ describe("imports", () => {
       skippedCount: 1,
       unmatched: [{ title: "Nothing" }],
     });
-    const library = await caller.library.list();
+    const library = (await caller.library.list()).entries;
     expect(library.map((entry) => `${entry.type} ${entry.title}`).sort()).toEqual([
       "movie The Matrix",
       "tv Severance",
@@ -123,7 +128,7 @@ describe("imports", () => {
     });
 
     expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
-    const library = await caller.library.list();
+    const library = (await caller.library.list()).entries;
     expect(library.map((entry) => `${entry.title}: ${entry.status}`).sort()).toEqual([
       "Dune: want",
       "Piranesi: finished",
@@ -146,7 +151,7 @@ describe("imports", () => {
     });
 
     expect(await runToEnd(caller, id)).toMatchObject({ imported: 2, not_found: 1, total: 3 });
-    const library = await caller.library.list();
+    const library = (await caller.library.list()).entries;
     expect(library.map((entry) => `${entry.type} ${entry.title}: ${entry.status}`).sort()).toEqual([
       "game Hades: finished",
       "game Portal 2: want",
@@ -154,6 +159,54 @@ describe("imports", () => {
     expect(await caller.imports.get({ id })).toMatchObject({
       source: "steam",
       unmatched: [{ title: "Some Tool" }],
+    });
+  });
+
+  it("records how long each Steam game was played, on the entries it adds", async () => {
+    const { caller } = await signedInAs("Ada");
+
+    const { id } = await caller.imports.createFromSteam({
+      profile: "https://steamcommunity.com/id/fixtureplayer",
+      visibility: "public",
+      playedStatus: "in_progress",
+    });
+    await runToEnd(caller, id);
+
+    const library = (await caller.library.list()).entries;
+    expect(library.find((entry) => entry.title === "Hades")).toMatchObject({
+      status: "in_progress",
+      progress: { kind: "minutes", played: HADES_MINUTES_ON_STEAM },
+    });
+    // A game that was never started has nothing to record.
+    const [portal] = library.filter((entry) => entry.title === "Portal 2");
+    expect(portal && (await caller.library.entry({ mediaId: portal.mediaId }))).toMatchObject({
+      status: "want",
+      progress: null,
+    });
+  });
+
+  it("leaves the hours on a game that was already in the library", async () => {
+    const { caller } = await signedInAs("Ada");
+    const first = await caller.imports.createFromSteam({
+      profile: "https://steamcommunity.com/id/fixtureplayer",
+      visibility: "public",
+      playedStatus: "in_progress",
+    });
+    await runToEnd(caller, first.id);
+    const hades = (await caller.library.list()).entries.find((entry) => entry.title === "Hades");
+    if (!hades) throw new Error("Hades was not imported.");
+    await caller.library.setProgress({ mediaId: hades.mediaId, minutesPlayed: 60 });
+
+    const again = await caller.imports.createFromSteam({
+      profile: "https://steamcommunity.com/id/fixtureplayer",
+      visibility: "public",
+      playedStatus: "in_progress",
+    });
+    await runToEnd(caller, again.id);
+
+    expect((await caller.library.entry({ mediaId: hades.mediaId }))?.progress).toEqual({
+      kind: "minutes",
+      played: 60,
     });
   });
 
@@ -190,7 +243,7 @@ describe("imports", () => {
       skippedCount: 1,
       unmatched: [{ title: "A Film Nobody Has" }],
     });
-    const library = await caller.library.list();
+    const library = (await caller.library.list()).entries;
     expect(library.map((entry) => `${entry.type} ${entry.title}: ${entry.status}`).sort()).toEqual([
       "movie The Matrix: finished",
       // Five plays of a show with nineteen aired episodes.
@@ -250,6 +303,7 @@ describe("imports", () => {
     expect(await caller.library.entry({ mediaId: matrix.id })).toEqual({
       status: "dropped",
       visibility: "private",
+      progress: null,
     });
     expect(await caller.ratings.summary({ target })).toMatchObject({ mine: 8 });
     expect((await caller.reviews.list({ target })).mine).toMatchObject({
@@ -277,7 +331,7 @@ describe("imports", () => {
       not_found: 1,
       pending: 0,
     });
-    expect(await caller.library.list()).toHaveLength(1);
+    expect((await caller.library.list()).entries).toHaveLength(1);
   });
 
   it("keeps a row waiting, and says it paused, while the provider is busy", async () => {
@@ -303,6 +357,20 @@ describe("imports", () => {
     });
   });
 
+  it("lists each import with how many titles are still waiting to be matched", async () => {
+    const { caller } = await signedInAs("Ada");
+    const { id } = await caller.imports.createFromFiles({
+      source: "letterboxd",
+      visibility: "public",
+      files: [LETTERBOXD],
+    });
+
+    expect(await caller.imports.mine()).toMatchObject([{ id, total: 2, pending: 2 }]);
+
+    await runToEnd(caller, id);
+    expect(await caller.imports.mine()).toMatchObject([{ id, total: 2, pending: 0 }]);
+  });
+
   it("keeps one person's imports from everyone else", async () => {
     const ada = await signedInAs("Ada");
     const grace = await signedInAs("Grace");
@@ -317,7 +385,7 @@ describe("imports", () => {
     expect(await grace.caller.imports.mine()).toEqual([]);
     expect(await ada.caller.imports.mine()).toMatchObject([{ id, source: "letterboxd", total: 2 }]);
     expect(await db.select().from(importItems)).toHaveLength(2);
-    expect(await grace.caller.library.list()).toEqual([]);
+    expect((await grace.caller.library.list()).entries).toEqual([]);
   });
 
   it("refuses files that are not from the chosen service, or that hold no titles", async () => {

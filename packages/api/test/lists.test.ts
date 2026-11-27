@@ -4,15 +4,36 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { anonymous, signedInAs } from "./helpers";
 
 async function addTitles() {
-  const [matrix, hades] = await db
+  const [matrix, hades, dune, piranesi, severance] = await db
     .insert(media)
     .values([
-      { type: "movie", title: "The Matrix", provider: "tmdb", providerId: "603" },
+      {
+        type: "movie",
+        title: "The Matrix",
+        provider: "tmdb",
+        providerId: "603",
+        releaseYear: 1999,
+        posterUrl: "https://image.tmdb.org/t/p/original/matrix.jpg",
+        backdropUrl: "https://image.tmdb.org/t/p/original/matrix-wide.jpg",
+        artHue: 140,
+        artSaturation: 60,
+      },
       { type: "game", title: "Hades", provider: "igdb", providerId: "113112" },
+      { type: "book", title: "Dune", provider: "open_library", providerId: "OL893414W" },
+      { type: "book", title: "Piranesi", provider: "open_library", providerId: "OL20893680W" },
+      { type: "tv", title: "Severance", provider: "tmdb", providerId: "95396" },
     ])
     .returning({ id: media.id });
-  if (!matrix || !hades) throw new Error("Titles were not created.");
-  return { matrix: matrix.id, hades: hades.id };
+  if (!matrix || !hades || !dune || !piranesi || !severance) {
+    throw new Error("Titles were not created.");
+  }
+  return {
+    matrix: matrix.id,
+    hades: hades.id,
+    dune: dune.id,
+    piranesi: piranesi.id,
+    severance: severance.id,
+  };
 }
 
 const missingId = "00000000-0000-4000-8000-000000000000";
@@ -72,6 +93,162 @@ describe("lists", () => {
       { type: "movie", title: "The Matrix" },
     ]);
     expect(await caller.lists.mine()).toMatchObject([{ name: "Favorites", itemCount: 2 }]);
+  });
+
+  it("returns what is needed to draw each title, and its note", async () => {
+    const { caller } = await signedInAs("Ada");
+    const { id } = await caller.lists.create({ name: "Favorites" });
+    await caller.lists.addItem({ listId: id, mediaId: titles.matrix, note: "  Still the one. " });
+    await caller.lists.addItem({ listId: id, mediaId: titles.hades });
+
+    expect((await anonymous.lists.get({ id })).items).toEqual([
+      {
+        mediaId: titles.matrix,
+        type: "movie",
+        providerId: "603",
+        title: "The Matrix",
+        releaseYear: 1999,
+        posterUrl: "https://image.tmdb.org/t/p/original/matrix.jpg",
+        backdropUrl: "https://image.tmdb.org/t/p/original/matrix-wide.jpg",
+        artHue: 140,
+        artSaturation: 60,
+        posterAspect: null,
+        note: "Still the one.",
+      },
+      expect.objectContaining({ title: "Hades", note: null }),
+    ]);
+  });
+
+  it("keeps the note a title already has when the title is added again", async () => {
+    const { caller } = await signedInAs("Ada");
+    const { id } = await caller.lists.create({ name: "Favorites" });
+    await caller.lists.addItem({ listId: id, mediaId: titles.matrix, note: "First thought." });
+
+    await caller.lists.addItem({ listId: id, mediaId: titles.matrix, note: "Second thought." });
+    await caller.lists.addItem({ listId: id, mediaId: titles.matrix });
+
+    expect((await caller.lists.get({ id })).items).toMatchObject([{ note: "First thought." }]);
+  });
+
+  it("writes, changes, and clears a note", async () => {
+    const { caller } = await signedInAs("Ada");
+    const { id } = await caller.lists.create({ name: "Favorites" });
+    await caller.lists.addItem({ listId: id, mediaId: titles.matrix });
+    const noteNow = async () => (await caller.lists.get({ id })).items[0]?.note;
+
+    await caller.lists.setNote({ listId: id, mediaId: titles.matrix, note: " Rewatch yearly. " });
+    expect(await noteNow()).toBe("Rewatch yearly.");
+
+    await caller.lists.setNote({ listId: id, mediaId: titles.matrix, note: "Every spring." });
+    expect(await noteNow()).toBe("Every spring.");
+
+    await caller.lists.setNote({ listId: id, mediaId: titles.matrix, note: null });
+    expect(await noteNow()).toBeNull();
+
+    // A note of nothing but spaces is no note.
+    await caller.lists.setNote({ listId: id, mediaId: titles.matrix, note: "   " });
+    expect(await noteNow()).toBeNull();
+  });
+
+  it("refuses a note longer than 280 characters, or for a title that is not on the list", async () => {
+    const { caller } = await signedInAs("Ada");
+    const { id } = await caller.lists.create({ name: "Favorites" });
+    await caller.lists.addItem({ listId: id, mediaId: titles.matrix });
+    const tooLong = "x".repeat(281);
+
+    await expect(
+      caller.lists.setNote({ listId: id, mediaId: titles.matrix, note: tooLong }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      caller.lists.addItem({ listId: id, mediaId: titles.hades, note: tooLong }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      caller.lists.setNote({ listId: id, mediaId: titles.hades, note: "Not here." }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await caller.lists.setNote({ listId: id, mediaId: titles.matrix, note: "x".repeat(280) });
+  });
+
+  it("shows each of a person's lists with its description and its first four titles", async () => {
+    const { caller } = await signedInAs("Ada");
+    const { id } = await caller.lists.create({ name: "Favorites", description: "The best." });
+    const empty = await caller.lists.create({ name: "Someday" });
+    for (const mediaId of [
+      titles.hades,
+      titles.matrix,
+      titles.dune,
+      titles.piranesi,
+      titles.severance,
+    ]) {
+      await caller.lists.addItem({ listId: id, mediaId });
+    }
+
+    const mine = await caller.lists.mine();
+
+    expect(mine).toMatchObject([
+      { id, name: "Favorites", description: "The best.", visibility: "public", itemCount: 5 },
+      { id: empty.id, name: "Someday", description: null, itemCount: 0, artwork: [] },
+    ]);
+    expect(mine[0]?.artwork.map((title) => title.title)).toEqual([
+      "Hades",
+      "The Matrix",
+      "Dune",
+      "Piranesi",
+    ]);
+    expect(mine[0]?.artwork[1]).toEqual({
+      mediaId: titles.matrix,
+      type: "movie",
+      providerId: "603",
+      title: "The Matrix",
+      releaseYear: 1999,
+      posterUrl: "https://image.tmdb.org/t/p/original/matrix.jpg",
+      backdropUrl: "https://image.tmdb.org/t/p/original/matrix-wide.jpg",
+      artHue: 140,
+      artSaturation: 60,
+      posterAspect: null,
+    });
+  });
+
+  it("shows lists made by people the viewer follows, and by nobody else", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    const linus = await signedInAs("Linus");
+    await ada.caller.follows.follow({ username: "grace" });
+    // Linus follows Ada, which does not show her his lists.
+    await linus.caller.follows.follow({ username: "ada" });
+    await ada.caller.lists.create({ name: "Ada's own" });
+    await linus.caller.lists.create({ name: "Linus's list" });
+    const { id } = await grace.caller.lists.create({ name: "Grace's list" });
+    await grace.caller.lists.addItem({ listId: id, mediaId: titles.matrix });
+
+    expect(await ada.caller.lists.fromFollowing()).toMatchObject([
+      {
+        id,
+        name: "Grace's list",
+        owner: "grace",
+        itemCount: 1,
+        artwork: [{ title: "The Matrix", providerId: "603" }],
+      },
+    ]);
+    expect(await grace.caller.lists.fromFollowing()).toEqual([]);
+    await expect(anonymous.lists.fromFollowing()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+  });
+
+  it("keeps friends-only and private lists, and their titles, out of a follower's view", async () => {
+    const ada = await signedInAs("Ada");
+    const grace = await signedInAs("Grace");
+    await ada.caller.follows.follow({ username: "grace" });
+    for (const visibility of ["friends", "private"] as const) {
+      const { id } = await grace.caller.lists.create({ name: `${visibility} list`, visibility });
+      await grace.caller.lists.addItem({ listId: id, mediaId: titles.matrix });
+    }
+
+    // Ada follows Grace, but Grace does not follow back: they are not friends.
+    expect(await ada.caller.lists.fromFollowing()).toEqual([]);
+
+    await grace.caller.follows.follow({ username: "ada" });
+    const seen = await ada.caller.lists.fromFollowing();
+    expect(seen).toMatchObject([{ name: "friends list", artwork: [{ title: "The Matrix" }] }]);
+    expect(JSON.stringify(seen)).not.toContain("private list");
   });
 
   it("takes a title off a list", async () => {
@@ -166,11 +343,17 @@ describe("lists", () => {
     await expect(
       grace.caller.lists.removeItem({ listId: id, mediaId: titles.matrix }),
     ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(
+      grace.caller.lists.setNote({ listId: id, mediaId: titles.matrix, note: "Hijacked" }),
+    ).rejects.toMatchObject({ code: "NOT_FOUND" });
+    await expect(
+      anonymous.lists.setNote({ listId: id, mediaId: titles.matrix, note: "Hijacked" }),
+    ).rejects.toMatchObject({ code: "UNAUTHORIZED" });
     await grace.caller.lists.remove({ id });
 
     expect(await ada.caller.lists.get({ id })).toMatchObject({
       name: "Favorites",
-      items: [{ title: "The Matrix" }],
+      items: [{ title: "The Matrix", note: null }],
     });
     expect(await grace.caller.lists.mine()).toEqual([]);
   });

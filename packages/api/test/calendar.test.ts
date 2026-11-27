@@ -1,5 +1,13 @@
 import { db } from "@yousiverse/db";
-import { episodes, libraryEntries, media, seasons, tvShows, users } from "@yousiverse/db/schema";
+import {
+  episodes,
+  games,
+  libraryEntries,
+  media,
+  seasons,
+  tvShows,
+  users,
+} from "@yousiverse/db/schema";
 import { eq } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { addDays, usToday } from "../src/calendar/dates";
@@ -31,6 +39,19 @@ const movie = (
     providerId: String(nextId++),
     ...extra,
   });
+
+/** A title as the calendar returns it, when nothing but its name and address was stored. */
+const summary = (fields: { type: string; title: string; providerId?: string }) => ({
+  mediaId: expect.any(String),
+  providerId: expect.any(String),
+  releaseYear: null,
+  posterUrl: null,
+  backdropUrl: null,
+  artHue: null,
+  artSaturation: null,
+  posterAspect: null,
+  ...fields,
+});
 
 /** A show with one season whose episodes air on the given dates. */
 async function show(title: string, airDates: (string | null)[], seasonNumber = 2) {
@@ -76,16 +97,60 @@ describe("calendar.upcoming", () => {
       providerId: "77",
     });
 
-    const { entries, today: reported } = await anonymous.calendar.upcoming({ scope: "catalog" });
+    const { entries, ...window } = await anonymous.calendar.upcoming({ scope: "catalog" });
 
-    expect(reported).toBe(today);
+    expect(window).toMatchObject({ today, until: inDays(90) });
     expect(entries.map((entry) => [entry.date, entry.title.title, entry.kind])).toEqual([
       [today, "Today", "release"],
       [inDays(3), "Sooner", "release"],
       [inDays(10), "A Game", "release"],
       [inDays(40), "Later", "release"],
     ]);
-    expect(entries[2]?.title).toEqual({ type: "game", providerId: "77", title: "A Game" });
+    expect(entries[2]).toEqual({
+      kind: "release",
+      date: inDays(10),
+      title: summary({ type: "game", providerId: "77", title: "A Game" }),
+      platforms: [],
+    });
+  });
+
+  it("carries what a row needs to draw the title, and where a game comes out", async () => {
+    const gameId = await addTitle({
+      type: "game",
+      title: "A Game",
+      releaseDate: inDays(10),
+      releaseYear: 2027,
+      posterUrl: "https://images.example/cover.jpg",
+      backdropUrl: "https://images.example/wide.jpg",
+      artHue: 210,
+      artSaturation: 40,
+      posterAspect: 750,
+      provider: "igdb",
+      providerId: "77",
+    });
+    await db.insert(games).values({ mediaId: gameId, platforms: ["PC", "PlayStation 5"] });
+
+    const { entries } = await anonymous.calendar.upcoming({ scope: "catalog" });
+
+    expect(entries).toEqual([
+      {
+        kind: "release",
+        date: inDays(10),
+        title: {
+          mediaId: gameId,
+          type: "game",
+          providerId: "77",
+          title: "A Game",
+          releaseYear: 2027,
+          posterUrl: "https://images.example/cover.jpg",
+          backdropUrl: "https://images.example/wide.jpg",
+          artHue: 210,
+          artSaturation: 40,
+          posterAspect: 750,
+        },
+        platforms: ["PC", "PlayStation 5"],
+      },
+    ]);
   });
 
   it("lists a show by its upcoming episodes, not by when it first aired", async () => {
@@ -104,7 +169,7 @@ describe("calendar.upcoming", () => {
       {
         kind: "episodes",
         date: today,
-        title: { type: "tv", providerId: expect.any(String), title: "Weekly" },
+        title: summary({ type: "tv", title: "Weekly" }),
         seasonNumber: 2,
         firstEpisode: 2,
         lastEpisode: 2,
@@ -134,6 +199,34 @@ describe("calendar.upcoming", () => {
 
     expect(films.entries.map((entry) => entry.title.title)).toEqual(["A Film"]);
     expect(shows.entries.map((entry) => entry.title.title)).toEqual(["A Show"]);
+  });
+
+  it("counts each medium's entries in the scope, whatever type is asked for", async () => {
+    const ada = await signedInAs("Ada");
+    const mine = await movie("Mine", inDays(2));
+    await movie("Someone else's", inDays(3));
+    await movie("Too far off", inDays(91));
+    await addTitle({
+      type: "game",
+      title: "A Game",
+      releaseDate: inDays(4),
+      provider: "igdb",
+      providerId: "77",
+    });
+    // Three episodes on one day are one entry; a fourth a week later is another.
+    await show("A Show", [inDays(5), inDays(5), inDays(5), inDays(12), inDays(-3)]);
+    await ada.caller.library.save({ mediaId: mine, status: "want" });
+
+    const everything = await anonymous.calendar.upcoming({ scope: "catalog" });
+    const onlyGames = await anonymous.calendar.upcoming({ scope: "catalog", type: "game" });
+    const library = await ada.caller.calendar.upcoming({ scope: "library", type: "tv" });
+
+    expect(everything.counts).toEqual({ movie: 2, tv: 2, game: 1 });
+    expect(everything.entries).toHaveLength(5);
+    expect(onlyGames.counts).toEqual(everything.counts);
+    expect(onlyGames.entries.map((entry) => entry.title.title)).toEqual(["A Game"]);
+    expect(library.counts).toEqual({ movie: 1, tv: 0, game: 0 });
+    expect(library.entries).toEqual([]);
   });
 
   it("needs signing in to show a library, and shows only that person's titles", async () => {

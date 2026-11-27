@@ -17,6 +17,8 @@ export type ImportRow = {
   /** Quarter points, 0 to 40. */
   rating: number | null;
   review: string | null;
+  /** How long a game has been played, for sources that know. */
+  minutesPlayed?: number | null;
 };
 
 export type ParsedImport = {
@@ -79,6 +81,7 @@ export function mergeRows(earlier: ImportRow, later: ImportRow): ImportRow {
     status,
     rating: later.rating ?? earlier.rating,
     review: later.review ?? earlier.review,
+    minutesPlayed: later.minutesPlayed ?? earlier.minutesPlayed,
   };
 }
 
